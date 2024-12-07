@@ -1,0 +1,158 @@
+/* Custom styles for signin.html */
+
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../assets/data2.jpg');
+    background-size: cover;
+    z-index: -2;
+  }
+
+  .form-box-login{
+    height: 500px;
+  }
+
+  .form-box-register{
+    height: 620px;
+  }
+
+  .form-box-login,.form-box-register {
+    position: relative;
+    width: 400px;
+    background: #fff; /* Mengubah warna background form-box menjadi putih */
+    border-radius: 20px;
+    backdrop-filter: blur(15px) brightness(80%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .form-box h2 {
+    font-size: 2em;
+    color: #000; /* Mengubah warna teks h2 menjadi hitam */
+    text-align: center;
+  }
+
+  .form-floating {
+    position: relative;
+    margin: 30px 0;
+    width: 310px;
+    border-bottom: 2px solid #000; /* Mengubah warna garis bawah form-floating menjadi hitam */
+    color: #000; /* Mengubah warna teks input menjadi hitam */
+  }
+
+  .form-floating label {
+    position: absolute;
+    top: 20%;
+    left: 5px;
+    transform: translateY(-50%);
+    color: #000;
+    font-size: 1em;
+    pointer-events: none;
+    transition: 0.5s;
+  }
+  /* Animasi untuk option pada select */
+  .form-floating select:focus + .select-label,
+  .form-floating select:valid + .select-label {
+    top: -30px;
+    font-size: 0.8em;
+    color: #000;
+  }
+
+  .select-label {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    color: #777; /* Warna awal label */
+    font-size: 1em;
+    transition: 0.5s;
+  }
+
+  /* Animasi ketika option dipilih */
+  .form-floating select option {
+    transition: background-color 0.3s ease; /* Animasi latar belakang saat dipilih */
+  }
+
+  /* Gaya saat option dipilih */
+  .form-floating select option:checked {
+    background-color: #f0f0f0; /* Ganti warna latar belakang saat dipilih */
+  }
+
+  /* animations: start */
+  input:focus~label,
+  input:valid~label {
+    top: -5px;
+    color: #000;
+  }
+
+  input:focus~option,
+  input:valid~option {
+    top: -5px;
+    color: #000;
+  }
+
+  .form-floating input {
+    width: 100%;
+    height: 50px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    padding: 0 35px 0 5px;
+    color: #000;
+  }
+
+  .form-floating select {
+    width: 100%;
+    height: 50px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    padding: 0 35px 0 5px;
+    color: #000;
+  }
+
+  .form-check {
+    margin-bottom: 20px;
+  }
+
+  .form-check input {
+    margin-right: 5px;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+
+  .register {
+    text-align: center;
+    margin-top: 20px;
+    color: #777;
+  }
+
+  .register a {
+    color: #777;
+  }
+
+  .form-text {
+    text-align: center;
+    margin-top: 10px;
+  }
