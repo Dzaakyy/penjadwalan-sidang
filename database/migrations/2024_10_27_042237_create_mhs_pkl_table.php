@@ -23,7 +23,6 @@ return new class extends Migration
             $table->enum('status_admin', ['0', '1'])->default(0)->comment('0: Belum Diverifikasi, 1: Diverifikasi');
             $table->bigInteger('ruang_sidang')->nullable();
             $table->bigInteger('dosen_pembimbing');
-            $table->double('nilai_dosen_pembimbing')->nullable();
             $table->bigInteger('dosen_penguji')->nullable();
             $table->bigInteger('jam_sidang')->nullable();
             $table->date('tgl_sidang')->nullable();

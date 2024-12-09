@@ -20,7 +20,6 @@ class MahasiswaPkl extends Model
         'status_admin',
         'ruang_sidang',
         'dosen_pembimbing',
-        'nilai_dosen_pembimbing',
         'dosen_penguji',
         'jam_sidang',
         'tgl_sidang',

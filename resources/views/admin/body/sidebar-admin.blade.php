@@ -1,11 +1,15 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
+        @hasanyrole('superAdmin|admin|dosen|pimpinanJurusan|pimpinanProdi|pembimbing|penguji|mahasiswa')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('dashboard') }}">
                 <i class="mdi mdi-grid-large menu-icon"></i>
                 <span class="menu-title">Dashboard</span>
             </a>
         </li>
+        @endhasanyrole
+
+        @hasrole('admin')
         <li class="nav-item nav-category">Admin</li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#master" aria-expanded="false" aria-controls="ui-basic">
@@ -31,15 +35,30 @@
             </div>
         </li>
 
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#pkl_admin" aria-expanded="false"
+                aria-controls="form-elements">
+                <i class="menu-icon mdi mdi-account-tie"></i>
+                <span class="menu-title">PKL</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="pkl_admin">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('verif_pkl') }}">Verifikasi Berkas PKL</a></li>
+                    {{-- <li class="nav-item"> <a class="nav-link large-text" href="#">Verifikasi Berkas PKL</a></li> --}}
+                </ul>
+            </div>
+        </li>
+        @endhasrole
 
 
 
-
+        @hasrole('pimpinanProdi')
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#pkl_kaprodi" aria-expanded="false"
                 aria-controls="form-elements">
                 <i class="menu-icon mdi mdi-account-tie"></i>
-                <span class="menu-title">PKL (Kaprodi)</span>
+                <span class="menu-title">PKL</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="pkl_kaprodi">
@@ -51,29 +70,17 @@
                 </ul>
             </div>
         </li>
+        @endhasrole
 
 
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#pkl_admin" aria-expanded="false"
-                aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-account-tie"></i>
-                <span class="menu-title">PKL (Admin)</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="pkl_admin">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('verif_pkl') }}">Verifikasi Berkas PKL</a></li>
-                    {{-- <li class="nav-item"> <a class="nav-link large-text" href="#">Verifikasi Berkas PKL</a></li> --}}
-                </ul>
-            </div>
-        </li>
 
 
+        @hasrole('pembimbing')
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#dosen_bimbingan_PKL" aria-expanded="false"
                 aria-controls="form-elements">
                 <i class="menu-icon mdi mdi-account-tie"></i>
-                <span class="menu-title">PKL (Pembimbing)</span>
+                <span class="menu-title">Bimbingan PKL</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="dosen_bimbingan_PKL">
@@ -82,7 +89,9 @@
                 </ul>
             </div>
         </li>
+        @endhasrole
 
+        @hasrole('pembimbing|penguji')
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#sidang_pkl" aria-expanded="false"
                 aria-controls="form-elements">
@@ -96,8 +105,9 @@
                 </ul>
             </div>
         </li>
+        @endhasrole
 
-
+        @hasrole('mahasiswa')
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#pkl" aria-expanded="false"
                 aria-controls="form-elements">
@@ -113,10 +123,11 @@
                 </ul>
             </div>
         </li>
+        @endhasrole
 
 
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#sempro" aria-expanded="false" aria-controls="charts">
                 <i class="menu-icon mdi mdi-bookshelf"></i>
                 <span class="menu-title">Sempro</span>
@@ -140,7 +151,7 @@
                     <li class="nav-item"> <a class="nav-link large-text" href="#">TA</a></li>
                 </ul>
             </div>
-        </li>
+        </li> --}}
 
 
 

@@ -25,4 +25,18 @@ class Pimpinan extends Model
     public function r_jabatan_pimpinan(){
         return $this->belongsTo(JabatanPimpinan::class, 'jabatan_pimpinan_id','id_jabatan_pimpinan');
     }
+
+    public function scopeKajur($query)
+    {
+        return $query->whereHas('r_jabatan_pimpinan', function ($query) {
+            $query->where('kode_jabatan_pimpinan', 'Kajur');
+        });
+    }
+    public function scopeKaprodi($query)
+    {
+        return $query->whereHas('r_jabatan_pimpinan', function ($query) {
+            $query->where('kode_jabatan_pimpinan', 'Kaprodi');
+        });
+    }
+
 }
