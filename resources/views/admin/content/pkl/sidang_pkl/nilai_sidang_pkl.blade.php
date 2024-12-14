@@ -54,20 +54,26 @@
                                     <td>
                                         @if ($isPenguji)
                                             @if (isset($data->r_nilai_penguji) && !is_null($data->r_nilai_penguji->nilai_pkl) && $data->r_nilai_penguji->status == 1)
-                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_mhs_pkl }}" class="btn btn-success">
+                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_mhs_pkl }}"
+                                                    class="btn btn-success">
                                                     <span class="bi bi-pencil-square"></span> Edit
-                                            @else
-                                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_mhs_pkl }}" class="btn btn-primary">
-                                                    <span class="bi bi-pencil-square"></span> Nilai
-                                                </a>
+                                                @else
+                                                    <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_mhs_pkl }}"
+                                                        class="btn btn-primary">
+                                                        <span class="bi bi-pencil-square"></span> Nilai
+                                                    </a>
                                             @endif
                                         @elseif ($isPembimbing)
-                                            @if (isset($data->r_nilai_pembimbing) && !is_null($data->r_nilai_pembimbing->nilai_pkl) && $data->r_nilai_pembimbing->status == 0)
-                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_mhs_pkl }}" class="btn btn-success">
+                                            @if (isset($data->r_nilai_pembimbing) &&
+                                                    !is_null($data->r_nilai_pembimbing->nilai_pkl) &&
+                                                    $data->r_nilai_pembimbing->status == 0)
+                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_mhs_pkl }}"
+                                                    class="btn btn-success">
                                                     <span class="bi bi-pencil-square"></span> Edit
                                                 </a>
                                             @else
-                                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_mhs_pkl }}" class="btn btn-primary">
+                                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_mhs_pkl }}"
+                                                    class="btn btn-primary">
                                                     <span class="bi bi-pencil-square"></span> Nilai
                                                 </a>
                                             @endif
@@ -225,7 +231,8 @@
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <input type="hidden" name="mhs_pkl_id" value="{{ old('mhs_pkl_id', $data->id_mhs_pkl) }}">
+                                                        <input type="hidden" name="mhs_pkl_id"
+                                                            value="{{ old('mhs_pkl_id', $data->id_mhs_pkl) }}">
                                                         @error('mhs_pkl_id')
                                                             <small>{{ $message }}</small>
                                                         @enderror

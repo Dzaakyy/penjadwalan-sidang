@@ -23,10 +23,36 @@ class MahasiswaPkl extends Model
         'dosen_penguji',
         'jam_sidang',
         'tgl_sidang',
+        'nilai_mahasiswa',
     ];
     protected $table = 'mhs_pkl';
     protected $primaryKey = 'id_mhs_pkl';
     public $timestamps = false;
+
+
+
+    public static function boot()
+    {
+        parent::boot();
+        MahasiswaPkl::all()->each(function ($sidangPkl) {
+            $nilaiBimbingan = $sidangPkl->r_nilai_bimbingan->nilai_bimbingan ?? null;
+            $nilaiPembimbing = $sidangPkl->r_nilai_pembimbing->nilai_pkl ?? null;
+            $nilaiPenguji = $sidangPkl->r_nilai_penguji->nilai_pkl ?? null;
+            $nilaiIndustri = $sidangPkl->nilai_pembimbing_industri ?? null;
+
+            if ($nilaiBimbingan !== null && $nilaiPembimbing !== null && $nilaiPenguji !== null && $nilaiIndustri !== null) {
+                // $nilaimahasiswa = ($nilaiBimbingan * 0.35) + ($nilaiPembimbing * 0.35) +  ($nilaiPenguji * 0.35) + ($nilaiIndustri * 0.3);
+                $nilaimahasiswa = ($nilaiBimbingan * 0.35) + ((($nilaiPembimbing + $nilaiPenguji) /2) * 0.35) + ($nilaiIndustri * 0.3);
+
+                $sidangPkl->nilai_mahasiswa = $nilaimahasiswa;
+
+
+                $sidangPkl->save();
+            } else {
+            }
+        });
+    }
+
 
     public function r_pkl()
     {

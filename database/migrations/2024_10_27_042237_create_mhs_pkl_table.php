@@ -26,7 +26,9 @@ return new class extends Migration
             $table->bigInteger('dosen_penguji')->nullable();
             $table->bigInteger('jam_sidang')->nullable();
             $table->date('tgl_sidang')->nullable();
+            $table->string('nilai_mahasiswa')->nullable();
         });
+        
 
         Schema::table('mhs_pkl', function (Blueprint $table) {
             $table->foreign('mahasiswa_id')->references('mahasiswa_id')->on('usulan_pkl')

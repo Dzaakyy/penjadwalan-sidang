@@ -60,7 +60,7 @@ class MahasiswaController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-
+        $user->assignRole('mahasiswa');
         $data = [
             'id_mahasiswa' => $request->id_mahasiswa,
             'nama' => $request->nama,
@@ -99,7 +99,7 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = Mahasiswa::with('r_user')->where('id_mahasiswa', $id)->first();
 
-        // Check if the dosen record exists
+
         if (!$mahasiswa) {
             return redirect()->route('mahasiswa')->with('error', 'Data mahasiswa tidak ditemukan.');
         }
@@ -203,8 +203,6 @@ class MahasiswaController extends Controller
 
 
 
-
-
     public function show(string $id)
     {
         $data_mahasiswa = Mahasiswa::findOrFail($id);
@@ -212,18 +210,32 @@ class MahasiswaController extends Controller
     }
 
 
+
     public function delete(string $id)
     {
         $data_mahasiswa = Mahasiswa::where('id_mahasiswa', $id)->first();
-        if ($data_mahasiswa && $data_mahasiswa->image) {
+
+        if (!$data_mahasiswa) {
+            return redirect()->route('mahasiswa')->with('error', 'Data mahasiswa tidak ditemukan.');
+        }
+
+        // Menghapus gambar mahasiswa jika ada
+        if ($data_mahasiswa->image) {
             Storage::delete('public/uploads/mahasiswa/image/' . $data_mahasiswa->image);
         }
 
-        if ($data_mahasiswa) {
-            $data_mahasiswa->delete();
+        // Menghapus data mahasiswa
+        $user = $data_mahasiswa->r_user; // Ambil user yang terkait dengan mahasiswa
+        if ($user) {
+            $user->delete(); // Hapus data user (akun)
         }
-        return redirect()->route('mahasiswa')->with('success', 'Data berhasil dihapus.');
+
+        // Menghapus data mahasiswa
+        $data_mahasiswa->delete();
+
+        return redirect()->route('mahasiswa')->with('success', 'Data mahasiswa dan akun berhasil dihapus.');
     }
+
 
     function getCariNomor()
     {

@@ -10,7 +10,7 @@
         @endhasanyrole
 
         @hasrole('admin')
-        <li class="nav-item nav-category">Admin</li>
+        {{-- <li class="nav-item nav-category">Admin</li> --}}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#master" aria-expanded="false" aria-controls="ui-basic">
                 <i class="menu-icon mdi mdi-floor-plan"></i>
@@ -38,7 +38,7 @@
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#pkl_admin" aria-expanded="false"
                 aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-account-tie"></i>
+                <i class="menu-icon mdi mdi-briefcase-account"></i>
                 <span class="menu-title">PKL</span>
                 <i class="menu-arrow"></i>
             </a>
@@ -58,7 +58,7 @@
             <a class="nav-link" data-bs-toggle="collapse" href="#pkl_kaprodi" aria-expanded="false"
                 aria-controls="form-elements">
                 <i class="menu-icon mdi mdi-account-tie"></i>
-                <span class="menu-title">PKL</span>
+                <span class="menu-title">Kepala Prodi</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="pkl_kaprodi">
@@ -73,14 +73,13 @@
         @endhasrole
 
 
-
-
         @hasrole('pembimbing')
+        {{-- <li class="nav-item nav-category">Pembimbing</li> --}}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#dosen_bimbingan_PKL" aria-expanded="false"
                 aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-account-tie"></i>
-                <span class="menu-title">Bimbingan PKL</span>
+                <i class="menu-icon mdi mdi-handshake"></i>
+                <span class="menu-title">Bimbingan</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="dosen_bimbingan_PKL">
@@ -92,11 +91,12 @@
         @endhasrole
 
         @hasrole('pembimbing|penguji')
+        {{-- <li class="nav-item nav-category">Sidang</li> --}}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#sidang_pkl" aria-expanded="false"
                 aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-account-tie"></i>
-                <span class="menu-title">Sidang PKL</span>
+                <i class="menu-icon mdi mdi-gavel"></i>
+                <span class="menu-title">Sidang</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="sidang_pkl">
@@ -108,10 +108,11 @@
         @endhasrole
 
         @hasrole('mahasiswa')
+        {{-- <li class="nav-item nav-category">Mahasiswa</li> --}}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#pkl" aria-expanded="false"
                 aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-account-tie"></i>
+                <i class="menu-icon mdi mdi-briefcase-account"></i>
                 <span class="menu-title">PKL</span>
                 <i class="menu-arrow"></i>
             </a>
@@ -123,11 +124,10 @@
                 </ul>
             </div>
         </li>
-        @endhasrole
 
 
 
-        {{-- <li class="nav-item">
+        <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#sempro" aria-expanded="false" aria-controls="charts">
                 <i class="menu-icon mdi mdi-bookshelf"></i>
                 <span class="menu-title">Sempro</span>
@@ -135,12 +135,13 @@
             </a>
             <div class="collapse" id="sempro">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link  large-text" href="#">Ajukan Judul</a></li>
+                    <li class="nav-item"> <a class="nav-link  large-text"href="{{ route('daftar_sempro') }}">Ajukan Judul</a></li>
                 </ul>
             </div>
         </li>
+        @endhasrole
 
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#ta" aria-expanded="false" aria-controls="tables">
                 <i class="menu-icon mdi mdi-school"></i>
                 <span class="menu-title">TA</span>

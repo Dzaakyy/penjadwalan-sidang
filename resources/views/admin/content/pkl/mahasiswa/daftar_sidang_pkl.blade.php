@@ -110,7 +110,8 @@
                                             @if (!empty($data->r_nilai_bimbingan) && !empty($data->r_nilai_bimbingan->nilai_bimbingan))
                                                 <button type="submit" class="btn btn-primary">Upload</button>
                                             @else
-                                                <span class="badge badge-dark" style="font-weight: bold;">Belum Ada Nilai Bimbingan</span>
+                                                <span class="badge badge-dark" style="font-weight: bold;">Belum Ada Nilai
+                                                    Bimbingan</span>
                                             @endif
 
 
@@ -160,15 +161,88 @@
                                     <label class="col-sm-4 col-form-label" style="font-size: 15px;">Tanggal Sidang</label>
                                     <div class="col-sm-8">
                                         <label class="col-form-label" style="font-size: 15px;">
-                                            &nbsp;&nbsp; {{ $data->tgl_sidang ? \Carbon\Carbon::parse($data->tgl_sidang)->locale('id')->format('d-m-Y') : '-' }}
+                                            &nbsp;&nbsp;
+                                            {{ $data->tgl_sidang? \Carbon\Carbon::parse($data->tgl_sidang)->locale('id')->format('d-m-Y'): '-' }}
                                         </label>
 
                                     </div>
                                 </div>
-
+                                @if (!empty($data->nilai_mahasiswa) && !empty($data->nilai_mahasiswa))
+                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_mhs_pkl }}"
+                                    class="btn btn-primary">
+                                    <span class="bi bi-pencil-square"></span>Lihat Nilai
+                                </a>
+                                @else
+                                    <span class="badge badge-dark" style="font-weight: bold;">Belum Ada Nilai</span>
+                                @endif
                             </div>
                         </div>
                     </div>
+
+
+                     {{-- Modal Nilai PKL --}}
+                     <div class="modal fade" id="nilai{{ $data->id_mhs_pkl }}" data-bs-backdrop="static"
+                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai Pkl ->
+                                        {{ $data->r_usulan_pkl->r_mahasiswa->nama }}
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <form id="nilai_dosen_pembimbing{{ $data->id_mhs_pkl }}">
+
+                                        <div class="form-group">
+                                            <label for="">Nilai Bimbingan - {{ $data->r_dosen_pembimbing->nama_dosen}}</label>
+                                            <input type="text" class="form-control"
+                                                value="{{ $data->r_nilai_bimbingan->nilai_bimbingan ?? '' }}"
+                                                readonly
+                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Nilai Pembimbing Industri - {{ $data->pembimbing_pkl}}</label>
+                                            <input type="text" class="form-control"
+                                                value="{{ $data->nilai_pembimbing_industri ?? '' }}"
+                                                readonly
+                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="">Nilai Pembimbing - {{ $data->r_dosen_pembimbing->nama_dosen }}</label>
+                                            <input type="text" class="form-control"
+                                                value="{{ $data->r_nilai_pembimbing->nilai_pkl ?? '' }}"
+                                                readonly
+                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="">Nilai Penguji- {{ $data->r_dosen_penguji ? $data->r_dosen_penguji->nama_dosen : '-' }}</label>
+                                            <input type="text" class="form-control"
+                                                value="{{ $data->r_nilai_penguji->nilai_pkl ?? '' }}"
+                                                readonly
+                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="nilai_bimbingan">Total Nilai</label>
+                                            <input type="text" class="form-control nilai_bimbingan"
+                                                name="nilai_bimbingan" placeholder="Total Nilai"
+                                                value="{{ $data->nilai_mahasiswa ?? '' }}"
+                                                readonly
+                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 @endif
             @endforeach
         </div>

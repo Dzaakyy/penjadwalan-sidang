@@ -39,4 +39,9 @@ class Mahasiswa extends Model
     {
         return $this->hasOne(UsulanPkl::class, 'mahasiswa_id', 'id_mahasiswa');
     }
+
+    public function r_sempro()
+    {
+        return $this->hasMany(MahasiswaSempro::class, 'mahasiswa_id', 'id_mahasiswa');
+    }
 }

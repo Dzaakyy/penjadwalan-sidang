@@ -170,7 +170,7 @@ class BimbinganPklController extends Controller
     public function delete(string $id)
     {
         $data_pkl = BimbinganPkl::where('id_bimbingan_pkl', $id)->first();
-        if ($data_pkl && $data_pkl->laporan_pkl) {
+        if ($data_pkl && $data_pkl->file_dokumentasi) {
             Storage::delete('public/uploads/mahasiswa/bimbingan/' . $data_pkl->file_dokumentasi);
         }
 

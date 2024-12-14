@@ -65,6 +65,7 @@ class DosenController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
+        $user->assignRole('dosen');
 
         $data = [
             'id_dosen' => $request->id_dosen,
