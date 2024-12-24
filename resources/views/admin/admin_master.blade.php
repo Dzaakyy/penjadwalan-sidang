@@ -106,6 +106,8 @@
     <script src="{{asset('admin/assets/vendors/js/datatables-demo.js') }}"></script>
     <script src="{{asset('admin/assets/js/jquery.cookie.js')}}" type="text/javascript"></script>
     <script src="{{asset('admin/assets/js/dashboard.js')}}"></script>
+    {{-- <script src="{{ asset('admin/assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script> --}}
+    <script src="{{ asset('admin/assets/js/apexchart.js') }}"></script>
     @yield('scripts')
     <!-- <script src="assets/js/Chart.roundedBarCharts.js"></script> -->
     <!-- End custom js for this page-->

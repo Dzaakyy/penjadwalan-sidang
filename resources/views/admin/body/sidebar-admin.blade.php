@@ -1,144 +1,182 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
-        @hasanyrole('superAdmin|admin|dosen|pimpinanJurusan|pimpinanProdi|pembimbing|penguji|mahasiswa')
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('dashboard') }}">
-                <i class="mdi mdi-grid-large menu-icon"></i>
-                <span class="menu-title">Dashboard</span>
-            </a>
-        </li>
+        @hasanyrole('superAdmin|admin|dosen|pimpinanJurusan|pimpinanProdi|pembimbingPkl|pengujiPkl|pembimbingSempro|pengujiSempro|mahasiswa')
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('dashboard') }}">
+                    <i class="mdi mdi-grid-large menu-icon"></i>
+                    <span class="menu-title">Dashboard</span>
+                </a>
+            </li>
         @endhasanyrole
 
         @hasrole('admin')
-        {{-- <li class="nav-item nav-category">Admin</li> --}}
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#master" aria-expanded="false" aria-controls="ui-basic">
-                <i class="menu-icon mdi mdi-floor-plan"></i>
-                <span class="menu-title">Table Master</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="master">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('jurusan') }}">Jurusan</a></li>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('prodi') }}">Prodi</a></li>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('dosen') }}">Dosen</a></li>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('mahasiswa') }}">Mahasiswa</a>
-                    </li>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('ruang') }}">Ruangan</a></li>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('sesi') }}">Sesi</a></li>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('jabatan_pimpinan') }}">Jabatan
-                            Pimpinan</a></li>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('pimpinan') }}">Pimpinan</a>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('thn_ajaran') }}">Tahun Ajaran</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
+            <li class="nav-item nav-category">Admin</li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#master" aria-expanded="false" aria-controls="ui-basic">
+                    <i class="menu-icon mdi mdi-floor-plan"></i>
+                    <span class="menu-title">Table Master</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="master">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('jurusan') }}">Jurusan</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('prodi') }}">Prodi</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('dosen') }}">Dosen</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('mahasiswa') }}">Mahasiswa</a>
+                        </li>
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('ruang') }}">Ruangan</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('sesi') }}">Sesi</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('jabatan_pimpinan') }}">Jabatan
+                                Pimpinan</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('pimpinan') }}">Pimpinan</a>
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('thn_ajaran') }}">Tahun
+                                Ajaran</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
 
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#pkl_admin" aria-expanded="false"
-                aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-briefcase-account"></i>
-                <span class="menu-title">PKL</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="pkl_admin">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('verif_pkl') }}">Verifikasi Berkas PKL</a></li>
-                    {{-- <li class="nav-item"> <a class="nav-link large-text" href="#">Verifikasi Berkas PKL</a></li> --}}
-                </ul>
-            </div>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#pkl_admin" aria-expanded="false"
+                    aria-controls="form-elements">
+                    <i class="menu-icon mdi mdi-briefcase-account"></i>
+                    <span class="menu-title">Verifikasi Berkas</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="pkl_admin">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('verif_pkl') }}">PKL</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text"
+                                href="{{ route('verifikasi_berkas_sempro_admin') }}">Sempro</a></li>
+                        {{-- <li class="nav-item"> <a class="nav-link large-text" href="#">Verifikasi Berkas PKL</a></li> --}}
+                    </ul>
+                </div>
+            </li>
         @endhasrole
 
 
 
         @hasrole('pimpinanProdi')
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#pkl_kaprodi" aria-expanded="false"
-                aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-account-tie"></i>
-                <span class="menu-title">Kepala Prodi</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="pkl_kaprodi">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('tempat_pkl') }}">Tempat PKL</a>
-                    </li>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('konfirmasi_usulan_pkl') }}">Usulan PKL</a></li>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('daftar_sidang_kaprodi') }}">Daftar Sidang PKL</a></li>
-                </ul>
-            </div>
-        </li>
+            <li class="nav-item nav-category">Kepala Prodi</li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#pkl_kaprodi" aria-expanded="false"
+                    aria-controls="form-elements">
+                    <i class="menu-icon mdi mdi-account-tie"></i>
+                    <span class="menu-title">PKL</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="pkl_kaprodi">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('tempat_pkl') }}">Tempat
+                                PKL</a>
+                        </li>
+                        <li class="nav-item"> <a class="nav-link large-text"
+                                href="{{ route('konfirmasi_usulan_pkl') }}">Usulan PKL</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text"
+                                href="{{ route('daftar_sidang_kaprodi') }}">Daftar Sidang PKL</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#sempro_kaprodi" aria-expanded="false"
+                    aria-controls="form-elements">
+                    <i class="menu-icon mdi mdi-bookshelf"></i>
+                    <span class="menu-title">Sempro</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="sempro_kaprodi">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link large-text"
+                                href="{{ route('verifikasi_judul_sempro_kaprodi') }}">Verifikasi Judul</a>
+                        <li class="nav-item"> <a class="nav-link large-text"
+                                href="{{ route('daftar_sidang_sempro_kaprodi') }}">Daftar Sidang</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
         @endhasrole
 
 
-        @hasrole('pembimbing')
-        {{-- <li class="nav-item nav-category">Pembimbing</li> --}}
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#dosen_bimbingan_PKL" aria-expanded="false"
-                aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-handshake"></i>
-                <span class="menu-title">Bimbingan</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="dosen_bimbingan_PKL">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('dosen_bimbingan_pkl') }}">Bimbingan PKL</a></li>
-                </ul>
-            </div>
-        </li>
+        @hasrole('pembimbingPkl')
+            <li class="nav-item nav-category">Pembimbing</li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#dosen_bimbingan_PKL" aria-expanded="false"
+                    aria-controls="form-elements">
+                    <i class="menu-icon mdi mdi-handshake"></i>
+                    <span class="menu-title">Bimbingan PKL</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="dosen_bimbingan_PKL">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link large-text"
+                                href="{{ route('dosen_bimbingan_pkl') }}">Bimbingan PKL</a></li>
+                    </ul>
+                </div>
+            </li>
         @endhasrole
 
-        @hasrole('pembimbing|penguji')
-        {{-- <li class="nav-item nav-category">Sidang</li> --}}
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#sidang_pkl" aria-expanded="false"
-                aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-gavel"></i>
-                <span class="menu-title">Sidang</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="sidang_pkl">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('nilai_sidang_pkl') }}">Sidang PKL</a></li>
-                </ul>
-            </div>
-        </li>
-        @endhasrole
+        @hasanyrole('pembimbingPkl|pengujiPkl|pembimbingSempro|pengujiSempro')
+            <li class="nav-item nav-category">Pembimbing | Penguji</li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#sidang" aria-expanded="false"
+                    aria-controls="form-elements">
+                    <i class="menu-icon mdi mdi-gavel"></i>
+                    <span class="menu-title">Sidang</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                @hasrole('pembimbingPkl|pengujiPkl')
+                    <div class="collapse" id="sidang">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link large-text"
+                                    href="{{ route('nilai_sidang_pkl') }}">PKL</a></li>
+                        @endhasrole
+                        @hasrole('pembimbingSempro|pengujiSempro')
+                            <li class="nav-item"> <a class="nav-link large-text"
+                                    href="{{ route('nilai_sidang_sempro') }}">Sempro</a></li>
+                        @endhasrole
+                    </ul>
+                </div>
+            </li>
+        @endhasanyrole
 
         @hasrole('mahasiswa')
-        {{-- <li class="nav-item nav-category">Mahasiswa</li> --}}
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#pkl" aria-expanded="false"
-                aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-briefcase-account"></i>
-                <span class="menu-title">PKL</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="pkl">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('usulan_pkl') }}">Usulan PKL</a></li>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('bimbingan_pkl') }}">Bimbingan PKL</a></li>
-                    <li class="nav-item"> <a class="nav-link large-text" href="{{ route('daftar_sidang') }}">Daftar Sidang</a></li>
-                </ul>
-            </div>
-        </li>
+            {{-- <li class="nav-item nav-category">Mahasiswa</li> --}}
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#pkl" aria-expanded="false"
+                    aria-controls="form-elements">
+                    <i class="menu-icon mdi mdi-briefcase-account"></i>
+                    <span class="menu-title">PKL</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="pkl">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('usulan_pkl') }}">Usulan
+                                PKL</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text"
+                                href="{{ route('bimbingan_pkl') }}">Bimbingan PKL</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('daftar_sidang') }}">Daftar
+                                Sidang</a></li>
+                    </ul>
+                </div>
+            </li>
 
 
 
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#sempro" aria-expanded="false" aria-controls="charts">
-                <i class="menu-icon mdi mdi-bookshelf"></i>
-                <span class="menu-title">Sempro</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="sempro">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link  large-text"href="{{ route('daftar_sempro') }}">Ajukan Judul</a></li>
-                </ul>
-            </div>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#sempro" aria-expanded="false"
+                    aria-controls="charts">
+                    <i class="menu-icon mdi mdi-bookshelf"></i>
+                    <span class="menu-title">Sempro</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="sempro">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link  large-text"href="{{ route('daftar_sempro') }}">Daftar
+                                Sempro</a></li>
+                    </ul>
+                </div>
+            </li>
         @endhasrole
 
         {{-- <li class="nav-item">

@@ -15,32 +15,66 @@ class DaftarSemproController extends Controller
     {
         $mahasiswa = Auth::user()->r_mahasiswa;
         $nextNumber = $this->getCariNomor();
-
         $data_mahasiswa_sempro = MahasiswaSempro::all();
         return view('admin.content.sempro.mahasiswa.daftar_sempro', compact('data_mahasiswa_sempro', 'nextNumber', 'mahasiswa'));
     }
 
 
 
+    // public function store(Request $request)
+    // {
+    //     // dd($request->all());
+    //     $validator = Validator::make($request->all(), [
+    //         'id_sempro' => 'required',
+    //         'mahasiswa_id' => 'required|exists:mahasiswa,id_mahasiswa',
+    //         'judul' => 'required',
+    //         // 'file_sempro' => 'required|file',
+    //     ]);
+
+
+    //     if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
+
+
+    //     $data = [
+    //         'id_sempro' => $request->id_sempro,
+    //         'mahasiswa_id' => $request->mahasiswa_id,
+    //         'judul' => $request->judul,
+    //         // 'file_sempro' => $request->file_sempro,
+    //     ];
+
+    //     // if ($request->hasFile('file_sempro')) {
+    //     //     $file = $request->file('file_sempro');
+    //     //     $filename = $file->getClientOriginalName();
+    //     //     $path = 'public/uploads/mahasiswa/sempro/';
+    //     //     $file->storeAs($path, $filename);
+
+    //     //     $data['file_sempro'] = $filename;
+    //     // }
+    //     MahasiswaSempro::create($data);
+    //     return redirect()->route('daftar_sempro')->with('success', 'Data berhasil ditambahkan.');
+    // }
+
     public function store(Request $request)
     {
+
         // dd($request->all());
         $validator = Validator::make($request->all(), [
             'id_sempro' => 'required',
             'mahasiswa_id' => 'required|exists:mahasiswa,id_mahasiswa',
-            'judul' => 'required',
-            'file_sempro' => 'required|file',
+            // 'judul' => 'required',
+
         ]);
 
-
-        if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
-
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
 
         $data = [
             'id_sempro' => $request->id_sempro,
             'mahasiswa_id' => $request->mahasiswa_id,
             'judul' => $request->judul,
             'file_sempro' => $request->file_sempro,
+            'status_judul' => $request->status_judul,
         ];
 
         if ($request->hasFile('file_sempro')) {
@@ -49,11 +83,31 @@ class DaftarSemproController extends Controller
             $path = 'public/uploads/mahasiswa/sempro/';
             $file->storeAs($path, $filename);
 
-            $data['file_sempro'] = $filename;
+
+            if (file_exists(storage_path('app/' . $path . $filename))) {
+                $data['file_sempro'] = $filename;
+            } else {
+
+                return back()->with('error', 'Gagal mengunggah file');
+            }
         }
-        MahasiswaSempro::create($data);
-        return redirect()->route('daftar_sempro')->with('success', 'Data berhasil ditambahkan.');
+
+
+        $mahasiswaSempro = MahasiswaSempro::where('mahasiswa_id', $request->mahasiswa_id)->first();
+
+        if ($mahasiswaSempro) {
+
+            $mahasiswaSempro->update($data);
+            $message = 'Data berhasil diupdate.';
+        } else {
+
+            MahasiswaSempro::create($data);
+            $message = 'Data berhasil ditambahkan.';
+        }
+
+        return redirect()->route('daftar_sempro')->with('success', $message);
     }
+
 
 
     public function update(Request $request, string $id)
@@ -61,7 +115,7 @@ class DaftarSemproController extends Controller
         $validator = Validator::make($request->all(), [
             'id_sempro' => 'required',
             'mahasiswa_id' => 'required|exists:mahasiswa,id_mahasiswa',
-            'judul' => 'required'
+            // 'judul' => 'required'
 
         ]);
 
@@ -70,7 +124,7 @@ class DaftarSemproController extends Controller
         $data = [
             'id_sempro' => $request->id_sempro,
             'mahasiswa_id' => $request->mahasiswa_id,
-            'judul' => $request->judul,
+            // 'judul' => $request->judul,
         ];
 
 
@@ -78,7 +132,6 @@ class DaftarSemproController extends Controller
         if ($oldData->file_sempro !== null && $request->hasFile('file_sempro')) {
             Storage::delete('public/uploads/mahasiswa/sempro/' . $oldData->file_sempro);
         }
-
 
         if ($request->hasFile('file_sempro')) {
             $file = $request->file('file_sempro');
@@ -94,7 +147,7 @@ class DaftarSemproController extends Controller
             $mhs_sempro->update($data);
         }
 
-        return redirect()->route('daftar_sempro')->with('success', 'Data berhasil diganti.');
+        return redirect()->route('daftar_sempro')->with('success', 'File Berhasil DiUpload.');
     }
 
 

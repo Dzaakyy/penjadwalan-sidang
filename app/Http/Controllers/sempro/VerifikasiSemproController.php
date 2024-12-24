@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sempro;
 
 use App\Models\Sesi;
+use App\Models\User;
 use App\Models\Dosen;
 use App\Models\Ruang;
 use App\Models\Pimpinan;
@@ -13,38 +14,33 @@ use Illuminate\Support\Facades\Auth;
 
 class VerifikasiSemproController extends Controller
 {
+
     public function index()
     {
+        $data_mahasiswa_sempro = MahasiswaSempro::all();
 
-        $getDosen = Auth::user()->r_dosen->id_dosen;
-
-        $Kaprodi = Pimpinan::where('dosen_id', $getDosen)
-            ->whereHas('r_jabatan_pimpinan', function ($query) {
-                $query->where('kode_jabatan_pimpinan', 'Kaprodi');
-            })
-            ->whereHas('r_dosen', function ($query) {
-                $query->where('prodi_id', Auth::user()->r_dosen->prodi_id);
-            })
-            ->exists();
-        // $nextNumber = $this->getCariNomor();
-
-        $prodiId = Auth::user()->r_dosen->prodi_id;
-
-        $data_mahasiswa_sempro = MahasiswaSempro::with('r_mahasiswa', 'pembimbing_satu', 'pembimbing_dua', 'penguji', 'r_ruangan', 'r_sesi')
-            ->whereHas('r_mahasiswa', function ($query) use ($prodiId) {
-                $query->where('prodi_id', $prodiId);
-            })
-            ->orderByDesc('id_sempro')
-            ->get();
-
-        $data_ruangan = Ruang::all();
-        $dosen_penguji = Dosen::all();
-        $jam_sidang = Sesi::all();
-        $data_sempro = MahasiswaSempro::all();
-
-        return view('admin.content.sempro.kaprodi.verifikasi_sempro', compact('data_ruangan', 'data_mahasiswa_sempro', 'dosen_penguji', 'jam_sidang'));
+        return view('admin.content.sempro.admin.verifikasi_sempro', compact('data_mahasiswa_sempro'));
     }
 
-    
+
+
+
+    public function update(Request $request, $id)
+    {
+
+        // dd($request->all());
+
+        $request->validate([
+            'status_berkas' => 'required|in:0,1',
+        ]);
+
+        $mahasiswa_sempro = MahasiswaSempro::findOrFail($id);
+        $mahasiswa_sempro->status_berkas = $request->status_berkas;
+        $mahasiswa_sempro->save();
+
+        return redirect()->back()->with('success', 'Data berhasil diverifikasi');
+    }
+
+
 
 }

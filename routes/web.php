@@ -23,6 +23,10 @@ use App\Http\Controllers\pkl\TempatPklController;
 use App\Http\Controllers\pkl\UsulanPklController;
 use App\Http\Controllers\pkl\VerifPklController;
 use App\Http\Controllers\Sempro\DaftarSemproController;
+use App\Http\Controllers\Sempro\DaftarSidangSemproController;
+use App\Http\Controllers\Sempro\NilaiSidangSemproController;
+use App\Http\Controllers\Sempro\VerifikasiJudulSemproController;
+use App\Http\Controllers\Sempro\VerifikasiSemproController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +62,7 @@ Route::middleware('auth')->group(function () {
 
 
 
-// admin
+// dasboard
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 });
@@ -274,12 +278,38 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 // ------------------------------------------------------ Sempro ------------------------------------------------------
+
+// Mahasiswa
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/daftar_sempro', [DaftarSemproController::class, 'index'])->middleware(['auth', 'verified'])->name('daftar_sempro');
-    Route::POST('/daftar_sempro/mahasiswa/', [DaftarSemproController::class, 'store'])->middleware(['auth', 'verified'])->name('daftar_sempro.post');
+    Route::put('/daftar_sempro/mahasiswa/', [DaftarSemproController::class, 'store'])->middleware(['auth', 'verified'])->name('daftar_sempro.post');
     Route::put('/daftar_sempro/mahasiswa/update/{id}', [DaftarSemproController::class, 'update'])->middleware(['auth', 'verified'])->name('daftar_sempro.update');
     Route::delete('/daftar_sempro/mahasiswa/delete/{id}', [DaftarSemproController::class, 'delete'])->middleware(['auth', 'verified'])->name('daftar_sempro.delete');
 });
 
+
+// Kaprodi
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/verifikasi-judul-sempro', [VerifikasiJudulSemproController::class, 'index'])->middleware(['auth', 'verified'])->name('verifikasi_judul_sempro_kaprodi');
+    Route::put('/verifikasi-judul-sempro/kaprodi/update/{id}', [VerifikasiJudulSemproController::class, 'update'])->middleware(['auth', 'verified'])->name('verifikasi_judul_sempro_kaprodi.update');
+    Route::get('/get-existing-schedules', [DaftarSidangSemproController::class, 'getExistingSchedules']);
+    Route::get('/daftar-sidang-sempro', [DaftarSidangSemproController::class, 'index'])->middleware(['auth', 'verified'])->name('daftar_sidang_sempro_kaprodi');
+    Route::put('/daftar-sidang-sempro/kaprodi/update/{id}', [DaftarSidangSemproController::class, 'update'])->middleware(['auth', 'verified'])->name('daftar_sidang_sempro_kaprodi.update');
+    Route::get('/cetak-surat-tugas-sempro/download/{id}', [DaftarSidangSemproController::class, 'download_pdf'])->name('cetak_surat_tugas_sempro.download');
+});
+
+// Admin
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/verifikasi-berkas-sempro', [VerifikasiSemproController::class, 'index'])->middleware(['auth', 'verified'])->name('verifikasi_berkas_sempro_admin');
+    Route::put('/verifikasi-berkas-sempro/kaprodi/update/{id}', [VerifikasiSemproController::class, 'update'])->middleware(['auth', 'verified'])->name('verifikasi_berkas_sempro_admin.update');
+
+});
+
+// Nilai Sidang Sempro
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/nilai_sidang_sempro', [NilaiSidangSemproController::class, 'index'])->middleware(['auth', 'verified'])->name('nilai_sidang_sempro');
+    Route::post('/nilai_sidang_sempro/nilai/{id}', [NilaiSidangSemproController::class, 'nilai_sidang_sempro'])->middleware(['auth', 'verified'])->name('nilai_sidang_sempro.post');
+    Route::put('/nilai_sidang_sempro/edit/nilai/{id}', [NilaiSidangSemproController::class, 'nilai_sidang_sempro'])->middleware(['auth', 'verified'])->name('nilai_sidang_sempro.update');
+});
 
 require __DIR__ . '/auth.php';

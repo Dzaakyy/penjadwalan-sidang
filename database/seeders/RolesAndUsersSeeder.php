@@ -24,8 +24,10 @@ class RolesAndUsersSeeder extends Seeder
         $dosenRole = Role::firstOrCreate(['name' => 'dosen']);
         $pimpinanJurusanRole = Role::firstOrCreate(['name' => 'pimpinanJurusan']);
         $pimpinanProdiRole = Role::firstOrCreate(['name' => 'pimpinanProdi']);
-        $pembimbingRole = Role::firstOrCreate(['name' => 'pembimbing']);
-        $pengujiRole = Role::firstOrCreate(['name' => 'penguji']);
+        $pembimbingPklRole = Role::firstOrCreate(['name' => 'pembimbingPkl']);
+        $pengujiPklRole = Role::firstOrCreate(['name' => 'pengujiPkl']);
+        $pembimbingSemproRole = Role::firstOrCreate(['name' => 'pembimbingSempro']);
+        $pengujiSemproRole = Role::firstOrCreate(['name' => 'pengujiSempro']);
         $mahasiswaRole = Role::firstOrCreate(['name' => 'mahasiswa']);
 
         // Mengaitkan peran dengan pengguna
@@ -89,11 +91,11 @@ class RolesAndUsersSeeder extends Seeder
                 }
 
                 if (in_array($dosen->id_dosen, $pembimbingDosenIds->toArray())) {
-                    $existingUser->assignRole($pembimbingRole);
+                    $existingUser->assignRole($pembimbingPklRole);
                 }
 
                 if (in_array($dosen->id_dosen, $pengujiDosenIds->toArray())) {
-                    $existingUser->assignRole($pengujiRole);
+                    $existingUser->assignRole($pengujiPklRole);
                 }
 
             } else {
@@ -113,11 +115,11 @@ class RolesAndUsersSeeder extends Seeder
                 }
 
                 if (in_array($dosen->id_dosen, $pembimbingDosenIds->toArray())) {
-                    $existingUser->assignRole($pembimbingRole);
+                    $existingUser->assignRole($pembimbingPklRole);
                 }
 
                 if (in_array($dosen->id_dosen, $pengujiDosenIds->toArray())) {
-                    $existingUser->assignRole($pengujiRole);
+                    $existingUser->assignRole($pengujiPklRole);
                 }
 
             }

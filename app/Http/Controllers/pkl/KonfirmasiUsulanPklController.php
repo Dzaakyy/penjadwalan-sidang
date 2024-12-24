@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\pkl;
 
+use App\Models\User;
 use App\Models\Dosen;
 use App\Models\Pimpinan;
 use App\Models\Mahasiswa;
@@ -162,6 +163,19 @@ class KonfirmasiUsulanPklController extends Controller
             'tahun_pkl' => $request->tahun_pkl,
             'dosen_pembimbing' => $request->dosen_pembimbing,
         ]);
+
+        $dosen = Dosen::find($request->dosen_pembimbing);
+
+        if ($dosen) {
+            $user = User::where('email', $dosen->r_user->email)->first();
+
+            if ($user) {
+                if (!$user->hasRole('pembimbingPkl  ')) {
+                    $user->assignRole('pembimbingPkl');
+                }
+            }
+        }
+
 
 
         return redirect()->route('konfirmasi_usulan_pkl')->with('success', 'Usulan PKL berhasil dikonfirmasi dan Pembimbing Sudah Dipilih!');

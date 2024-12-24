@@ -79,12 +79,9 @@
                                             @endif
                                         @endif
                                     </td>
-
-
-
-
-
                                 </tr>
+                            </tbody>
+                        </table>
 
 
                                 {{-- Modal Nilai Sidang --}}
@@ -319,8 +316,7 @@
                                 </div>
                             @endif
                         @endforeach
-                    </tbody>
-                </table>
+
             </div>
         </div>
     </div>

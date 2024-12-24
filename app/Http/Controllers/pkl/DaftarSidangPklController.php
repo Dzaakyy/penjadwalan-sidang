@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\pkl;
 
 use App\Models\Sesi;
+use App\Models\User;
 use App\Models\Dosen;
 use App\Models\Ruang;
+use App\Models\Pimpinan;
 use App\Models\MahasiswaPkl;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Pimpinan;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class DaftarSidangPklController extends Controller
@@ -68,6 +69,18 @@ class DaftarSidangPklController extends Controller
         $mahasiswaPkl->tgl_sidang = $request->tgl_sidang;
         $mahasiswaPkl->jam_sidang = $request->jam_sidang;
         $mahasiswaPkl->save();
+
+        $dosen = Dosen::find($request->dosen_penguji);
+
+        if ($dosen) {
+            $user = User::where('email', $dosen->r_user->email)->first();
+
+            if ($user) {
+                if (!$user->hasRole('pengujiPkl')) {
+                    $user->assignRole('pengujiPkl');
+                }
+            }
+        }
 
 
         return redirect()->back()->with('success', 'Pendaftaran sidang berhasil ditambahkan');
