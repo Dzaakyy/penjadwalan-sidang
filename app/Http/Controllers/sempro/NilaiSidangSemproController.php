@@ -39,8 +39,6 @@ class NilaiSidangSemproController extends Controller
             ->distinct('mahasiswa_id')
             ->get();
 
-
-
         $data_dosen_penguji_sempro = MahasiswaSempro::with([
             'r_mahasiswa',
             'r_penguji',
@@ -57,6 +55,7 @@ class NilaiSidangSemproController extends Controller
         $nextNumber = $this->getCariNomor();
 
         $mahasiswaSempro = $data_dosen_sempro->first();
+
         $isPembimbingSatu = $mahasiswaSempro && $mahasiswaSempro->pembimbing_satu == $dosen_penilai;
         $isPembimbingDua = $mahasiswaSempro && $mahasiswaSempro->pembimbing_dua == $dosen_penilai;
         $isPenguji = $mahasiswaSempro && $mahasiswaSempro->penguji == $dosen_penilai;

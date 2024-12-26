@@ -277,7 +277,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 
-// ------------------------------------------------------ Sempro ------------------------------------------------------
+// ------------------------------------------------------ Sempro ---------------------------------------------------------------------------------------------------------------------------------------
 
 // Mahasiswa
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -292,8 +292,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/verifikasi-judul-sempro', [VerifikasiJudulSemproController::class, 'index'])->middleware(['auth', 'verified'])->name('verifikasi_judul_sempro_kaprodi');
     Route::put('/verifikasi-judul-sempro/kaprodi/update/{id}', [VerifikasiJudulSemproController::class, 'update'])->middleware(['auth', 'verified'])->name('verifikasi_judul_sempro_kaprodi.update');
-    Route::get('/get-existing-schedules', [DaftarSidangSemproController::class, 'getExistingSchedules']);
     Route::get('/daftar-sidang-sempro', [DaftarSidangSemproController::class, 'index'])->middleware(['auth', 'verified'])->name('daftar_sidang_sempro_kaprodi');
+    Route::get('/get-available-dates', [DaftarSidangSemproController::class, 'getAvailableDates']);
+    Route::get('/get-available-rooms-and-sessions', [DaftarSidangSemproController::class, 'getAvailableRoomsAndSessions']);
+    Route::get('/get-available-rooms', [DaftarSidangSemproController::class, 'getAvailableRooms']);
+    Route::get('/get-available-sessions', [DaftarSidangSemproController::class, 'getAvailableSessions']);
     Route::put('/daftar-sidang-sempro/kaprodi/update/{id}', [DaftarSidangSemproController::class, 'update'])->middleware(['auth', 'verified'])->name('daftar_sidang_sempro_kaprodi.update');
     Route::get('/cetak-surat-tugas-sempro/download/{id}', [DaftarSidangSemproController::class, 'download_pdf'])->name('cetak_surat_tugas_sempro.download');
 });
