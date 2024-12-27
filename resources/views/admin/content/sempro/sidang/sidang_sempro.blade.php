@@ -90,49 +90,50 @@
                                     </td> --}}
 
                                     <td>
-                                        @if ($isPembimbingSatu)
+                                        @php
+                                            $roles = $rolesPerMahasiswa[$data->mahasiswa_id] ?? ['isPembimbingSatu' => false, 'isPembimbingDua' => false, 'isPenguji' => false];
+                                        @endphp
+
+                                        @if ($roles['isPembimbingSatu'])
                                             @if (isset($data->r_nilai_pembimbing_satu) &&
                                                     !is_null($data->r_nilai_pembimbing_satu->nilai_sempro) &&
                                                     $data->r_nilai_pembimbing_satu->status == 0)
-                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_sempro }}"
-                                                    class="btn btn-success">
+                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_sempro }}" class="btn btn-success">
                                                     <span class="bi bi-pencil-square"></span> Edit
                                                 </a>
                                             @else
-                                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_sempro }}"
-                                                    class="btn btn-primary">
+                                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_sempro }}" class="btn btn-primary">
                                                     <span class="bi bi-pencil-square"></span> Nilai
                                                 </a>
                                             @endif
-                                        @elseif ($isPembimbingDua)
+                                        @elseif ($roles['isPembimbingDua'])
                                             @if (isset($data->r_nilai_pembimbing_dua) &&
                                                     !is_null($data->r_nilai_pembimbing_dua->nilai_sempro) &&
                                                     $data->r_nilai_pembimbing_dua->status == 1)
-                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_sempro }}"
-                                                    class="btn btn-success">
+                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_sempro }}" class="btn btn-success">
                                                     <span class="bi bi-pencil-square"></span> Edit
                                                 </a>
                                             @else
-                                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_sempro }}"
-                                                    class="btn btn-primary">
+                                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_sempro }}" class="btn btn-primary">
                                                     <span class="bi bi-pencil-square"></span> Nilai
                                                 </a>
                                             @endif
-                                        @elseif ($isPenguji)
+                                        @elseif ($roles['isPenguji'])
                                             @if (isset($data->r_nilai_penguji) &&
                                                     !is_null($data->r_nilai_penguji->nilai_sempro) &&
                                                     $data->r_nilai_penguji->status == 2)
-                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_sempro }}"
-                                                    class="btn btn-success">
+                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_sempro }}" class="btn btn-success">
                                                     <span class="bi bi-pencil-square"></span> Edit
-                                                @else
-                                                    <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_sempro }}"
-                                                        class="btn btn-primary">
-                                                        <span class="bi bi-pencil-square"></span> Nilai
-                                                    </a>
+                                                </a>
+                                            @else
+                                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_sempro }}" class="btn btn-primary">
+                                                    <span class="bi bi-pencil-square"></span> Nilai
+                                                </a>
                                             @endif
                                         @endif
                                     </td>
+
+
                                 </tr>
                             @endif
                         @endforeach
@@ -141,6 +142,14 @@
 
 
                 @foreach ($data_dosen_sempro as $data)
+                @php
+
+                $roles = $rolesPerMahasiswa[$data->mahasiswa_id] ?? [
+                    'isPembimbingSatu' => false,
+                    'isPembimbingDua' => false,
+                    'isPenguji' => false,
+                ];
+            @endphp
                 <div class="modal fade" id="nilai{{ $data->id_sempro }}" data-bs-backdrop="static" data-bs-keyboard="false"
                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -192,11 +201,11 @@
                                                 <td>
                                                     <input type="number" class="form-control pendahuluan"
                                                         name="pendahuluan" placeholder="Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->pendahuluan ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->pendahuluan ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->pendahuluan ?? ''
                                                                     : '')) }}"
                                                         required oninput="hitungTotalNilai(this)">
@@ -213,11 +222,11 @@
                                                 <td>
                                                     <input type="number" class="form-control tinjauan_pustaka"
                                                         name="tinjauan_pustaka" placeholder="Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->tinjauan_pustaka ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->tinjauan_pustaka ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->tinjauan_pustaka ?? ''
                                                                     : '')) }}"
                                                         required oninput="hitungTotalNilai(this)">
@@ -235,11 +244,11 @@
                                                 <td>
                                                     <input type="number" class="form-control metodologi" name="metodologi"
                                                         placeholder="Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->metodologi ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->metodologi ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->metodologi ?? ''
                                                                     : '')) }}"
                                                         required oninput="hitungTotalNilai(this)">
@@ -256,11 +265,11 @@
                                                 <td>
                                                     <input type="number" class="form-control penggunaan_bahasa"
                                                         name="penggunaan_bahasa" placeholder="Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->penggunaan_bahasa ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->penggunaan_bahasa ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->penggunaan_bahasa ?? ''
                                                                     : '')) }}"
                                                         required oninput="hitungTotalNilai(this)">
@@ -276,11 +285,11 @@
                                                 <td>
                                                     <input type="number" class="form-control presentasi"
                                                         name="presentasi" placeholder="Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->presentasi ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->presentasi ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->presentasi ?? ''
                                                                     : '')) }}"
                                                         required oninput="hitungTotalNilai(this)">
@@ -291,11 +300,11 @@
                                                 <td>
                                                     <input type="text" class="form-control nilai_sempro"
                                                         name="nilai_sempro" placeholder="Total Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->nilai_sempro ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->nilai_sempro ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->nilai_sempro ?? ''
                                                                     : '')) }}"
                                                         readonly
@@ -305,7 +314,7 @@
 
 
                                             <input type="hidden" name="status"
-                                                value="{{ $data->status ?? ($isPembimbingSatu ? '0' : ($isPembimbingDua ? '1' : ($isPenguji ? '2' : ''))) }}">
+                                                value="{{ $data->status ?? ($roles ['isPembimbingSatu'] ? '0' : ($roles ['isPembimbingDua'] ? '1' : ($roles ['isPenguji'] ? '2' : ''))) }}">
                                     </table>
 
                                     <div class="modal-footer text-end">
@@ -342,15 +351,15 @@
                                     <div class="form-group">
                                         <input type="hidden" class="form-control" id="id_nilai_sempro"
                                             name="id_nilai_sempro"
-                                            value="{{ $isPembimbingSatu
+                                            value="{{$roles ['isPembimbingSatu']
                                                 ? (isset($data->r_nilai_pembimbing_satu)
                                                     ? $data->r_nilai_pembimbing_satu->id_nilai_sempro
                                                     : '')
-                                                : ($isPembimbingDua
+                                                : ($roles ['isPembimbingDua']
                                                     ? (isset($data->r_nilai_pembimbing_dua)
                                                         ? $data->r_nilai_pembimbing_dua->id_nilai_sempro
                                                         : '')
-                                                    : ($isPenguji
+                                                    : ($roles ['isPenguji']
                                                         ? (isset($data->r_nilai_penguji)
                                                             ? $data->r_nilai_penguji->id_nilai_sempro
                                                             : '')
@@ -386,11 +395,11 @@
                                                 <td>
                                                     <input type="number" class="form-control pendahuluan"
                                                         name="pendahuluan" placeholder="Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->pendahuluan ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->pendahuluan ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->pendahuluan ?? ''
                                                                     : '')) }}"
                                                         required oninput="hitungTotalNilai(this)">
@@ -407,11 +416,11 @@
                                                 <td>
                                                     <input type="number" class="form-control tinjauan_pustaka"
                                                         name="tinjauan_pustaka" placeholder="Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->tinjauan_pustaka ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->tinjauan_pustaka ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->tinjauan_pustaka ?? ''
                                                                     : '')) }}"
                                                         required oninput="hitungTotalNilai(this)">
@@ -429,11 +438,11 @@
                                                 <td>
                                                     <input type="number" class="form-control metodologi"
                                                         name="metodologi" placeholder="Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->metodologi ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->metodologi ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->metodologi ?? ''
                                                                     : '')) }}"
                                                         required oninput="hitungTotalNilai(this)">
@@ -450,11 +459,11 @@
                                                 <td>
                                                     <input type="number" class="form-control penggunaan_bahasa"
                                                         name="penggunaan_bahasa" placeholder="Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->penggunaan_bahasa ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->penggunaan_bahasa ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->penggunaan_bahasa ?? ''
                                                                     : '')) }}"
                                                         required oninput="hitungTotalNilai(this)">
@@ -470,11 +479,11 @@
                                                 <td>
                                                     <input type="number" class="form-control presentasi"
                                                         name="presentasi" placeholder="Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->presentasi ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->presentasi ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->presentasi ?? ''
                                                                     : '')) }}"
                                                         required oninput="hitungTotalNilai(this)">
@@ -485,11 +494,11 @@
                                                 <td>
                                                     <input type="text" class="form-control nilai_sempro"
                                                         name="nilai_sempro" placeholder="Total Nilai"
-                                                        value="{{ $isPembimbingSatu
+                                                        value="{{$roles ['isPembimbingSatu']
                                                             ? $data->r_nilai_pembimbing_satu->nilai_sempro ?? ''
-                                                            : ($isPembimbingDua
+                                                            : ($roles ['isPembimbingDua']
                                                                 ? $data->r_nilai_pembimbing_dua->nilai_sempro ?? ''
-                                                                : ($isPenguji
+                                                                : ($roles ['isPenguji']
                                                                     ? $data->r_nilai_penguji->nilai_sempro ?? ''
                                                                     : '')) }}"
                                                         readonly
@@ -499,7 +508,7 @@
 
 
                                             <input type="hidden" name="status"
-                                                value="{{ $data->status ?? ($isPembimbingSatu ? '0' : ($isPembimbingDua ? '1' : ($isPenguji ? '2' : ''))) }}">
+                                                value="{{ $data->status ?? ($roles ['isPembimbingSatu'] ? '0' : ($roles ['isPembimbingDua'] ? '1' : ($roles ['isPenguji'] ? '2' : ''))) }}">
                                     </table>
 
                                     <div class="modal-footer text-end">

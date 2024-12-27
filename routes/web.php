@@ -27,6 +27,11 @@ use App\Http\Controllers\Sempro\DaftarSidangSemproController;
 use App\Http\Controllers\Sempro\NilaiSidangSemproController;
 use App\Http\Controllers\Sempro\VerifikasiJudulSemproController;
 use App\Http\Controllers\Sempro\VerifikasiSemproController;
+use App\Http\Controllers\Ta\AccPembimbingController;
+use App\Http\Controllers\Ta\DaftarSidangTaController;
+use App\Http\Controllers\Ta\DaftarTaController;
+use App\Http\Controllers\Ta\VerifikasiBerkaController;
+use App\Http\Controllers\Ta\VerifikasiBerkasTAController;
 
 /*
 |--------------------------------------------------------------------------
@@ -294,7 +299,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/verifikasi-judul-sempro/kaprodi/update/{id}', [VerifikasiJudulSemproController::class, 'update'])->middleware(['auth', 'verified'])->name('verifikasi_judul_sempro_kaprodi.update');
     Route::get('/daftar-sidang-sempro', [DaftarSidangSemproController::class, 'index'])->middleware(['auth', 'verified'])->name('daftar_sidang_sempro_kaprodi');
     Route::get('/get-available-dates', [DaftarSidangSemproController::class, 'getAvailableDates']);
-    Route::get('/get-available-rooms-and-sessions', [DaftarSidangSemproController::class, 'getAvailableRoomsAndSessions']);
     Route::get('/get-available-rooms', [DaftarSidangSemproController::class, 'getAvailableRooms']);
     Route::get('/get-available-sessions', [DaftarSidangSemproController::class, 'getAvailableSessions']);
     Route::put('/daftar-sidang-sempro/kaprodi/update/{id}', [DaftarSidangSemproController::class, 'update'])->middleware(['auth', 'verified'])->name('daftar_sidang_sempro_kaprodi.update');
@@ -314,5 +318,46 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/nilai_sidang_sempro/nilai/{id}', [NilaiSidangSemproController::class, 'nilai_sidang_sempro'])->middleware(['auth', 'verified'])->name('nilai_sidang_sempro.post');
     Route::put('/nilai_sidang_sempro/edit/nilai/{id}', [NilaiSidangSemproController::class, 'nilai_sidang_sempro'])->middleware(['auth', 'verified'])->name('nilai_sidang_sempro.update');
 });
+
+
+
+
+
+// =================================================================================== TA ========================================================================================================================
+
+// Mahasiswa
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/daftar_ta', [DaftarTaController::class, 'index'])->middleware(['auth', 'verified'])->name('daftar_ta');
+    Route::put('/daftar_ta/mahasiswa/', [DaftarTaController::class, 'store'])->middleware(['auth', 'verified'])->name('daftar_ta.post');
+    Route::get('/get-pembimbing/{mahasiswa_id}', [DaftarTaController::class, 'getPembimbing']);
+});
+
+
+// Admin
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/verifikasi-berkas-ta', [VerifikasiBerkasTAController::class, 'index'])->middleware(['auth', 'verified'])->name('verifikasi_berkas_ta_admin');
+    Route::put('/verifikasi-berkas-ta/admin/update/{id}', [VerifikasiBerkasTAController::class, 'update'])->middleware(['auth', 'verified'])->name('verifikasi_berkas_ta_admin.update');
+
+});
+
+
+// Pembimbing
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/acc-pembimbing', [AccPembimbingController::class, 'index'])->middleware(['auth', 'verified'])->name('acc_pembimbing');
+    Route::put('/acc-pembimbing-satu/update/{id}', [AccPembimbingController::class, 'update_pembimbing_satu'])->middleware(['auth', 'verified'])->name('acc_pembimbing_satu.update');
+    Route::put('/acc-pembimbing-dua/update/{id}', [AccPembimbingController::class, 'update_pembimbing_dua'])->middleware(['auth', 'verified'])->name('acc_pembimbing_dua.update');
+
+});
+
+// Kaprodi
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/daftar-sidang-ta', [DaftarSidangTaController::class, 'index'])->middleware(['auth', 'verified'])->name('daftar_sidang_ta_kaprodi');
+    Route::get('/get-available-dates-ta', [DaftarSidangTaController::class, 'getAvailableDates']);
+    Route::get('/get-available-rooms-ta', [DaftarSidangTaController::class, 'getAvailableRooms']);
+    Route::get('/get-available-sessions-ta', [DaftarSidangTaController::class, 'getAvailableSessions']);
+    Route::put('/daftar-sidang-ta/kaprodi/update/{id}', [DaftarSidangTaController::class, 'update'])->middleware(['auth', 'verified'])->name('daftar_sidang_ta_kaprodi.update');
+    Route::get('/cetak-surat-tugas-ta/download/{id}', [DaftarSidangTaController::class, 'download_pdf'])->name('cetak_surat_tugas_ta.download');
+});
+
 
 require __DIR__ . '/auth.php';

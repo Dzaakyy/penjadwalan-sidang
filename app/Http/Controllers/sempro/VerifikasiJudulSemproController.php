@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Sempro;
 
+use App\Models\User;
 use App\Models\Dosen;
 use App\Models\Pimpinan;
 use Illuminate\Http\Request;
@@ -56,6 +57,23 @@ class VerifikasiJudulSemproController extends Controller
         $mahasiswa_sempro->status_judul = $request->status_judul;
         $mahasiswa_sempro->pembimbing_satu = $request->status_judul == 2 ? $request->pembimbing_satu : null;
         $mahasiswa_sempro->pembimbing_dua = $request->status_judul == 2 ? $request->pembimbing_dua : null;
+
+        $pembimbing_ids = [$request->pembimbing_satu, $request->pembimbing_dua];
+        foreach ($pembimbing_ids as $pembimbing_id) {
+            $dosen = Dosen::find($pembimbing_id);
+
+            if ($dosen) {
+                $user = User::where('email', $dosen->r_user->email)->first();
+
+                if ($user) {
+
+                    if (!$user->hasRole('pembimbingSempro')) {
+                        $user->assignRole('pembimbingSempro');
+                    }
+                }
+            }
+        }
+
         $mahasiswa_sempro->save();
 
         return redirect()->back()->with('success', 'Status berhasil diperbarui.');

@@ -35,7 +35,6 @@ class NilaiSidangSemproController extends Controller
                     ->orWhere('pembimbing_dua', $dosen_penilai)
                     ->orWhere('penguji', $dosen_penilai);
             })
-
             ->distinct('mahasiswa_id')
             ->get();
 
@@ -50,18 +49,32 @@ class NilaiSidangSemproController extends Controller
             ->distinct('mahasiswa_id')
             ->get();
 
-        $data_nilai_sidang_sempro = $data_dosen_penguji_sempro->merge($data_dosen_sempro);
+        $data_nilai_sidang_sempro = $data_dosen_sempro->merge($data_dosen_penguji_sempro);
 
         $nextNumber = $this->getCariNomor();
 
-        $mahasiswaSempro = $data_dosen_sempro->first();
+        $rolesPerMahasiswa = $data_dosen_sempro->mapWithKeys(function ($item) use ($dosen_penilai) {
+            return [
+                $item->mahasiswa_id => [
+                    'isPembimbingSatu' => $item->pembimbing_satu == $dosen_penilai,
+                    'isPembimbingDua' => $item->pembimbing_dua == $dosen_penilai,
+                    'isPenguji' => $item->penguji == $dosen_penilai,
+                ],
+            ];
+        });
 
-        $isPembimbingSatu = $mahasiswaSempro && $mahasiswaSempro->pembimbing_satu == $dosen_penilai;
-        $isPembimbingDua = $mahasiswaSempro && $mahasiswaSempro->pembimbing_dua == $dosen_penilai;
-        $isPenguji = $mahasiswaSempro && $mahasiswaSempro->penguji == $dosen_penilai;
+        // Debugging: Periksa daftar peran dosen untuk setiap mahasiswa
+        // dd($rolesPerMahasiswa);
 
-        return view('admin.content.sempro.sidang.sidang_sempro', compact('data_nilai_sidang_sempro', 'isPenguji', 'data_dosen_sempro', 'data_dosen_penguji_sempro', 'isPembimbingSatu', 'isPembimbingDua', 'mahasiswaSempro', 'nextNumber'));
+        return view('admin.content.sempro.sidang.sidang_sempro', compact(
+            'data_nilai_sidang_sempro',
+            'rolesPerMahasiswa',
+            'data_dosen_sempro',
+            'data_dosen_penguji_sempro',
+            'nextNumber'
+        ));
     }
+
 
 
     public function nilai_sidang_sempro(Request $request, string $id)
@@ -84,11 +97,10 @@ class NilaiSidangSemproController extends Controller
 
         $nilai_sempro =
             (($request->pendahuluan) +
-            ($request->tinjauan_pustaka) +
-            ($request->metodologi) +
-            ($request->penggunaan_bahasa) +
-            ($request->presentasi)) / 5
-            ;
+                ($request->tinjauan_pustaka) +
+                ($request->metodologi) +
+                ($request->penggunaan_bahasa) +
+                ($request->presentasi)) / 5;
 
 
         $nilai_mahasiswaSempro = NilaiSempro::updateOrCreate(
@@ -104,6 +116,8 @@ class NilaiSidangSemproController extends Controller
                 'status' => $request->status,
             ]
         );
+
+        // dd($request->all());
 
         $message = $nilai_mahasiswaSempro->wasRecentlyCreated
             ? 'Nilai berhasil disimpan!'

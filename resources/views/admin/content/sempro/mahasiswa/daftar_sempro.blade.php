@@ -17,33 +17,27 @@
     @endif
 
     @php
-    $mahasiswa_id = Auth::user()->r_mahasiswa->id_mahasiswa;
+        $mahasiswa_id = Auth::user()->r_mahasiswa->id_mahasiswa;
 
-    // Ambil data usulan PKL untuk mahasiswa yang sedang login
-    $usulanPkl = Auth::user()->r_mahasiswa->usulan_pkl;
+        $usulanPkl = Auth::user()->r_mahasiswa->usulan_pkl;
 
-    // Cek nilai mahasiswa
-    $nilaiMahasiswaNotNull = false;
-    if ($usulanPkl) {
-        // Ambil data mahasiswa PKL untuk mahasiswa ini
-        $mahasiswaPkl = \App\Models\MahasiswaPkl::where('mahasiswa_id', $mahasiswa_id)->first();
+        $nilaiMahasiswaNotNull = false;
+        if ($usulanPkl) {
+            $mahasiswaPkl = \App\Models\MahasiswaPkl::where('mahasiswa_id', $mahasiswa_id)->first();
 
-        // Cek jika nilai mahasiswa tidak null
-        if ($mahasiswaPkl && !is_null($mahasiswaPkl->nilai_mahasiswa)) {
-            $nilaiMahasiswaNotNull = true;
+            if ($mahasiswaPkl && !is_null($mahasiswaPkl->nilai_mahasiswa)) {
+                $nilaiMahasiswaNotNull = true;
+            }
         }
-    }
 
-    // Cek jika mahasiswa sudah terdaftar di Sempro
-    $semproTerdaftar = $data_mahasiswa_sempro->where('mahasiswa_id', $mahasiswa_id)->isNotEmpty();
-@endphp
+        $semproTerdaftar = $data_mahasiswa_sempro->where('mahasiswa_id', $mahasiswa_id)->isNotEmpty();
+    @endphp
 
-<!-- Tombol akan muncul jika nilai_mahasiswa tidak null dan mahasiswa belum terdaftar di Sempro -->
-@if ($nilaiMahasiswaNotNull && !$semproTerdaftar)
-    <a data-bs-toggle="modal" data-bs-target="#daftar_sempro" class="btn btn-primary me-2 mb-3">
-        <i class="bi bi-file-earmark-plus"></i> Daftar Sempro
-    </a>
-@endif
+    @if ($nilaiMahasiswaNotNull && !$semproTerdaftar)
+        <a data-bs-toggle="modal" data-bs-target="#daftar_sempro" class="btn btn-primary me-2 mb-3">
+            <i class="bi bi-file-earmark-plus"></i> Daftar Sempro
+        </a>
+    @endif
 
 
 

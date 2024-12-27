@@ -171,25 +171,48 @@ class DaftarSidangSemproController extends Controller
         $tanggal = $request->tanggal;
         $penguji = $request->penguji;
 
-        // Validasi input
+
         $request->validate([
             'tanggal' => 'required|date',
             'penguji' => 'required'
         ]);
 
-        // Ambil ruangan yang tidak memiliki sesi pada tanggal yang dipilih
-        $usedRooms = MahasiswaSempro::where('tanggal_sempro', $tanggal)
-            ->pluck('ruangan_id')->toArray();
 
-        $availableRooms = Ruang::whereNotIn('id_ruang', $usedRooms)
-            ->get(['id_ruang', 'kode_ruang as nama_ruangan']);
+        $usedRoomsAndSessions = MahasiswaSempro::where('tanggal_sempro', $tanggal)
+            ->get(['ruangan_id', 'sesi_id']);
 
-        if ($availableRooms->isEmpty()) {
+        $availableRooms = Ruang::all();
+
+
+        $availableRoomsWithSessions = $availableRooms->map(function ($room) use ($usedRoomsAndSessions) {
+            $availableSessions = Sesi::whereNotIn(
+                'id_sesi',
+                $usedRoomsAndSessions->where('ruangan_id', $room->id_ruang)->pluck('sesi_id')->toArray()
+            )->get();
+
+            return [
+                'id_ruang' => $room->id_ruang,
+                'nama_ruangan' => $room->kode_ruang,
+                'sessions' => $availableSessions->map(function ($session) {
+                    return [
+                        'id_sesi' => $session->id_sesi,
+                        'sesi' => $session->sesi,
+                        'jam' => $session->jam,
+                    ];
+                })->values()
+            ];
+        })->filter(function ($room) {
+            return $room['sessions']->isNotEmpty();
+        });
+
+        if ($availableRoomsWithSessions->isEmpty()) {
             return response()->json(['message' => 'Tidak ada ruangan yang tersedia pada tanggal ini.'], 404);
         }
 
-        return response()->json($availableRooms);
+        return response()->json($availableRoomsWithSessions);
     }
+
+
 
     public function getAvailableSessions(Request $request)
     {
@@ -265,23 +288,6 @@ class DaftarSidangSemproController extends Controller
 
         $mahasiswa_sempro->save();
 
-        $pembimbing_ids = [$request->pembimbing_satu, $request->pembimbing_dua];
-        foreach ($pembimbing_ids as $pembimbing_id) {
-            $dosen = Dosen::find($pembimbing_id);
-
-            if ($dosen) {
-                $user = User::where('email', $dosen->r_user->email)->first();
-
-                if ($user) {
-
-                    if (!$user->hasRole('pembimbingSempro')) {
-                        $user->assignRole('pembimbingSempro');
-                    }
-                }
-            }
-        }
-
-
         $dosen = Dosen::find($request->penguji);
 
         if ($dosen) {
@@ -320,12 +326,12 @@ class DaftarSidangSemproController extends Controller
             ->first();
 
         if (!$data_sidang_sempro) {
-            abort(404, 'Data Mahasiswa PKL tidak ditemukan.');
+            abort(404, 'Data Mahasiswa Sempro tidak ditemukan.');
         }
 
 
         if (!$data_sidang_sempro) {
-            abort(404, 'Data Mahasiswa PKL tidak ditemukan.');
+            abort(404, 'Data Mahasiswa Sempro tidak ditemukan.');
         }
 
         $pembimbingList = collect([$data_sidang_sempro->r_pembimbing_satu, $data_sidang_sempro->r_pembimbing_dua]);

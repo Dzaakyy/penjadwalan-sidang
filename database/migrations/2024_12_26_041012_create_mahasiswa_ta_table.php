@@ -31,6 +31,8 @@ return new class extends Migration
             $table->bigInteger('sesi_id')->nullable();
             $table->string('nilai_mahasiswa')->nullable();
             $table->enum('keterangan', ['0', '1','2'])->default('0')->comment('0: Belum Sidang, 1:Tdk Lulus Sidang, 2:Lulus Sidang')->nullable();
+            $table->enum('acc_pembimbing_satu', ['0', '1'])->default('0')->comment('0: Belum Diacc, 1:Sudah Diacc')->nullable();
+            $table->enum('acc_pembimbing_dua', ['0', '1'])->default('0')->comment('0: Belum Diacc, 1:Sudah Diacc')->nullable();
         });
 
         Schema::table('mhs_ta', function (Blueprint $table) {

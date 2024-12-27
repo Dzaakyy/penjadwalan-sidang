@@ -52,7 +52,13 @@
                                         {{ $data->r_nilai_penguji ? $data->r_dosen_penguji->nama_dosen . ' - ' . $data->r_nilai_penguji->nilai_pkl : $data->r_dosen_penguji->nama_dosen . ' - Belum Ada Nilai' }}
                                     </td>
                                     <td>
-                                        @if ($isPenguji)
+                                        @php
+                                            $roles = $rolesPerMahasiswa[$data->mahasiswa_id] ?? [
+                                                'isPembimbing' => false,
+                                                'isPenguji' => false,
+                                            ];
+                                        @endphp
+                                        @if ($roles['isPenguji'])
                                             @if (isset($data->r_nilai_penguji) && !is_null($data->r_nilai_penguji->nilai_pkl) && $data->r_nilai_penguji->status == 1)
                                                 <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_mhs_pkl }}"
                                                     class="btn btn-success">
@@ -63,7 +69,7 @@
                                                         <span class="bi bi-pencil-square"></span> Nilai
                                                     </a>
                                             @endif
-                                        @elseif ($isPembimbing)
+                                        @elseif ($roles['isPembimbing'])
                                             @if (isset($data->r_nilai_pembimbing) &&
                                                     !is_null($data->r_nilai_pembimbing->nilai_pkl) &&
                                                     $data->r_nilai_pembimbing->status == 0)
@@ -80,8 +86,6 @@
                                         @endif
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
 
 
                                 {{-- Modal Nilai Sidang --}}
@@ -127,7 +131,7 @@
                                                                 </label>
                                                                 <input type="number" class="form-control bahasa"
                                                                     name="bahasa" placeholder="Bahasa"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->bahasa ?? '' : ($isPenguji ? $data->r_nilai_penguji->bahasa ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->bahasa ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->bahasa ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
 
@@ -135,7 +139,7 @@
                                                                 <label for="analisis">Analisis Masalah (15%)</label>
                                                                 <input type="number" class="form-control analisis"
                                                                     name="analisis" placeholder="Analisis"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->analisis ?? '' : ($isPenguji ? $data->r_nilai_penguji->analisis ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->analisis ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->analisis ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
 
@@ -143,7 +147,7 @@
                                                                 <label for="sikap">Sikap (15%)</label>
                                                                 <input type="number" class="form-control sikap"
                                                                     name="sikap" placeholder="Sikap"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->sikap ?? '' : ($isPenguji ? $data->r_nilai_penguji->sikap ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->sikap ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->sikap ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
                                                         </div>
@@ -154,7 +158,7 @@
                                                                 <label for="komunikasi">Komunikasi (15%)</label>
                                                                 <input type="number" class="form-control komunikasi"
                                                                     name="komunikasi" placeholder="Komunikasi"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->komunikasi ?? '' : ($isPenguji ? $data->r_nilai_penguji->komunikasi ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->komunikasi ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->komunikasi ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
 
@@ -162,7 +166,7 @@
                                                                 <label for="penyajian">Sistematika Penyajian (15%) </label>
                                                                 <input type="number" class="form-control penyajian"
                                                                     name="penyajian" placeholder="Penyajian"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->penyajian ?? '' : ($isPenguji ? $data->r_nilai_penguji->penyajian ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->penyajian ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->penyajian ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
 
@@ -170,7 +174,7 @@
                                                                 <label for="penguasaan">Penguasaan Materi (25%)</label>
                                                                 <input type="number" class="form-control penguasaan"
                                                                     name="penguasaan" placeholder="Penguasaan"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->penguasaan ?? '' : ($isPenguji ? $data->r_nilai_penguji->penguasaan ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->penguasaan ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->penguasaan ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
                                                         </div>
@@ -180,13 +184,13 @@
                                                         <label for="nilai_pkl">Total Nilai</label>
                                                         <input type="text" class="form-control nilai_pkl"
                                                             name="nilai_pkl" placeholder="Total Nilai"
-                                                            value="{{ $isPembimbing ? $data->r_nilai_pembimbing->nilai_pkl ?? '' : ($isPenguji ? $data->r_nilai_penguji->nilai_pkl ?? '' : '') }}"
+                                                            value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->nilai_pkl ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->nilai_pkl ?? '' : '') }}"
                                                             readonly
                                                             style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
                                                     </div>
 
                                                     <input type="hidden" name="status"
-                                                        value="{{ $data->status ?? ($isPembimbing ? '0' : ($isPenguji ? '1' : '')) }}">
+                                                        value="{{ $data->status ?? ($roles ['isPembimbing'] ? '0' : ($roles ['isPenguji'] ? '1' : '')) }}">
 
                                                     <div class="modal-footer justify-content-between">
                                                         <button type="submit" class="btn btn-primary">Konfrmasi</button>
@@ -223,7 +227,7 @@
                                                     <div class="form-group">
                                                         <input type="hidden" class="form-control" id="id_nilai_pkl"
                                                             name="id_nilai_pkl"
-                                                            value="{{ $isPembimbing ? (isset($data->r_nilai_pembimbing) ? $data->r_nilai_pembimbing->id_nilai_pkl : '') : ($isPenguji ? (isset($data->r_nilai_penguji) ? $data->r_nilai_penguji->id_nilai_pkl : '') : '') }}"
+                                                            value="{{$roles ['isPembimbing'] ? (isset($data->r_nilai_pembimbing) ? $data->r_nilai_pembimbing->id_nilai_pkl : '') : ($roles ['isPenguji'] ? (isset($data->r_nilai_penguji) ? $data->r_nilai_penguji->id_nilai_pkl : '') : '') }}"
                                                             readonly>
                                                     </div>
 
@@ -245,7 +249,7 @@
                                                                 </label>
                                                                 <input type="number" class="form-control bahasa"
                                                                     name="bahasa" placeholder="Bahasa"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->bahasa ?? '' : ($isPenguji ? $data->r_nilai_penguji->bahasa ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->bahasa ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->bahasa ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
 
@@ -253,7 +257,7 @@
                                                                 <label for="analisis">Analisis Masalah (15%)</label>
                                                                 <input type="number" class="form-control analisis"
                                                                     name="analisis" placeholder="Analisis"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->analisis ?? '' : ($isPenguji ? $data->r_nilai_penguji->analisis ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->analisis ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->analisis ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
 
@@ -261,7 +265,7 @@
                                                                 <label for="sikap">Sikap (15%)</label>
                                                                 <input type="number" class="form-control sikap"
                                                                     name="sikap" placeholder="Sikap"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->sikap ?? '' : ($isPenguji ? $data->r_nilai_penguji->sikap ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->sikap ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->sikap ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
                                                         </div>
@@ -272,7 +276,7 @@
                                                                 <label for="komunikasi">Komunikasi (15%)</label>
                                                                 <input type="number" class="form-control komunikasi"
                                                                     name="komunikasi" placeholder="Komunikasi"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->komunikasi ?? '' : ($isPenguji ? $data->r_nilai_penguji->komunikasi ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->komunikasi ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->komunikasi ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
 
@@ -280,7 +284,7 @@
                                                                 <label for="penyajian">Sistematika Penyajian (15%) </label>
                                                                 <input type="number" class="form-control penyajian"
                                                                     name="penyajian" placeholder="Penyajian"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->penyajian ?? '' : ($isPenguji ? $data->r_nilai_penguji->penyajian ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->penyajian ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->penyajian ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
 
@@ -288,7 +292,7 @@
                                                                 <label for="penguasaan">Penguasaan Materi (25%)</label>
                                                                 <input type="number" class="form-control penguasaan"
                                                                     name="penguasaan" placeholder="Penguasaan"
-                                                                    value="{{ $isPembimbing ? $data->r_nilai_pembimbing->penguasaan ?? '' : ($isPenguji ? $data->r_nilai_penguji->penguasaan ?? '' : '') }}"
+                                                                    value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->penguasaan ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->penguasaan ?? '' : '') }}"
                                                                     required oninput="hitungTotalNilai(this)">
                                                             </div>
                                                         </div>
@@ -298,13 +302,13 @@
                                                         <label for="nilai_pkl">Total Nilai</label>
                                                         <input type="text" class="form-control nilai_pkl"
                                                             name="nilai_pkl" placeholder="Total Nilai"
-                                                            value="{{ $isPembimbing ? $data->r_nilai_pembimbing->nilai_pkl ?? '' : ($isPenguji ? $data->r_nilai_penguji->nilai_pkl ?? '' : '') }}"
+                                                            value="{{$roles ['isPembimbing'] ? $data->r_nilai_pembimbing->nilai_pkl ?? '' : ($roles ['isPenguji'] ? $data->r_nilai_penguji->nilai_pkl ?? '' : '') }}"
                                                             readonly
                                                             style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
                                                     </div>
 
                                                     <input type="hidden" name="status"
-                                                        value="{{ $data->status ?? ($isPembimbing ? '0' : ($isPenguji ? '1' : '')) }}">
+                                                        value="{{ $data->status ?? ($roles ['isPembimbing'] ? '0' : ($roles ['isPenguji'] ? '1' : '')) }}">
 
                                                     <div class="modal-footer justify-content-between">
                                                         <button type="submit" class="btn btn-primary">Konfrmasi</button>
@@ -316,7 +320,8 @@
                                 </div>
                             @endif
                         @endforeach
-
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

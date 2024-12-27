@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Surat Tugas PKL</title>
+    <title>Surat Tugas ta</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <style>
@@ -63,6 +63,7 @@
 
 
         .badan {
+
             top: 70px;
             position: relative;
 
@@ -284,21 +285,41 @@
             @endphp
             <tbody>
 
-                @foreach ($pembimbingList as $pembimbing)
+                {{-- @foreach ($pembimbingList as $key => $pembimbing)
                     <tr class="table-light">
                         <td class="no">{{ $counter++ }}</td>
                         <td class="nama_dosen">{{ $pembimbing->nama_dosen }}</td>
                         <td class="nip">{{ $pembimbing->nip }}</td>
-                        <td class="jabatan">Dosen Pembimbing</td>
+                        <td class="jabatan">
+                            Dosen Pembimbing {{ $key + 1 }}
+                        </td>
                     </tr>
-                @endforeach
+                @endforeach --}}
 
-                @foreach ($pengujiList as $penguji)
+                @foreach ($ketuaList as $ketua)
+                <tr class="table-light">
+                    <td class="no">{{ $counter++ }}</td>
+                    <td class="nama_dosen">{{ $ketua->nama_dosen }}</td>
+                    <td class="nip">{{ $ketua->nip }}</td>
+                    <td class="jabatan">Ketua</td>
+                </tr>
+            @endforeach
+
+                @foreach ($sekretarisList as $sekretaris)
+                <tr class="table-light">
+                    <td class="no">{{ $counter++ }}</td>
+                    <td class="nama_dosen">{{ $sekretaris->nama_dosen }}</td>
+                    <td class="nip">{{ $sekretaris->nip }}</td>
+                    <td class="jabatan">Sekretaris</td>
+                </tr>
+            @endforeach
+
+                @foreach ($pengujiList as $key => $penguji)
                     <tr class="table-light">
                         <td class="no">{{ $counter++ }}</td>
                         <td class="nama_dosen">{{ $penguji->nama_dosen }}</td>
                         <td class="nip">{{ $penguji->nip }}</td>
-                        <td class="jabatan">Dosen Penguji</td>
+                        <td class="jabatan">Dosen Penguji {{ $key + 1 }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -306,29 +327,29 @@
         </table><br>
 
         <div style="margin-bottom: 1%;">
-            <font style="font-size: 15px;">Untuk melaksanakan Sidang PKL Mahasiswa yang disebut dibawah ini</font>
+            <font style="font-size: 15px;">Untuk melaksanakan Sidang TA Mahasiswa yang disebut dibawah ini</font>
         </div>
 
 
 
         <div class="details">
             <table class="details-table" style="padding-left: 20px;">
-                @if ($data_sidang_pkl)
+                @if ($data_sidang_ta)
                     <tr>
                         <td class="label">Nama </td>
-                        <td class="value">: {{ $data_sidang_pkl->r_pkl->r_mahasiswa->nama }}</td>
+                        <td class="value">: {{ $data_sidang_ta->r_mahasiswa->nama }}</td>
                     </tr>
                     <tr>
                         <td class="label">NIM</td>
-                        <td class="value">: {{ $data_sidang_pkl->r_pkl->r_mahasiswa->nim }}</td>
+                        <td class="value">: {{ $data_sidang_ta->r_mahasiswa->nim }}</td>
                     </tr>
                     <tr>
                         <td class="label">Program Studi</td>
-                        <td class="value">: {{ $data_sidang_pkl->r_pkl->r_mahasiswa->r_prodi->prodi }}</td>
+                        <td class="value">: {{ $data_sidang_ta->r_mahasiswa->r_prodi->prodi }}</td>
                     </tr>
                     <tr>
-                        <td class="label">Judul Proyek PKL</td>
-                        <td class="value">: {{ $data_sidang_pkl->judul }}</td>
+                        <td class="label">Judul</td>
+                        <td class="value">: {{ $judulSempro }}</td>
                     </tr>
                 @endif
             </table>
@@ -346,12 +367,12 @@
             <tbody>
                 <tr class="table-light">
                     <td class="hari">
-                        {{ \Carbon\Carbon::parse($data_sidang_pkl->tgl_sidang)->locale('id')->translatedFormat('l') }}
+                        {{ \Carbon\Carbon::parse($data_sidang_ta->tgl_ta)->locale('id')->translatedFormat('l') }}
                     </td>
                     <td class="tanggal_sidang">
-                        {{ \Carbon\Carbon::parse($data_sidang_pkl->tgl_sidang)->format('d-m-Y') }}</td>
-                    <td class="jam">{{ $data_sidang_pkl->r_sesi->jam }}</td>
-                    <td class="ruangan">{{ $data_sidang_pkl->r_ruang->kode_ruang }}</td>
+                        {{ \Carbon\Carbon::parse($data_sidang_ta->tgl_ta)->format('d-m-Y') }}</td>
+                    <td class="jam">{{ $data_sidang_ta->r_sesi->jam }}</td>
+                    <td class="ruangan">{{ $data_sidang_ta->r_ruangan->kode_ruang }}</td>
                 </tr>
             </tbody>
         </table>
@@ -376,10 +397,5 @@
 
 
 </body>
-
-
-
-
-
 
 </html>

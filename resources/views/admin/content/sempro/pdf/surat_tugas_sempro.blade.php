@@ -243,8 +243,7 @@
                         <font style="font-size: 15px;">Telepon: (0751) 72590, Faks: (0751) 72576</font><br>
                         <font style="font-size: 15px;">
                             Laman: <a href="https://ti.pnp.ac.id"
-                                style="color: blue; text-decoration: underline;">https://ti.pnp.ac.id</a> | Surel:
-                            ti@pnp.ac.id
+                                style="color: blue; text-decoration: underline;">https://www.pnp.ac.id/</a> | Surel:@pnp.ac.id
                         </font>
 
                     </center>

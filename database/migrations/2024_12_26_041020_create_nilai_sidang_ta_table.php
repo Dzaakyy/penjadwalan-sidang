@@ -14,11 +14,16 @@ return new class extends Migration
         Schema::create('nilai_sidang_ta', function (Blueprint $table) {
             $table->bigInteger('id_nilai_sidang_ta')->primary();
             $table->bigInteger('ta_id');
-            $table->double('pendahuluan')->nullable();
-            $table->double('tinjauan_pustaka')->nullable();
-            $table->double('metodologi')->nullable();
-            $table->double('penggunaan_bahasa')->nullable();
-            $table->double('presentasi')->nullable();
+            $table->double('sikap_penampilan')->nullable();
+            $table->double('komunikasi_sistematika')->nullable();
+            $table->double('penguasaan_materi')->nullable();
+            $table->double('identifikasi_masalah')->nullable();
+            $table->double('relevansi_teori')->nullable();
+            $table->double('metode_algoritma')->nullable();
+            $table->double('hasil_pembahasan')->nullable();
+            $table->double('kesimpulan_saran')->nullable();
+            $table->double('bahasa_tata_tulis')->nullable();
+            $table->double('kesesuaian_fungsional')->nullable();
             $table->double('nilai_sidang')->nullable();
             $table->enum('status', ['0', '1', '2' ,'3'])->comment('0: Ketua, 1: Sekretaris, 3: Penguji 1, 4: Penguji 2');
         });

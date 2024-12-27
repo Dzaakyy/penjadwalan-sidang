@@ -28,6 +28,8 @@ class RolesAndUsersSeeder extends Seeder
         $pengujiPklRole = Role::firstOrCreate(['name' => 'pengujiPkl']);
         $pembimbingSemproRole = Role::firstOrCreate(['name' => 'pembimbingSempro']);
         $pengujiSemproRole = Role::firstOrCreate(['name' => 'pengujiSempro']);
+        $pembimbingTaRole = Role::firstOrCreate(['name' => 'pembimbingTa']);
+        $pengujiTaRole = Role::firstOrCreate(['name' => 'pengujiTa']);
         $mahasiswaRole = Role::firstOrCreate(['name' => 'mahasiswa']);
 
         // Mengaitkan peran dengan pengguna

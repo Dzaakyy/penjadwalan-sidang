@@ -177,7 +177,8 @@
                                         </div>
                                         <div class="modal-body">
                                             <p>Apakah kamu yakin ingin memverifikasi judul
-                                                <b>{{ $data->r_mahasiswa->nama }}</b></p>
+                                                <b>{{ $data->r_mahasiswa->nama }}</b>
+                                            </p>
 
                                             <form id="daftar_sidang{{ $data->id_sempro }}"
                                                 action="{{ route('verifikasi_judul_sempro_kaprodi.update', ['id' => $data->id_sempro]) }}"
@@ -216,12 +217,13 @@
                                                 <div class="form-group pembimbing-wrapper" style="display: none;">
                                                     <label for="pembimbing_satu">Pilih Dosen Pembimbing Satu</label>
                                                     <select name="pembimbing_satu" id="pembimbing_satu" class="form-select">
-                                                        <option value="" disabled selected>Pilih Dosen Pembimbing Satu</option>
+                                                        <option value="" disabled selected>Pilih Dosen Pembimbing Satu
+                                                        </option>
                                                         @foreach ($dosen as $dosenItem)
                                                             @if (!isset($data->r_pembimbing_satu) || $data->r_pembimbing_satu->id_dosen != $dosenItem->id_dosen)
                                                                 @if (!isset($data->r_pembimbing_dua) || $data->r_pembimbing_dua->id_dosen != $dosenItem->id_dosen)
                                                                     <option value="{{ $dosenItem->id_dosen }}"
-                                                                        {{ (old('pembimbing_satu') == $dosenItem->id_dosen) ? 'selected' : '' }}>
+                                                                        {{ old('pembimbing_satu') == $dosenItem->id_dosen ? 'selected' : '' }}>
                                                                         {{ $dosenItem->nama_dosen }}
                                                                     </option>
                                                                 @endif
@@ -233,12 +235,13 @@
                                                 <div class="form-group pembimbing-wrapper" style="display: none;">
                                                     <label for="pembimbing_dua">Pilih Dosen Pembimbing Dua</label>
                                                     <select name="pembimbing_dua" id="pembimbing_dua" class="form-select">
-                                                        <option value="" disabled selected>Pilih Dosen Pembimbing Dua</option>
+                                                        <option value="" disabled selected>Pilih Dosen Pembimbing Dua
+                                                        </option>
                                                         @foreach ($dosen as $dosenItem)
                                                             @if (!isset($data->r_pembimbing_satu) || $data->r_pembimbing_satu->id_dosen != $dosenItem->id_dosen)
                                                                 @if (!isset($data->r_pembimbing_dua) || $data->r_pembimbing_dua->id_dosen != $dosenItem->id_dosen)
                                                                     <option value="{{ $dosenItem->id_dosen }}"
-                                                                        {{ (old('pembimbing_dua') == $dosenItem->id_dosen) ? 'selected' : '' }}>
+                                                                        {{ old('pembimbing_dua') == $dosenItem->id_dosen ? 'selected' : '' }}>
                                                                         {{ $dosenItem->nama_dosen }}
                                                                     </option>
                                                                 @endif
@@ -336,81 +339,82 @@
         }, 5000);
 
         document.addEventListener("DOMContentLoaded", () => {
-    // Fungsi untuk menangani pembimbing
-    function updatePembimbingOptions(pembimbingSatu, pembimbingDua) {
-        const selectedSatu = pembimbingSatu.value;
-        const selectedDua = pembimbingDua.value;
+            // Fungsi untuk menangani pembimbing
+            function updatePembimbingOptions(pembimbingSatu, pembimbingDua) {
+                const selectedSatu = pembimbingSatu.value;
+                const selectedDua = pembimbingDua.value;
 
-        // Reset pembimbing 2 options
-        Array.from(pembimbingDua.options).forEach((option) => {
-            option.style.display = ""; // Show all options by default
-        });
+                // Reset pembimbing 2 options
+                Array.from(pembimbingDua.options).forEach((option) => {
+                    option.style.display = ""; // Show all options by default
+                });
 
-        // Reset pembimbing 1 options
-        Array.from(pembimbingSatu.options).forEach((option) => {
-            option.style.display = ""; // Show all options by default
-        });
+                // Reset pembimbing 1 options
+                Array.from(pembimbingSatu.options).forEach((option) => {
+                    option.style.display = ""; // Show all options by default
+                });
 
-        // Hide selected pembimbing 1 in pembimbing 2 options
-        if (selectedSatu) {
-            Array.from(pembimbingDua.options).forEach((option) => {
-                if (option.value === selectedSatu) {
-                    option.style.display = "none"; // Hide selected pembimbing 1
+                // Hide selected pembimbing 1 in pembimbing 2 options
+                if (selectedSatu) {
+                    Array.from(pembimbingDua.options).forEach((option) => {
+                        if (option.value === selectedSatu) {
+                            option.style.display = "none"; // Hide selected pembimbing 1
+                        }
+                    });
                 }
-            });
-        }
 
-        // Hide selected pembimbing 2 in pembimbing 1 options
-        if (selectedDua) {
-            Array.from(pembimbingSatu.options).forEach((option) => {
-                if (option.value === selectedDua) {
-                    option.style.display = "none"; // Hide selected pembimbing 2
+                // Hide selected pembimbing 2 in pembimbing 1 options
+                if (selectedDua) {
+                    Array.from(pembimbingSatu.options).forEach((option) => {
+                        if (option.value === selectedDua) {
+                            option.style.display = "none";
+                        }
+                    });
                 }
+            }
+
+
+            document.querySelectorAll('.modal').forEach((modal) => {
+                modal.addEventListener('show.bs.modal', function() {
+                    const pembimbingSatu = modal.querySelector("#pembimbing_satu");
+                    const pembimbingDua = modal.querySelector("#pembimbing_dua");
+
+
+                    updatePembimbingOptions(pembimbingSatu, pembimbingDua);
+
+                    pembimbingSatu.addEventListener("change", () => updatePembimbingOptions(
+                        pembimbingSatu, pembimbingDua));
+                    pembimbingDua.addEventListener("change", () => updatePembimbingOptions(
+                        pembimbingSatu, pembimbingDua));
+                });
             });
-        }
-    }
 
-    // Event listener untuk modal
-    document.querySelectorAll('.modal').forEach((modal) => {
-        modal.addEventListener('show.bs.modal', function() {
-            const pembimbingSatu = modal.querySelector("#pembimbing_satu");
-            const pembimbingDua = modal.querySelector("#pembimbing_dua");
 
-            // Update pembimbing saat modal dibuka
-            updatePembimbingOptions(pembimbingSatu, pembimbingDua);
+            const statusJudulInputs = document.querySelectorAll('input[name="status_judul"]');
+            statusJudulInputs.forEach(input => {
+                input.addEventListener('change', togglePembimbing);
+            });
 
-            pembimbingSatu.addEventListener("change", () => updatePembimbingOptions(pembimbingSatu, pembimbingDua));
-            pembimbingDua.addEventListener("change", () => updatePembimbingOptions(pembimbingSatu, pembimbingDua));
+
+            togglePembimbing();
         });
-    });
 
-    // Event listener untuk toggle pembimbing (untuk status diterima/ditolak)
-    const statusJudulInputs = document.querySelectorAll('input[name="status_judul"]');
-    statusJudulInputs.forEach(input => {
-        input.addEventListener('change', togglePembimbing);
-    });
 
-    // Initial toggle Pembimbing state
-    togglePembimbing();
-});
+        function togglePembimbing() {
+            const pembimbingWrapper = document.querySelectorAll(".pembimbing-wrapper");
+            const statusJudul = document.querySelector('input[name="status_judul"]:checked');
 
-// Fungsi untuk menampilkan atau menyembunyikan pembimbing
-function togglePembimbing() {
-    const pembimbingWrapper = document.querySelectorAll(".pembimbing-wrapper");
-    const statusJudul = document.querySelector('input[name="status_judul"]:checked');
+            if (statusJudul && statusJudul.value === "2") {
 
-    if (statusJudul && statusJudul.value === "2") {
-        // Jika status diterima, tampilkan pembimbing
-        pembimbingWrapper.forEach((wrapper) => (wrapper.style.display = "block"));
-        document.querySelector("#pembimbing_satu").setAttribute("required", "required");
-        document.querySelector("#pembimbing_dua").setAttribute("required", "required");
-    } else {
-        // Jika status ditolak, sembunyikan pembimbing
-        pembimbingWrapper.forEach((wrapper) => (wrapper.style.display = "none"));
-        document.querySelector("#pembimbing_satu").removeAttribute("required");
-        document.querySelector("#pembimbing_dua").removeAttribute("required");
-    }
-}
+                pembimbingWrapper.forEach((wrapper) => (wrapper.style.display = "block"));
+                document.querySelector("#pembimbing_satu").setAttribute("required", "required");
+                document.querySelector("#pembimbing_dua").setAttribute("required", "required");
+            } else {
 
+                pembimbingWrapper.forEach((wrapper) => (wrapper.style.display = "none"));
+                document.querySelector("#pembimbing_satu").removeAttribute("required");
+                document.querySelector("#pembimbing_dua").removeAttribute("required");
+            }
+        }
     </script>
 @endsection

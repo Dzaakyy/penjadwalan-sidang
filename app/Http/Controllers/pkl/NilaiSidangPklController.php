@@ -52,12 +52,17 @@ class NilaiSidangPklController extends Controller
 
         $nextNumber = $this->getCariNomor();
 
-        $mahasiswaPkl = $data_dosen_pembimbing_pkl->first();
-        $isPembimbing = $mahasiswaPkl && $mahasiswaPkl->dosen_pembimbing == $dosen_penilai;
-        $isPenguji = $mahasiswaPkl && $mahasiswaPkl->dosen_penguji == $dosen_penilai;
+        $rolesPerMahasiswa = $data_dosen_pembimbing_pkl->mapWithKeys(function ($item) use ($dosen_penilai) {
+            return [
+                $item->mahasiswa_id => [
+                    'isPembimbing' => $item->dosen_pembimbing == $dosen_penilai,
+                    'isPenguji' => $item->dosen_penguji == $dosen_penilai,
+                ],
+            ];
+        });
 
 
-        return view('admin.content.pkl.sidang_pkl.nilai_sidang_pkl', compact('data_nilai_sidang_pkl', 'isPenguji', 'data_dosen_pembimbing_pkl', 'data_dosen_penguji_pkl', 'isPembimbing', 'mahasiswaPkl', 'nextNumber'));
+        return view('admin.content.pkl.sidang_pkl.nilai_sidang_pkl', compact('rolesPerMahasiswa', 'data_nilai_sidang_pkl', 'data_dosen_pembimbing_pkl', 'data_dosen_penguji_pkl', 'nextNumber'));
     }
 
 
