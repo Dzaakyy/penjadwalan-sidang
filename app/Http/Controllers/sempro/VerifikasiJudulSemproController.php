@@ -36,7 +36,6 @@ class VerifikasiJudulSemproController extends Controller
             ->orderByDesc('id_sempro')
             ->get();
         $dosen = Dosen::all();
-        // $data_mahasiswa_sempro = MahasiswaSempro::all();
 
         return view('admin.content.sempro.kaprodi.verifikasi_judul', compact('data_mahasiswa_sempro', 'dosen'));
     }

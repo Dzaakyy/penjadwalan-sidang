@@ -151,7 +151,7 @@
             @endhasrole
         @endhasrole
 
-        @hasanyrole('pembimbingPkl|pengujiPkl|pembimbingSempro|pengujiSempro')
+        @hasanyrole('pembimbingPkl|pengujiPkl|pembimbingSempro|pengujiSempro|pengujiTa')
             <li class="nav-item nav-category">Pembimbing | Penguji</li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#sidang" aria-expanded="false"
@@ -169,6 +169,10 @@
                         @hasrole('pembimbingSempro|pengujiSempro')
                             <li class="nav-item"> <a class="nav-link large-text"
                                     href="{{ route('nilai_sidang_sempro') }}">Sempro</a></li>
+                        @endhasrole
+                        @hasrole('pengujiTa')
+                            <li class="nav-item"> <a class="nav-link large-text"
+                                    href="{{ route('nilai_sidang_ta') }}">TA</a></li>
                         @endhasrole
                     </ul>
                 </div>
@@ -217,7 +221,7 @@
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#ta_mahasiswa" aria-expanded="false"
                     aria-controls="charts">
-                    <i class="menu-icon mdi mdi-bookshelf"></i>
+                    <i class="menu-icon mdi mdi-school"></i>
                     <span class="menu-title">TA</span>
                     <i class="menu-arrow"></i>
                 </a>

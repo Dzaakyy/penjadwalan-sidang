@@ -45,16 +45,16 @@
                         @foreach ($data_bimbingan as $data)
                             <tr class="table-light">
                                 <td>{{ $counter++ }}</td>
-                                <td style="max-width: 40px; word-break: break-all; white-space: normal;">
+                                <td style="max-width: 40px; word-wrap: break-word; white-space: normal;">
                                     {{ $data->r_pkl->r_usulan_pkl->r_mahasiswa->nama }}
                                 </td>
-                                <td style="max-width: 50px; word-break: break-all; white-space: normal;">
+                                <td style="max-width: 40px; word-wrap: break-word; white-space: normal;">
                                     {{ \Carbon\Carbon::parse($data->tgl_kegiatan_awal)->locale('id')->format('d-m-Y') }}
                                     /
                                     {{ \Carbon\Carbon::parse($data->tgl_kegiatan_akhir)->locale('id')->format('d-m-Y') }}
                                 </td>
 
-                                <td style="max-width: 100px; word-break: break-all; white-space: normal;">
+                                <td style="max-width: 100px; word-wrap: break-word; white-space: normal;">
                                     {{ $data->kegiatan }}
                                 </td>
                                 <td>

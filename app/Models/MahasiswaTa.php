@@ -33,6 +33,38 @@ class MahasiswaTa extends Model
     protected $primaryKey = 'id_ta';
     public $timestamps = false;
 
+
+
+    public static function boot()
+    {
+        parent::boot();
+        MahasiswaTa::all()->each(function ($sidangTA) {
+            $nilaiKetua = $sidangTA->r_nilai_ketua->nilai_sidang ?? null;
+            $nilaiSekretaris = $sidangTA->r_nilai_sekretaris->nilai_sidang ?? null;
+            $nilaiPenguji_1 = $sidangTA->r_nilai_penguji_1->nilai_sidang ?? null;
+            $nilaiPenguji_2 = $sidangTA->r_nilai_penguji_2->nilai_sidang ?? null;
+
+            if ($nilaiKetua !== null && $nilaiSekretaris !== null && $nilaiPenguji_1 !== null && $nilaiPenguji_2 !== null) {
+                $nilaimahasiswa = ($nilaiKetua+$nilaiSekretaris+$nilaiPenguji_1+$nilaiPenguji_2) /4 ;
+
+                $sidangTA->nilai_mahasiswa = $nilaimahasiswa;
+
+                if ($nilaimahasiswa >= 74) {
+                    $sidangTA->keterangan = '2';
+                } else {
+                    $sidangTA->keterangan = '1';
+                }
+            } else {
+
+                $sidangTA->keterangan = '0';
+            }
+
+
+            $sidangTA->save();
+
+        });
+    }
+
     public function r_mahasiswa()
     {
         return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id', 'id_mahasiswa');
@@ -71,18 +103,18 @@ class MahasiswaTa extends Model
     }
     public function r_nilai_ketua()
     {
-        return $this->hasOne(NilaiTa::class, 'ta_id', 'id_sempro')->where('status', '0');
+        return $this->hasOne(NilaiTa::class, 'ta_id', 'id_ta')->where('status', '0');
     }
     public function r_nilai_sekretaris()
     {
-        return $this->hasOne(NilaiTa::class, 'ta_id', 'id_sempro')->where('status', '1');
+        return $this->hasOne(NilaiTa::class, 'ta_id', 'id_ta')->where('status', '1');
     }
     public function r_nilai_penguji_1()
     {
-        return $this->hasOne(NilaiTa::class, 'ta_id', 'id_sempro')->where('status', '2');
+        return $this->hasOne(NilaiTa::class, 'ta_id', 'id_ta')->where('status', '2');
     }
     public function r_nilai_penguji_2()
     {
-        return $this->hasOne(NilaiTa::class, 'ta_id', 'id_sempro')->where('status', '3');
+        return $this->hasOne(NilaiTa::class, 'ta_id', 'id_ta')->where('status', '3');
     }
 }

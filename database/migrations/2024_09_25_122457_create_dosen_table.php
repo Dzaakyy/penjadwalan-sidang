@@ -21,7 +21,7 @@ return new class extends Migration
             $table->bigInteger('jurusan_id');
             $table->bigInteger('prodi_id');
             $table->string('image')->nullable();
-            $table->enum('golongan', ['0','1','2','3']);
+            $table->enum('golongan', ['0','1','2','3'])->comment('0: Guru Besar, 1: Lector Kepala, 2:Lector, 3:Assisten Ahli');
             $table->enum('status_dosen', ['0', '1'])->default(1);
         });
 

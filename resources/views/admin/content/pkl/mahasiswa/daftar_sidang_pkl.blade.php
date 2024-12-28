@@ -4,6 +4,18 @@
         <h4 class="card-title mt-4">Data PKL</h4>
     </div>
 
+    @if (Session::has('success'))
+        <div id="delay" class="alert alert-success" role="alert">
+            {{ Session::get('success') }}
+        </div>
+    @endif
+
+    @if (Session::has('error'))
+        <div id="delay" class="alert alert-danger" role="alert">
+            {{ Session::get('error') }}
+        </div>
+    @endif
+
     <div class="col-12 grid-margin d-flex justify-content-center">
         <div class="row" style="width: 100%;">
 
@@ -168,10 +180,10 @@
                                     </div>
                                 </div>
                                 @if (!empty($data->nilai_mahasiswa) && !empty($data->nilai_mahasiswa))
-                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_mhs_pkl }}"
-                                    class="btn btn-primary">
-                                    <span class="bi bi-pencil-square"></span>Lihat Nilai
-                                </a>
+                                    <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_mhs_pkl }}"
+                                        class="btn btn-primary">
+                                        <span class="bi bi-pencil-square"></span>Lihat Nilai
+                                    </a>
                                 @else
                                     <span class="badge badge-dark" style="font-weight: bold;">Belum Ada Nilai</span>
                                 @endif
@@ -179,72 +191,174 @@
                         </div>
                     </div>
 
+  {{-- Modal Nilai PKL --}}
+  <div class="modal fade" id="nilai{{ $data->id_mhs_pkl }}" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai PKL ->
+                    {{ $data->r_pkl->r_mahasiswa->nama }}
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
 
-                     {{-- Modal Nilai PKL --}}
-                     <div class="modal fade" id="nilai{{ $data->id_mhs_pkl }}" data-bs-backdrop="static"
-                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai Pkl ->
-                                        {{ $data->r_usulan_pkl->r_mahasiswa->nama }}
-                                    </h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
+                <form id="nilai{{ $data->id_mhs_pkl }}">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">No</th>
+                                <th style="width: 40%;">Jabatan</th>
+                                <th style="width: 20%;">Nama</th>
+                                <th style="width: 10%;">Nilai</th>
+                                <th style="width: 10%;">Bobot(%)</th>
+                                <th style="width: 20%;">Total Nilai</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td style="width:80px; word-break: break-all; white-space: normal;">
+                                    Pembimbing Program Studi</td>
+                                <td style="width: 20px; word-wrap: break-word; white-space: normal;">
+                                    {{ $data->r_dosen_pembimbing->nama_dosen ?? '' }}</td>
+                                <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                    {{ $data->r_nilai_bimbingan->nilai_bimbingan ?? '' }}
+                                </td>
+                                <td>35</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                    Pembimbing dari Industri</td>
+                                <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                    {{ $data->pembimbing_pkl ?? '' }}</td>
+                                <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                    {{ $data->nilai_pembimbing_industri ?? '' }}
+                                </td>
+                                <td>30</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="text-start"><strong>PENGUJI</strong></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                    Penguji 1</td>
+                                <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                    {{ $data->r_dosen_pembimbing->nama_dosen ?? '' }}</td>
+                                <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                    {{ $data->r_nilai_pembimbing->nilai_pkl ?? '' }}
+                                </td>
+                                <td rowspan="2">35</td>
+                                <td rowspan="2"></td>
 
-                                    <form id="nilai_dosen_pembimbing{{ $data->id_mhs_pkl }}">
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                    Penguji 2</td>
+                                <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                    {{ $data->r_dosen_penguji->nama_dosen ?? '' }}</td>
+                                <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                    {{ $data->r_nilai_penguji->nilai_pkl ?? '' }}
+                                </td>
 
-                                        <div class="form-group">
-                                            <label for="">Nilai Bimbingan - {{ $data->r_dosen_pembimbing->nama_dosen}}</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $data->r_nilai_bimbingan->nilai_bimbingan ?? '' }}"
-                                                readonly
-                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Nilai Pembimbing Industri - {{ $data->pembimbing_pkl}}</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $data->nilai_pembimbing_industri ?? '' }}"
-                                                readonly
-                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                        </div>
+                            </tr>
+                            <tr>
+                                <td colspan="5" class="text-start"><strong>Total Nilai</strong>
+                                </td>
+                                <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                    {{ number_format($data->nilai_mahasiswa, 2) }}
+                                </td>
 
-                                        <div class="form-group">
-                                            <label for="">Nilai Pembimbing - {{ $data->r_dosen_pembimbing->nama_dosen }}</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $data->r_nilai_pembimbing->nilai_pkl ?? '' }}"
-                                                readonly
-                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="">Nilai Penguji- {{ $data->r_dosen_penguji ? $data->r_dosen_penguji->nama_dosen : '-' }}</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $data->r_nilai_penguji->nilai_pkl ?? '' }}"
-                                                readonly
-                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="nilai_bimbingan">Total Nilai</label>
-                                            <input type="text" class="form-control nilai_bimbingan"
-                                                name="nilai_bimbingan" placeholder="Total Nilai"
-                                                value="{{ $data->nilai_mahasiswa ?? '' }}"
-                                                readonly
-                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            </tr>
 
 
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
                 @endif
             @endforeach
         </div>
     </div>
+@endsection
+@section('scripts')
+    <script>
+        setTimeout(function() {
+            var element = document.getElementById('delay');
+            if (element) {
+                element.parentNode.removeChild(element);
+            }
+        }, 5000);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            function hitungTotalNilai(container) {
+                let totalNilai = 0; 
+                let nilaiPenguji1 = 0;
+                let nilaiPenguji2 = 0;
+                let bobotPenguji = 0.35;
+                let totalNilaiPenguji = 0;
+
+                const rows = container.querySelectorAll("tbody tr");
+
+                rows.forEach((row, index) => {
+                    const nilaiCell = row.querySelector("td:nth-child(4)");
+                    const bobotCell = row.querySelector("td:nth-child(5)");
+                    const totalCell = row.querySelector("td:nth-child(6)");
+
+                    if (nilaiCell) {
+                        const nilai = parseFloat(nilaiCell.textContent) || 0;
+
+                        if (index === 3) {
+                            nilaiPenguji1 = nilai;
+                        } else if (index === 4) {
+                            nilaiPenguji2 = nilai;
+
+                            const rataRataPenguji = (nilaiPenguji1 + nilaiPenguji2) / 2;
+                            totalNilaiPenguji = rataRataPenguji * bobotPenguji;
+
+                            const penguji1TotalCell = rows[3].querySelector("td:nth-child(6)");
+                            if (penguji1TotalCell) {
+                                penguji1TotalCell.textContent = totalNilaiPenguji.toFixed(2);
+                            }
+                        } else if (index !== 2) {
+                            const bobot = parseFloat(bobotCell?.textContent) ||
+                            0;
+                            const nilaiPersen = (nilai * bobot) / 100;
+
+                            if (totalCell) {
+                                totalCell.textContent = nilaiPersen.toFixed(2);
+                            }
+
+                            totalNilai += nilaiPersen;
+                        }
+                    }
+                });
+
+                const totalNilaiCell = container.querySelector("tfoot .total-nilai");
+                if (totalNilaiCell) {
+                    totalNilaiCell.textContent = totalNilai.toFixed(2);
+                }
+            }
+
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('show.bs.modal', function() {
+                    const table = modal.querySelector("table");
+                    if (table) {
+                        hitungTotalNilai(table);
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

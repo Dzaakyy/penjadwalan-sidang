@@ -29,7 +29,7 @@ class ExportDosen implements FromCollection, WithHeadings
                 DB::raw('CASE WHEN dosen.gender = 0 THEN "Laki-Laki" ELSE "Perempuan" END AS gender'),
                 'jurusan.nama_jurusan',
                 'prodi.prodi',
-                // 'dosen.image',
+                'dosen.golongan',
                 DB::raw('CASE WHEN dosen.status_dosen = 0 THEN "Tidak Aktif" ELSE "Aktif" END AS status_dosen')
             )
             ->orderBy('id_dosen')
@@ -49,7 +49,7 @@ class ExportDosen implements FromCollection, WithHeadings
             'Jurusan',
             'Prodi',
             'Golongan',
-            // 'Image',
+
             'Status Dosen',
         ];
     }

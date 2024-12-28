@@ -21,7 +21,7 @@
                 {!! $errors->first('duplicate_data') !!}
             </div>
         @endif
- 
+
 
             <a href="{{ route('tempat_pkl.create') }}" class="btn btn-primary me-2 mb-3">
                 <i class="bi bi-file-earmark-plus"></i> New

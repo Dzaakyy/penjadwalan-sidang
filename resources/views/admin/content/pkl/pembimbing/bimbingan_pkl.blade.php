@@ -68,9 +68,11 @@
                                         @endif
                                     </td>
                                 </tr>
+                            @endforeach
                         </tbody>
                     </table>
 
+                    @foreach ($data_dosen_bimbingan_pkl as $data)
 
                     {{-- Modal Nilai Bimbingan --}}
                     <div class="modal fade" id="nilai{{ $data->id_mhs_pkl }}" data-bs-backdrop="static"
@@ -103,40 +105,93 @@
                                             @enderror
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="keaktifan">Keaktifan Bimbingan</label>
-                                            <input type="number" class="form-control keaktifan" name="keaktifan"
-                                                placeholder="Keaktifan Bimbingan"
-                                                value="{{ $data->r_nilai_bimbingan->keaktifan ?? '' }}" required
-                                                oninput="hitungTotalNilai(this)">
-                                        </div>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%;">No</th>
+                                                    <th style="width: 40%;">Materi Penilaian</th>
+                                                    <th style="width: 20%;">bobot(%)</th>
+                                                    <th style="width: 20%;">skor</th>
+                                                    <th style="width: 50%;">Nilai</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td style="width:80px; word-break: break-all; white-space: normal;">
+                                                        Keaktifan Bimbingan</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal;">
+                                                        30</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        <input type="number" class="form-control keaktifan"
+                                                            name="keaktifan" placeholder="Keaktifan Bimbingan"
+                                                            value="{{ $data->r_nilai_bimbingan->keaktifan ?? '' }}"
+                                                            required oninput="hitungTotalNilai(this)">
+                                                    </td>
+                                                    <td style="width: 50px; word-wrap: break-word; white-space: normal;">
+                                                        <input type="text" class="form-control nilai_persen"
+                                                            name="nilai_persen" placeholder="Nilai (%)" value=""
+                                                            readonly
+                                                            style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
 
-                                        <div class="form-group">
-                                            <label for="komunikatif">Komunikatif</label>
-                                            <input type="number" class="form-control komunikatif" name="komunikatif"
-                                                placeholder="Komunikatif"
-                                                value="{{ $data->r_nilai_bimbingan->komunikatif ?? '' }}" required
-                                                oninput="hitungTotalNilai(this)">
-                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Komunikatif</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        30</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        <input type="number" class="form-control komunikatif"
+                                                            name="komunikatif" placeholder="Komunikatif"
+                                                            value="{{ $data->r_nilai_bimbingan->komunikatif ?? '' }}"
+                                                            required oninput="hitungTotalNilai(this)">
+                                                    </td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        <input type="text" class="form-control nilai_persen"
+                                                            name="nilai_persen" placeholder="Nilai (%)" value=""
+                                                            readonly
+                                                            style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Problem Solving</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        40
+                                                    </td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        <input type="number" class="form-control problem_solving"
+                                                            name="problem_solving" placeholder="Problem Solving"
+                                                            value="{{ $data->r_nilai_bimbingan->problem_solving ?? '' }}"
+                                                            required oninput="hitungTotalNilai(this)">
+                                                    </td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        <input type="text" class="form-control nilai_persen"
+                                                            name="nilai_persen" placeholder="Nilai" value=""
+                                                            readonly
+                                                            style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
+                                                    </td>
+                                                </tr>
 
-                                        <div class="form-group">
-                                            <label for="problem_solving">Problem Solving</label>
-                                            <input type="number" class="form-control problem_solving"
-                                                name="problem_solving" placeholder="Problem Solving"
-                                                value="{{ $data->r_nilai_bimbingan->problem_solving ?? '' }}" required
-                                                oninput="hitungTotalNilai(this)">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="nilai_bimbingan">Total Nilai</label>
-                                            <input type="text" class="form-control nilai_bimbingan"
-                                                name="nilai_bimbingan" placeholder="Total Nilai"
-                                                value="{{ $data->r_nilai_bimbingan->nilai_bimbingan ?? '' }}" readonly
-                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                        </div>
+                                                <tr>
+                                                    <td colspan="4" class="text-start"><strong>Total Nilai</strong>
+                                                    </td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        <input type="text" class="form-control nilai_bimbingan"
+                                                            name="nilai_bimbingan" placeholder="Total Nilai"
+                                                            value="{{ $data->r_nilai_bimbingan->nilai_bimbingan ?? '' }}"
+                                                            readonly
+                                                            style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
 
 
-                                        <div class="modal-footer justify-content-between">
+                                        <div class="modal-footer text-end">
                                             <button type="submit" class="btn btn-primary">Konfrmasi</button>
                                         </div>
                                     </form>
@@ -184,9 +239,9 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width: 5%;">No</th>
-                                                    <th style="width: 20%;">Materi Penilaian</th>
-                                                    <th style="width: 30%;">bobot(%)</th>
-                                                    <th style="width: 30%;">skor</th>
+                                                    <th style="width: 40%;">Materi Penilaian</th>
+                                                    <th style="width: 20%;">bobot(%)</th>
+                                                    <th style="width: 20%;">skor</th>
                                                     <th style="width: 50%;">Nilai</th>
                                                 </tr>
                                             </thead>
@@ -207,7 +262,7 @@
                                                         <input type="text" class="form-control nilai_persen"
                                                             name="nilai_persen" placeholder="Nilai (%)" value=""
                                                             readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
+                                                            style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
 
                                                     </td>
                                                 </tr>
@@ -227,7 +282,7 @@
                                                         <input type="text" class="form-control nilai_persen"
                                                             name="nilai_persen" placeholder="Nilai (%)" value=""
                                                             readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
+                                                            style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -247,7 +302,7 @@
                                                         <input type="text" class="form-control nilai_persen"
                                                             name="nilai_persen" placeholder="Nilai" value=""
                                                             readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
+                                                            style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
                                                     </td>
                                                 </tr>
 
@@ -259,9 +314,10 @@
                                                             name="nilai_bimbingan" placeholder="Total Nilai"
                                                             value="{{ $data->r_nilai_bimbingan->nilai_bimbingan ?? '' }}"
                                                             readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
+                                                            style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
                                                     </td>
                                                 </tr>
+                                            </tbody>
                                         </table>
 
 

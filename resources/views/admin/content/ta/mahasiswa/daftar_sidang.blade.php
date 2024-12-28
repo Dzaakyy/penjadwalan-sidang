@@ -70,7 +70,8 @@
                         </div>
 
                         @if (Auth::user()->r_mahasiswa)
-                            <input type="hidden" hidden name="mahasiswa_id" value="{{ Auth::user()->r_mahasiswa->id_mahasiswa }}">
+                            <input type="hidden" hidden name="mahasiswa_id"
+                                value="{{ Auth::user()->r_mahasiswa->id_mahasiswa }}">
                         @endif
 
                         <div class="form-group" hidden>
@@ -212,8 +213,8 @@
             'Sekretaris Sidang' => $data->r_sekretaris ? $data->r_sekretaris->nama_dosen : '-',
             'Dosen Penguji 1' => $data->r_penguji_1 ? $data->r_penguji_1->nama_dosen : '-',
             'Dosen Penguji 2' => $data->r_penguji_2 ? $data->r_penguji_2->nama_dosen : '-',
-            'Tanggal Sempro' => $data->tanggal_sempro
-                ? \Carbon\Carbon::parse($data->tanggal_sempro)->locale('id')->format('d-m-Y')
+            'Tanggal TA' => $data->tanggal_ta
+                ? \Carbon\Carbon::parse($data->tanggal_ta)->locale('id')->format('d-m-Y')
                 : '-',
             'Ruang Sidang' => $data->r_ruangan ? $data->r_ruangan->kode_ruang : '-',
             'Jam Sidang' => $data->r_sesi ? $data->r_sesi->jam : '-',
@@ -240,59 +241,103 @@
                         </div>
                     </div>
 
-                    {{-- Modal Nilai TA --}}
-                    {{-- <div class="modal fade" id="nilai{{ $data->id_sempro }}" data-bs-backdrop="static"
-                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai Sempro ->
-                                    {{ $data->r_mahasiswa->nama }}
-                                </h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
 
-                                <form id="nilai{{ $data->id_sempro }}">
+                    {{-- Modal Nilai ta --}}
+                    <div class="modal fade" id="nilai{{ $data->id_ta }}" data-bs-backdrop="static"
+                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai ta ->
+                                        {{ $data->r_mahasiswa->nama }}
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
 
-                                    <div class="form-group">
-                                        <label for="">Nilai Pembimbing 1 -
-                                            {{ $data->r_pembimbing_satu->nama_dosen ?? '' }}</label>
-                                        <input type="text" class="form-control"
-                                            value="{{ $data->r_nilai_pembimbing_satu->nilai_sempro ?? '' }}" readonly
-                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                    </div>
+                                    <form id="nilai{{ $data->id_ta }}">
 
-                                    <div class="form-group">
-                                        <label for="">Nilai Pembimbing 2-
-                                            {{ $data->r_pembimbing_dua->nama_dosen ?? '' }}</label>
-                                        <input type="text" class="form-control"
-                                            value="{{ $data->r_nilai_pembimbing_dua->nilai_sempro ?? '' }}" readonly
-                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                    </div>
 
-                                    <div class="form-group">
-                                        <label for="">Nilai Penguji-
-                                            {{ $data->r_penguji ? $data->r_penguji->nama_dosen : '-' }}</label>
-                                        <input type="text" class="form-control"
-                                            value="{{ $data->r_nilai_penguji->nilai_sempro ?? '' }}" readonly
-                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                    </div>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%;">No</th>
+                                                    <th style="width: 40%;">Jabatan</th>
+                                                    <th style="width: 20%;">Nama</th>
+                                                    <th style="width: 20%;">Total Nilai</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td style="width:80px; word-break: break-all; white-space: normal;">
+                                                        Ketua</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal;">
+                                                        {{ $data->r_ketua->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_ketua->nilai_sidang ?? '' }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Sekretaris</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_sekretaris->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_sekretaris->nilai_sidang ?? '' }}
+                                                    </td>
 
-                                    <div class="form-group">
-                                        <label for="nilai_bimbingan">Total Nilai</label>
-                                        <input type="text" class="form-control nilai_bimbingan"
-                                            name="nilai_bimbingan" placeholder="Total Nilai"
-                                            value="{{ $data->nilai_mahasiswa ?? '' }}" readonly
-                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                    </div>
-                                </form>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Penguji 1</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_penguji_1->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_penguji_1->nilai_sidang ?? '' }}
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>4</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Penguji 2</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_penguji_2->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_penguji_2->nilai_sidang ?? '' }}
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" class="text-start"><strong>Total Nilai</strong>
+                                                    </td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->nilai_mahasiswa }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="text-start"><strong>Keterangan : </strong>
+                                                        @if ($data->keterangan == '0')
+                                                        @elseif ($data->keterangan == '1')
+                                                            Tidak Lulus
+                                                        @elseif ($data->keterangan == '2')
+                                                            Lulus
+                                                        @endif
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div> --}}
                 </div>
             </div>
         @endif

@@ -35,7 +35,8 @@ class ImportMahasiswa implements ToCollection, WithHeadingRow
 
                 $nama = $row['nama'] ?? null;
                 $email = $row['email'] ?? null;
-                $password = $row['password'] ?? null;
+
+                $password = $row['password'] ?? '12345678';
 
                 if ($nama === null || $email === null || $password === null) {
                     Log::warning('Missing nama, email, or password for row: ', $row->toArray());
@@ -58,8 +59,10 @@ class ImportMahasiswa implements ToCollection, WithHeadingRow
                         'password' => Hash::make($password),
                     ]);
                     Log::info('Created new user with email: ' . $email);
-                }
 
+                    $data_user->assignRole('mahasiswa');
+                    Log::info('Assigned "mahasiswa" role to user: ' . $email);
+                }
 
                 $data_prodi = Prodi::where('prodi', $row['prodi'])->first();
                 $nextNumber = $this->getCariNomor();
@@ -76,7 +79,6 @@ class ImportMahasiswa implements ToCollection, WithHeadingRow
                     Log::warning('Invalid status mahasiswa for row: ', [$row->toArray()]);
                     continue;
                 }
-
 
                 Log::info('Inserting mahasiswa with status: ', [$statusValue]);
 
@@ -105,6 +107,7 @@ class ImportMahasiswa implements ToCollection, WithHeadingRow
             throw $e;
         }
     }
+
 
 
 

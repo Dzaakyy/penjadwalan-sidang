@@ -30,6 +30,7 @@ use App\Http\Controllers\Sempro\VerifikasiSemproController;
 use App\Http\Controllers\Ta\AccPembimbingController;
 use App\Http\Controllers\Ta\DaftarSidangTaController;
 use App\Http\Controllers\Ta\DaftarTaController;
+use App\Http\Controllers\Ta\NilaiSidangTaController;
 use App\Http\Controllers\Ta\VerifikasiBerkaController;
 use App\Http\Controllers\Ta\VerifikasiBerkasTAController;
 
@@ -357,6 +358,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/get-available-sessions-ta', [DaftarSidangTaController::class, 'getAvailableSessions']);
     Route::put('/daftar-sidang-ta/kaprodi/update/{id}', [DaftarSidangTaController::class, 'update'])->middleware(['auth', 'verified'])->name('daftar_sidang_ta_kaprodi.update');
     Route::get('/cetak-surat-tugas-ta/download/{id}', [DaftarSidangTaController::class, 'download_pdf'])->name('cetak_surat_tugas_ta.download');
+});
+
+
+// Nilai Sidang TA
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/nilai_sidang_ta', [NilaiSidangTaController::class, 'index'])->middleware(['auth', 'verified'])->name('nilai_sidang_ta');
+    Route::post('/nilai_sidang_ta/nilai/{id}', [NilaiSidangTaController::class, 'nilai_sidang_ta'])->middleware(['auth', 'verified'])->name('nilai_sidang_ta.post');
+    Route::put('/nilai_sidang_ta/edit/nilai/{id}', [NilaiSidangTaController::class, 'nilai_sidang_ta'])->middleware(['auth', 'verified'])->name('nilai_sidang_ta.update');
 });
 
 

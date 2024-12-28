@@ -31,12 +31,12 @@
                     <input type="text" class="form-control">
                 </div>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <form class="search-form" action="#">
                     <i class="icon-search"></i>
                     <input type="search" class="form-control" placeholder="Search Here" title="Search here">
                 </form>
-            </li>
+            </li> --}}
             <li class="nav-item dropdown">
                 <a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
                     <i class="icon-bell"></i>

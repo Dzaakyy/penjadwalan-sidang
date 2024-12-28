@@ -308,11 +308,9 @@
                                                                     ? $data->r_nilai_penguji->nilai_sempro ?? ''
                                                                     : '')) }}"
                                                         readonly
-                                                        style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
+                                                        style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
                                                 </td>
                                             </tr>
-
-
                                             <input type="hidden" name="status"
                                                 value="{{ $data->status ?? ($roles ['isPembimbingSatu'] ? '0' : ($roles ['isPembimbingDua'] ? '1' : ($roles ['isPenguji'] ? '2' : ''))) }}">
                                     </table>
@@ -502,7 +500,7 @@
                                                                     ? $data->r_nilai_penguji->nilai_sempro ?? ''
                                                                     : '')) }}"
                                                         readonly
-                                                        style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
+                                                        style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
                                                 </td>
                                             </tr>
 

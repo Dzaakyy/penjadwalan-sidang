@@ -96,338 +96,381 @@
                                         </div>
                                     </td>
                                 </tr>
-
-                                {{-- Modal Daftar Sidang --}}
-                                <div class="modal fade" id="daftar{{ $data->id_ta }}" data-bs-backdrop="static"
-                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="staticBackdropLabel">Daftar Sidang</h5>
-
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-
-                                            <div class="modal-body">
-                                                <p>Apakah kamu yakin ingin mendaftarkan sidang
-                                                    <b>{{ $data->r_mahasiswa->nama }}</b>
-                                                </p>
-
-                                                <form id="daftar_sidang{{ $data->id_ta }}"
-                                                    action="{{ route('daftar_sidang_ta_kaprodi.update', ['id' => $data->id_ta]) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-
-
-                                                    <div class="form-group">
-                                                        <label for="ketua{{ $data->id_ta }}">Pilih Ketua Sidang</label>
-                                                        <select id="ketua{{ $data->id_ta }}" name="ketua"
-                                                            class="form-select" required>
-                                                            <option value="" disabled selected>Pilih Ketua Sidang
-                                                            </option>
-                                                            @if (isset($data->r_pembimbing_satu))
-                                                                <option value="{{ $data->r_pembimbing_satu->id_dosen }}"
-                                                                    {{ (isset($data->r_ketua) && $data->r_ketua->id_dosen == $data->r_pembimbing_satu->id_dosen) || old('ketua') == $data->r_pembimbing_satu->id_dosen ? 'selected' : '' }}>
-                                                                    {{ $data->r_pembimbing_satu->nama_dosen }}
-                                                                </option>
-                                                            @endif
-                                                            @if (isset($data->r_pembimbing_dua))
-                                                                <option value="{{ $data->r_pembimbing_dua->id_dosen }}"
-                                                                    {{ (isset($data->r_ketua) && $data->r_ketua->id_dosen == $data->r_pembimbing_dua->id_dosen) || old('ketua') == $data->r_pembimbing_dua->id_dosen ? 'selected' : '' }}>
-                                                                    {{ $data->r_pembimbing_dua->nama_dosen }}
-                                                                </option>
-                                                            @endif
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="sekretaris{{ $data->id_ta }}">Pilih Sekretaris
-                                                            Sidang</label>
-                                                        <select id="sekretaris{{ $data->id_ta }}" name="sekretaris"
-                                                            class="form-select" required>
-                                                            <option value="" disabled selected>Pilih Sekretaris
-                                                                Sidang
-                                                            </option>
-                                                            @foreach ($dosen as $dosenItem)
-                                                                @if (!isset($data->r_ketua) || $data->r_ketua->id_dosen != $dosenItem->id_dosen)
-                                                                    @if (!isset($data->r_penguji_1) || $data->r_penguji_1->id_dosen != $dosenItem->id_dosen)
-                                                                        @if (!isset($data->r_penguji_2) || $data->r_penguji_2->id_dosen != $dosenItem->id_dosen)
-                                                                            <option value="{{ $dosenItem->id_dosen }}"
-                                                                                {{ (isset($data->r_sekretaris) && $data->r_sekretaris->id_dosen == $dosenItem->id_dosen) || old('sekretaris') == $dosenItem->id_dosen ? 'selected' : '' }}>
-                                                                                {{ $dosenItem->nama_dosen }}
-                                                                            </option>
-                                                                        @endif
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="penguji_1{{ $data->id_ta }}">Pilih Dosen
-                                                            Penguji 1</label>
-                                                        <select id="penguji_1{{ $data->id_ta }}" name="penguji_1"
-                                                            class="form-select" required>
-                                                            <option value="" disabled selected>Pilih Dosen
-                                                                Penguji 1
-                                                            </option>
-                                                            @foreach ($dosen as $dosenItem)
-                                                                @if (!isset($data->r_ketua) || $data->r_ketua->id_dosen != $dosenItem->id_dosen)
-                                                                    @if (!isset($data->r_sekretaris) || $data->r_sekretaris->id_dosen != $dosenItem->id_dosen)
-                                                                        @if (!isset($data->r_penguji_2) || $data->r_penguji_2->id_dosen != $dosenItem->id_dosen)
-                                                                            <option value="{{ $dosenItem->id_dosen }}"
-                                                                                {{ (isset($data->r_penguji_1) && $data->r_penguji_1->id_dosen == $dosenItem->id_dosen) || old('penguji_1') == $dosenItem->id_dosen ? 'selected' : '' }}>
-                                                                                {{ $dosenItem->nama_dosen }}
-                                                                            </option>
-                                                                        @endif
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="penguji_2{{ $data->id_ta }}">Pilih Dosen
-                                                            Penguji 2</label>
-                                                        <select id="penguji_2{{ $data->id_ta }}" name="penguji_2"
-                                                            class="form-select" required>
-                                                            <option value="" disabled selected>Pilih Dosen
-                                                                Penguji 2
-                                                            </option>
-                                                            @foreach ($dosen as $dosenItem)
-                                                                @if (!isset($data->r_ketua) || $data->r_ketua->id_dosen != $dosenItem->id_dosen)
-                                                                    @if (!isset($data->r_sekretaris) || $data->r_sekretaris->id_dosen != $dosenItem->id_dosen)
-                                                                        @if (!isset($data->r_penguji_1) || $data->r_penguji_1->id_dosen != $dosenItem->id_dosen)
-                                                                            <option value="{{ $dosenItem->id_dosen }}"
-                                                                                {{ (isset($data->r_penguji_2) && $data->r_penguji_2->id_dosen == $dosenItem->id_dosen) || old('penguji_2') == $dosenItem->id_dosen ? 'selected' : '' }}>
-                                                                                {{ $dosenItem->nama_dosen }}
-                                                                            </option>
-                                                                        @endif
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-
-                                                    <div class="form-group">
-                                                        <label for="tanggal_ta{{ $data->id_ta }}">Tanggal
-                                                            Sidang</label>
-                                                        <input type="date" id="tanggal_ta{{ $data->id_ta }}"
-                                                            name="tanggal_ta" class="form-control" required
-                                                            value="{{ old('tanggal_ta', $data->tanggal_ta) }}">
-                                                    </div>
-
-
-                                                    <div class="form-group">
-                                                        <label for="ruangan_id{{ $data->id_ta }}">Pilih Ruang
-                                                            Sidang</label>
-                                                        <select id="ruangan_id{{ $data->id_ta }}" name="ruangan_id"
-                                                            class="form-select" required
-                                                            {{ !isset($data->ketua) || empty($data->ketua) || (!isset($data->sekretaris) || empty($data->sekretaris)) || (!isset($data->penguji_1) || empty($data->penguji_1)) || (!isset($data->penguji_2) || empty($data->penguji_2)) ? 'disabled' : '' }}>
-                                                            <option value="" disabled selected>Pilih Ruangan</option>
-                                                            @foreach ($data_ruangan as $ruang)
-                                                                <option value="{{ $ruang->id_ruang }}"
-                                                                    {{ old('ruangan_id', $data->ruangan_id) == $ruang->id_ruang ? 'selected' : '' }}>
-                                                                    {{ $ruang->kode_ruang }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-
-                                                    <div class="form-group">
-                                                        <label for="sesi_id{{ $data->id_ta }}">Pilih Jam Sidang</label>
-                                                        <select id="sesi_id{{ $data->id_ta }}" name="sesi_id"
-                                                            class="form-select" required
-                                                            {{ !isset($data->ketua) || empty($data->ketua) || (!isset($data->sekretaris) || empty($data->sekretaris)) || (!isset($data->penguji_1) || empty($data->penguji_1)) || (!isset($data->penguji_2) || empty($data->penguji_2)) ? 'disabled' : '' }}>
-                                                            <option value="" disabled selected>Pilih Jam Sidang
-                                                            </option>
-                                                            @foreach ($jam_sidang as $jam)
-                                                                <option value="{{ $jam->id_sesi }}"
-                                                                    {{ old('sesi_id', $data->sesi_id) == $jam->id_sesi ? 'selected' : '' }}>
-                                                                    {{ $jam->jam }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-
-
-                                                    <input type="hidden" name="status" value="1">
-                                            </div>
-
-                                            <div class="modal-footer justify-content-between">
-                                                <button type="submit" class="btn btn-primary">Ya, Daftar</button>
-                                            </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-
-                                {{-- Modal Edit Daftar Sidang --}}
-                                <div class="modal fade" id="edit{{ $data->id_ta }}" data-bs-backdrop="static"
-                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title fs-5" id="staticBackdropLabel">Edit Daftar Sidang
-                                                </h4>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>Apakah kamu yakin ingin mengubah daftar sidang
-                                                    <b>{{ $data->r_mahasiswa->nama }}</b>
-                                                </p>
-
-                                                <form id="status_admin{{ $data->id_ta }}"
-                                                    action="{{ route('daftar_sidang_ta_kaprodi.update', ['id' => $data->id_ta]) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-
-
-                                                    <div class="form-group">
-                                                        <label for="penguji{{ $data->id_ta }}">Pilih Dosen
-                                                            Penguji</label>
-                                                        <select id="penguji{{ $data->id_ta }}" name="penguji"
-                                                            class="form-select" required>
-                                                            <option value="" disabled selected>Pilih Dosen Penguji
-                                                            </option>
-                                                            @foreach ($dosen as $dosenItem)
-                                                                @if (!isset($data->r_pembimbing_satu) || $data->r_pembimbing_satu->id_dosen != $dosenItem->id_dosen)
-                                                                    @if (!isset($data->r_pembimbing_dua) || $data->r_pembimbing_dua->id_dosen != $dosenItem->id_dosen)
-                                                                        <option value="{{ $dosenItem->id_dosen }}"
-                                                                            {{ (isset($data->r_penguji) && $data->r_penguji->id_dosen == $dosenItem->id_dosen) || old('penguji') == $dosenItem->id_dosen ? 'selected' : '' }}>
-                                                                            {{ $dosenItem->nama_dosen }}
-                                                                        </option>
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-
-                                                    <div class="form-group">
-                                                        <label for="tanggal_ta{{ $data->id_ta }}">Tanggal
-                                                            Sidang</label>
-                                                        <input type="date" id="tanggal_ta{{ $data->id_ta }}"
-                                                            name="tanggal_ta" class="form-control" required
-                                                            value="{{ old('tanggal_ta', $data->tanggal_ta) }}"
-                                                            {{ empty($dosen) ? 'disabled' : '' }}>
-                                                    </div>
-
-
-                                                    <div class="form-group">
-                                                        <label for="ruangan_id{{ $data->id_ta }}">Pilih Ruang
-                                                            Sidang</label>
-                                                        <select id="ruangan_id{{ $data->id_ta }}" name="ruangan_id"
-                                                            class="form-select" {{ empty($dosen) ? 'disabled' : '' }}
-                                                            required>
-                                                            <option value="" disabled selected>Pilih Ruangan</option>
-                                                            @foreach ($data_ruangan as $ruang)
-                                                                <option value="{{ $ruang->id_ruang }}"
-                                                                    {{ old('ruangan_id', $data->ruangan_id) == $ruang->id_ruang ? 'selected' : '' }}>
-                                                                    {{ $ruang->kode_ruang }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-                                                    {{-- Jam Sidang --}}
-                                                    <div class="form-group">
-                                                        <label for="sesi_id{{ $data->id_ta }}">Pilih Jam
-                                                            Sidang</label>
-                                                        <select id="sesi_id{{ $data->id_ta }}" name="sesi_id"
-                                                            class="form-select" {{ empty($dosen) ? 'disabled' : '' }}
-                                                            required>
-                                                            <option value="" disabled selected>Pilih Jam Sidang
-                                                            </option>
-                                                            @foreach ($jam_sidang as $jam)
-                                                                <option value="{{ $jam->id_sesi }}"
-                                                                    {{ old('sesi_id', $data->sesi_id) == $jam->id_sesi ? 'selected' : '' }}>
-                                                                    {{ $jam->jam }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                            </div>
-                                            <div class="modal-footer justify-content-between">
-                                                <button type="submit" class="btn btn-primary">Ya, Edit</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                {{-- Modal Nilai ta --}}
-                                {{-- <div class="modal fade" id="nilai{{ $data->id_ta }}" data-bs-backdrop="static"
-                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai ta ->
-                                                    {{ $data->r_mahasiswa->nama }}
-                                                </h4>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-
-                                                <form id="nilai{{ $data->id_ta }}">
-
-                                                    <div class="form-group">
-                                                        <label for="">Nilai Pembimbing 1 -
-                                                            {{ $data->r_pembimbing_satu->nama_dosen ?? '' }}</label>
-                                                        <input type="text" class="form-control"
-                                                            value="{{ $data->r_nilai_pembimbing_satu->nilai_ta ?? '' }}"
-                                                            readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="">Nilai Pembimbing 2-
-                                                            {{ $data->r_pembimbing_dua->nama_dosen ?? '' }}</label>
-                                                        <input type="text" class="form-control"
-                                                            value="{{ $data->r_nilai_pembimbing_dua->nilai_ta ?? '' }}"
-                                                            readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="">Nilai Penguji-
-                                                            {{ $data->r_penguji ? $data->r_penguji->nama_dosen : '-' }}</label>
-                                                        <input type="text" class="form-control"
-                                                            value="{{ $data->r_nilai_penguji->nilai_ta ?? '' }}"
-                                                            readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="nilai_bimbingan">Total Nilai</label>
-                                                        <input type="text" class="form-control nilai_bimbingan"
-                                                            name="nilai_bimbingan" placeholder="Total Nilai"
-                                                            value="{{ $data->nilai_mahasiswa ?? '' }}" readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> --}}
                             @endif
                         @endforeach
                     </tbody>
                 </table>
+
+
+
+
+                @foreach ($data_mahasiswa_ta as $data)
+                    {{-- Modal Daftar Sidang --}}
+                    <div class="modal fade" id="daftar{{ $data->id_ta }}" data-bs-backdrop="static"
+                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Daftar Sidang</h5>
+
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <p>Apakah kamu yakin ingin mendaftarkan sidang
+                                        <b>{{ $data->r_mahasiswa->nama }}</b>
+                                    </p>
+
+                                    <form id="daftar_sidang{{ $data->id_ta }}"
+                                        action="{{ route('daftar_sidang_ta_kaprodi.update', ['id' => $data->id_ta]) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+
+                                        <div class="form-group">
+                                            <label for="ketua{{ $data->id_ta }}">Pilih Ketua Sidang</label>
+                                            <select id="ketua{{ $data->id_ta }}" name="ketua" class="form-select"
+                                                required>
+                                                <option value="" disabled selected>Pilih Ketua Sidang
+                                                </option>
+                                                @if (isset($data->r_pembimbing_satu))
+                                                    <option value="{{ $data->r_pembimbing_satu->id_dosen }}"
+                                                        {{ (isset($data->r_ketua) && $data->r_ketua->id_dosen == $data->r_pembimbing_satu->id_dosen) || old('ketua') == $data->r_pembimbing_satu->id_dosen ? 'selected' : '' }}>
+                                                        {{ $data->r_pembimbing_satu->nama_dosen }}
+                                                    </option>
+                                                @endif
+                                                @if (isset($data->r_pembimbing_dua))
+                                                    <option value="{{ $data->r_pembimbing_dua->id_dosen }}"
+                                                        {{ (isset($data->r_ketua) && $data->r_ketua->id_dosen == $data->r_pembimbing_dua->id_dosen) || old('ketua') == $data->r_pembimbing_dua->id_dosen ? 'selected' : '' }}>
+                                                        {{ $data->r_pembimbing_dua->nama_dosen }}
+                                                    </option>
+                                                @endif
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="sekretaris{{ $data->id_ta }}">Pilih Sekretaris
+                                                Sidang</label>
+                                            <select id="sekretaris{{ $data->id_ta }}" name="sekretaris"
+                                                class="form-select" required>
+                                                <option value="" disabled selected>Pilih Sekretaris
+                                                    Sidang
+                                                </option>
+                                                @foreach ($dosen as $dosenItem)
+                                                    @if (!isset($data->r_ketua) || $data->r_ketua->id_dosen != $dosenItem->id_dosen)
+                                                        @if (!isset($data->r_penguji_1) || $data->r_penguji_1->id_dosen != $dosenItem->id_dosen)
+                                                            @if (!isset($data->r_penguji_2) || $data->r_penguji_2->id_dosen != $dosenItem->id_dosen)
+                                                                <option value="{{ $dosenItem->id_dosen }}"
+                                                                    {{ (isset($data->r_sekretaris) && $data->r_sekretaris->id_dosen == $dosenItem->id_dosen) || old('sekretaris') == $dosenItem->id_dosen ? 'selected' : '' }}>
+                                                                    {{ $dosenItem->nama_dosen }}
+                                                                </option>
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="penguji_1{{ $data->id_ta }}">Pilih Dosen
+                                                Penguji 1</label>
+                                            <select id="penguji_1{{ $data->id_ta }}" name="penguji_1" class="form-select"
+                                                required>
+                                                <option value="" disabled selected>Pilih Dosen
+                                                    Penguji 1
+                                                </option>
+                                                @foreach ($dosen as $dosenItem)
+                                                    @if (!isset($data->r_ketua) || $data->r_ketua->id_dosen != $dosenItem->id_dosen)
+                                                        @if (!isset($data->r_sekretaris) || $data->r_sekretaris->id_dosen != $dosenItem->id_dosen)
+                                                            @if (!isset($data->r_penguji_2) || $data->r_penguji_2->id_dosen != $dosenItem->id_dosen)
+                                                                <option value="{{ $dosenItem->id_dosen }}"
+                                                                    {{ (isset($data->r_penguji_1) && $data->r_penguji_1->id_dosen == $dosenItem->id_dosen) || old('penguji_1') == $dosenItem->id_dosen ? 'selected' : '' }}>
+                                                                    {{ $dosenItem->nama_dosen }}
+                                                                </option>
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="penguji_2{{ $data->id_ta }}">Pilih Dosen
+                                                Penguji 2</label>
+                                            <select id="penguji_2{{ $data->id_ta }}" name="penguji_2" class="form-select"
+                                                required>
+                                                <option value="" disabled selected>Pilih Dosen
+                                                    Penguji 2
+                                                </option>
+                                                @foreach ($dosen as $dosenItem)
+                                                    @if (!isset($data->r_ketua) || $data->r_ketua->id_dosen != $dosenItem->id_dosen)
+                                                        @if (!isset($data->r_sekretaris) || $data->r_sekretaris->id_dosen != $dosenItem->id_dosen)
+                                                            @if (!isset($data->r_penguji_1) || $data->r_penguji_1->id_dosen != $dosenItem->id_dosen)
+                                                                <option value="{{ $dosenItem->id_dosen }}"
+                                                                    {{ (isset($data->r_penguji_2) && $data->r_penguji_2->id_dosen == $dosenItem->id_dosen) || old('penguji_2') == $dosenItem->id_dosen ? 'selected' : '' }}>
+                                                                    {{ $dosenItem->nama_dosen }}
+                                                                </option>
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label for="tanggal_ta{{ $data->id_ta }}">Tanggal
+                                                Sidang</label>
+                                            <input type="date" id="tanggal_ta{{ $data->id_ta }}" name="tanggal_ta"
+                                                class="form-control" required
+                                                value="{{ old('tanggal_ta', $data->tanggal_ta) }}">
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label for="ruangan_id{{ $data->id_ta }}">Pilih Ruang
+                                                Sidang</label>
+                                            <select id="ruangan_id{{ $data->id_ta }}" name="ruangan_id"
+                                                class="form-select" required
+                                                {{ !isset($data->ketua) || empty($data->ketua) || (!isset($data->sekretaris) || empty($data->sekretaris)) || (!isset($data->penguji_1) || empty($data->penguji_1)) || (!isset($data->penguji_2) || empty($data->penguji_2)) ? 'disabled' : '' }}>
+                                                <option value="" disabled selected>Pilih Ruangan</option>
+                                                @foreach ($data_ruangan as $ruang)
+                                                    <option value="{{ $ruang->id_ruang }}"
+                                                        {{ old('ruangan_id', $data->ruangan_id) == $ruang->id_ruang ? 'selected' : '' }}>
+                                                        {{ $ruang->kode_ruang }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label for="sesi_id{{ $data->id_ta }}">Pilih Jam Sidang</label>
+                                            <select id="sesi_id{{ $data->id_ta }}" name="sesi_id" class="form-select"
+                                                required
+                                                {{ !isset($data->ketua) || empty($data->ketua) || (!isset($data->sekretaris) || empty($data->sekretaris)) || (!isset($data->penguji_1) || empty($data->penguji_1)) || (!isset($data->penguji_2) || empty($data->penguji_2)) ? 'disabled' : '' }}>
+                                                <option value="" disabled selected>Pilih Jam Sidang
+                                                </option>
+                                                @foreach ($jam_sidang as $jam)
+                                                    <option value="{{ $jam->id_sesi }}"
+                                                        {{ old('sesi_id', $data->sesi_id) == $jam->id_sesi ? 'selected' : '' }}>
+                                                        {{ $jam->jam }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+
+                                        <input type="hidden" name="status" value="1">
+                                </div>
+
+                                <div class="modal-footer justify-content-between">
+                                    <button type="submit" class="btn btn-primary">Ya, Daftar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    {{-- Modal Edit Daftar Sidang --}}
+                    <div class="modal fade" id="edit{{ $data->id_ta }}" data-bs-backdrop="static"
+                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Edit Daftar Sidang
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Apakah kamu yakin ingin mengubah daftar sidang
+                                        <b>{{ $data->r_mahasiswa->nama }}</b>
+                                    </p>
+
+                                    <form id="status_admin{{ $data->id_ta }}"
+                                        action="{{ route('daftar_sidang_ta_kaprodi.update', ['id' => $data->id_ta]) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+
+                                        <div class="form-group">
+                                            <label for="penguji{{ $data->id_ta }}">Pilih Dosen
+                                                Penguji</label>
+                                            <select id="penguji{{ $data->id_ta }}" name="penguji" class="form-select"
+                                                required>
+                                                <option value="" disabled selected>Pilih Dosen Penguji
+                                                </option>
+                                                @foreach ($dosen as $dosenItem)
+                                                    @if (!isset($data->r_pembimbing_satu) || $data->r_pembimbing_satu->id_dosen != $dosenItem->id_dosen)
+                                                        @if (!isset($data->r_pembimbing_dua) || $data->r_pembimbing_dua->id_dosen != $dosenItem->id_dosen)
+                                                            <option value="{{ $dosenItem->id_dosen }}"
+                                                                {{ (isset($data->r_penguji) && $data->r_penguji->id_dosen == $dosenItem->id_dosen) || old('penguji') == $dosenItem->id_dosen ? 'selected' : '' }}>
+                                                                {{ $dosenItem->nama_dosen }}
+                                                            </option>
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label for="tanggal_ta{{ $data->id_ta }}">Tanggal
+                                                Sidang</label>
+                                            <input type="date" id="tanggal_ta{{ $data->id_ta }}" name="tanggal_ta"
+                                                class="form-control" required
+                                                value="{{ old('tanggal_ta', $data->tanggal_ta) }}"
+                                                {{ empty($dosen) ? 'disabled' : '' }}>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label for="ruangan_id{{ $data->id_ta }}">Pilih Ruang
+                                                Sidang</label>
+                                            <select id="ruangan_id{{ $data->id_ta }}" name="ruangan_id"
+                                                class="form-select" {{ empty($dosen) ? 'disabled' : '' }} required>
+                                                <option value="" disabled selected>Pilih Ruangan</option>
+                                                @foreach ($data_ruangan as $ruang)
+                                                    <option value="{{ $ruang->id_ruang }}"
+                                                        {{ old('ruangan_id', $data->ruangan_id) == $ruang->id_ruang ? 'selected' : '' }}>
+                                                        {{ $ruang->kode_ruang }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        {{-- Jam Sidang --}}
+                                        <div class="form-group">
+                                            <label for="sesi_id{{ $data->id_ta }}">Pilih Jam
+                                                Sidang</label>
+                                            <select id="sesi_id{{ $data->id_ta }}" name="sesi_id" class="form-select"
+                                                {{ empty($dosen) ? 'disabled' : '' }} required>
+                                                <option value="" disabled selected>Pilih Jam Sidang
+                                                </option>
+                                                @foreach ($jam_sidang as $jam)
+                                                    <option value="{{ $jam->id_sesi }}"
+                                                        {{ old('sesi_id', $data->sesi_id) == $jam->id_sesi ? 'selected' : '' }}>
+                                                        {{ $jam->jam }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="submit" class="btn btn-primary">Ya, Edit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {{-- Modal Nilai ta --}}
+                    <div class="modal fade" id="nilai{{ $data->id_ta }}" data-bs-backdrop="static"
+                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai ta ->
+                                        {{ $data->r_mahasiswa->nama }}
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <form id="nilai{{ $data->id_ta }}">
+
+
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%;">No</th>
+                                                    <th style="width: 40%;">Jabatan</th>
+                                                    <th style="width: 20%;">Nama</th>
+                                                    <th style="width: 20%;">Total Nilai</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td style="width:80px; word-break: break-all; white-space: normal;">
+                                                        Ketua</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal;">
+                                                        {{ $data->r_ketua->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_ketua->nilai_sidang ?? '' }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Sekretaris</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_sekretaris->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_sekretaris->nilai_sidang ?? '' }}
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Penguji 1</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_penguji_1->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_penguji_1->nilai_sidang ?? '' }}
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>4</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Penguji 2</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_penguji_2->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_penguji_2->nilai_sidang ?? '' }}
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" class="text-start"><strong>Total Nilai</strong>
+                                                    </td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->nilai_mahasiswa }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="text-start"><strong>Keterangan : </strong>
+                                                        @if ($data->keterangan == '0')
+
+                                                        @elseif ($data->keterangan == '1')
+                                                            Tidak Lulus
+                                                        @elseif ($data->keterangan == '2')
+                                                            Lulus
+                                                        @endif
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>

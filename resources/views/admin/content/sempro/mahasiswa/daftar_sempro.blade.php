@@ -41,9 +41,6 @@
 
 
 
-
-
-
     {{-- Modal Daftar Sempro --}}
     <div class="modal fade" id="daftar_sempro" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -338,37 +335,59 @@
 
                                     <form id="nilai{{ $data->id_sempro }}">
 
-                                        <div class="form-group">
-                                            <label for="">Nilai Pembimbing 1 -
-                                                {{ $data->r_pembimbing_satu->nama_dosen ?? '' }}</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $data->r_nilai_pembimbing_satu->nilai_sempro ?? '' }}" readonly
-                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                        </div>
 
-                                        <div class="form-group">
-                                            <label for="">Nilai Pembimbing 2-
-                                                {{ $data->r_pembimbing_dua->nama_dosen ?? '' }}</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $data->r_nilai_pembimbing_dua->nilai_sempro ?? '' }}" readonly
-                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                        </div>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%;">No</th>
+                                                    <th style="width: 40%;">Jabatan</th>
+                                                    <th style="width: 20%;">Nama</th>
+                                                    <th style="width: 20%;">Total Nilai</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td style="width:80px; word-break: break-all; white-space: normal;">
+                                                        Pembimbing 1</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal;">
+                                                        {{ $data->r_pembimbing_satu->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_pembimbing_satu->nilai_sempro ?? '' }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Pembimbing 2</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_pembimbing_dua->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_pembimbing_dua->nilai_sempro ?? '' }}
+                                                    </td>
 
-                                        <div class="form-group">
-                                            <label for="">Nilai Penguji-
-                                                {{ $data->r_penguji ? $data->r_penguji->nama_dosen : '-' }}</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $data->r_nilai_penguji->nilai_sempro ?? '' }}" readonly
-                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                        </div>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Penguji</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_penguji ? $data->r_penguji->nama_dosen : '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_penguji->nilai_sempro ?? '' }}
+                                                    </td>
 
-                                        <div class="form-group">
-                                            <label for="nilai_bimbingan">Total Nilai</label>
-                                            <input type="text" class="form-control nilai_bimbingan"
-                                                name="nilai_bimbingan" placeholder="Total Nilai"
-                                                value="{{ $data->nilai_mahasiswa ?? '' }}" readonly
-                                                style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                        </div>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" class="text-start"><strong>Total Nilai</strong>
+                                                    </td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->nilai_mahasiswa }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
                                     </form>
                                 </div>
                             </div>

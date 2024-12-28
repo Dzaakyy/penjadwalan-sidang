@@ -82,278 +82,299 @@
                                         </div>
                                     </td>
                                 </tr>
-
-                                {{-- Modal Daftar Sidang --}}
-                                <div class="modal fade" id="daftar{{ $data->id_sempro }}" data-bs-backdrop="static"
-                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="staticBackdropLabel">Daftar Sidang</h5>
-                                                <!-- Close Button (Tombol silang) -->
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-
-                                            <div class="modal-body">
-                                                <p>Apakah kamu yakin ingin mendaftarkan sidang
-                                                    <b>{{ $data->r_mahasiswa->nama }}</b>
-                                                </p>
-
-                                                <form id="daftar_sidang{{ $data->id_sempro }}"
-                                                    action="{{ route('daftar_sidang_sempro_kaprodi.update', ['id' => $data->id_sempro]) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-
-                                                    <input type="hidden" id="pembimbing_satu{{ $data->id_sempro }}"
-                                                        value="{{ $data->r_pembimbing_satu->id_dosen ?? '' }}">
-                                                    <input type="hidden" id="pembimbing_dua{{ $data->id_sempro }}"
-                                                        value="{{ $data->r_pembimbing_dua->id_dosen ?? '' }}">
-
-
-
-                                                    <!-- Dosen Penguji -->
-                                                    <div class="form-group">
-                                                        <label for="penguji{{ $data->id_sempro }}">Pilih Dosen
-                                                            Penguji</label>
-                                                        <select id="penguji{{ $data->id_sempro }}" name="penguji"
-                                                            class="form-select" required>
-                                                            <option value="" disabled selected>Pilih Dosen Penguji
-                                                            </option>
-                                                            @foreach ($dosen as $dosenItem)
-                                                                @if (!isset($data->r_pembimbing_satu) || $data->r_pembimbing_satu->id_dosen != $dosenItem->id_dosen)
-                                                                    @if (!isset($data->r_pembimbing_dua) || $data->r_pembimbing_dua->id_dosen != $dosenItem->id_dosen)
-                                                                        <option value="{{ $dosenItem->id_dosen }}"
-                                                                            {{ (isset($data->r_penguji) && $data->r_penguji->id_dosen == $dosenItem->id_dosen) || old('penguji') == $dosenItem->id_dosen ? 'selected' : '' }}>
-                                                                            {{ $dosenItem->nama_dosen }}
-                                                                        </option>
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-                                                    <!-- Tanggal Sidang -->
-                                                    <div class="form-group">
-                                                        <label for="tanggal_sempro{{ $data->id_sempro }}">Tanggal
-                                                            Sidang</label>
-                                                        <input type="date" id="tanggal_sempro{{ $data->id_sempro }}"
-                                                            name="tanggal_sempro" class="form-control" required
-                                                            value="{{ old('tanggal_sempro', $data->tanggal_sempro) }}"
-                                                            {{ !isset($data->penguji) || empty($data->penguji) ? 'disabled' : '' }}>
-                                                    </div>
-
-                                                    <!-- Ruang Sidang -->
-                                                    <div class="form-group">
-                                                        <label for="ruangan_id{{ $data->id_sempro }}">Pilih Ruang
-                                                            Sidang</label>
-                                                        <select id="ruangan_id{{ $data->id_sempro }}" name="ruangan_id"
-                                                            class="form-select" required
-                                                            {{ !isset($data->penguji) || empty($data->penguji) ? 'disabled' : '' }}>
-                                                            <option value="" disabled selected>Pilih Ruangan</option>
-                                                            @foreach ($data_ruangan as $ruang)
-                                                                <option value="{{ $ruang->id_ruang }}"
-                                                                    {{ old('ruangan_id', $data->ruangan_id) == $ruang->id_ruang ? 'selected' : '' }}>
-                                                                    {{ $ruang->kode_ruang }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-                                                    <!-- Jam Sidang -->
-                                                    <div class="form-group">
-                                                        <label for="sesi_id{{ $data->id_sempro }}">Pilih Jam Sidang</label>
-                                                        <select id="sesi_id{{ $data->id_sempro }}" name="sesi_id"
-                                                            class="form-select" required
-                                                            {{ !isset($data->penguji) || empty($data->penguji) ? 'disabled' : '' }}>
-                                                            <option value="" disabled selected>Pilih Jam Sidang
-                                                            </option>
-                                                            @foreach ($jam_sidang as $jam)
-                                                                <option value="{{ $jam->id_sesi }}"
-                                                                    {{ old('sesi_id', $data->sesi_id) == $jam->id_sesi ? 'selected' : '' }}>
-                                                                    {{ $jam->jam }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-
-                                                    <!-- Status -->
-                                                    <input type="hidden" name="status" value="1">
-                                            </div>
-
-                                            <div class="modal-footer justify-content-between">
-                                                <button type="submit" class="btn btn-primary">Ya, Daftar</button>
-                                            </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-
-                                {{-- Modal Edit Daftar Sidang --}}
-                                <div class="modal fade" id="edit{{ $data->id_sempro }}" data-bs-backdrop="static"
-                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title fs-5" id="staticBackdropLabel">Edit Daftar Sidang
-                                                </h4>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>Apakah kamu yakin ingin mengubah daftar sidang
-                                                    <b>{{ $data->r_mahasiswa->nama }}</b>
-                                                </p>
-
-                                                <form id="status_admin{{ $data->id_sempro }}"
-                                                    action="{{ route('daftar_sidang_sempro_kaprodi.update', ['id' => $data->id_sempro]) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-
-                                                    {{-- Dosen Penguji --}}
-                                                    <div class="form-group">
-                                                        <label for="penguji{{ $data->id_sempro }}">Pilih Dosen
-                                                            Penguji</label>
-                                                        <select id="penguji{{ $data->id_sempro }}" name="penguji"
-                                                            class="form-select" required>
-                                                            <option value="" disabled selected>Pilih Dosen Penguji
-                                                            </option>
-                                                            @foreach ($dosen as $dosenItem)
-                                                                @if (!isset($data->r_pembimbing_satu) || $data->r_pembimbing_satu->id_dosen != $dosenItem->id_dosen)
-                                                                    @if (!isset($data->r_pembimbing_dua) || $data->r_pembimbing_dua->id_dosen != $dosenItem->id_dosen)
-                                                                        <option value="{{ $dosenItem->id_dosen }}"
-                                                                            {{ (isset($data->r_penguji) && $data->r_penguji->id_dosen == $dosenItem->id_dosen) || old('penguji') == $dosenItem->id_dosen ? 'selected' : '' }}>
-                                                                            {{ $dosenItem->nama_dosen }}
-                                                                        </option>
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-                                                    {{-- Tanggal Sidang --}}
-                                                    <div class="form-group">
-                                                        <label for="tanggal_sempro{{ $data->id_sempro }}">Tanggal
-                                                            Sidang</label>
-                                                        <input type="date" id="tanggal_sempro{{ $data->id_sempro }}"
-                                                            name="tanggal_sempro" class="form-control" required
-                                                            value="{{ old('tanggal_sempro', $data->tanggal_sempro) }}"
-                                                            {{ empty($dosen) ? 'disabled' : '' }}>
-                                                    </div>
-
-                                                    {{-- Ruang Sidang --}}
-                                                    <div class="form-group">
-                                                        <label for="ruangan_id{{ $data->id_sempro }}">Pilih Ruang
-                                                            Sidang</label>
-                                                        <select id="ruangan_id{{ $data->id_sempro }}" name="ruangan_id"
-                                                            class="form-select" {{ empty($dosen) ? 'disabled' : '' }}
-                                                            required>
-                                                            <option value="" disabled selected>Pilih Ruangan</option>
-                                                            @foreach ($data_ruangan as $ruang)
-                                                                <option value="{{ $ruang->id_ruang }}"
-                                                                    {{ old('ruangan_id', $data->ruangan_id) == $ruang->id_ruang ? 'selected' : '' }}>
-                                                                    {{ $ruang->kode_ruang }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-                                                    {{-- Jam Sidang --}}
-                                                    <div class="form-group">
-                                                        <label for="sesi_id{{ $data->id_sempro }}">Pilih Jam
-                                                            Sidang</label>
-                                                        <select id="sesi_id{{ $data->id_sempro }}" name="sesi_id"
-                                                            class="form-select" {{ empty($dosen) ? 'disabled' : '' }}
-                                                            required>
-                                                            <option value="" disabled selected>Pilih Jam Sidang
-                                                            </option>
-                                                            @foreach ($jam_sidang as $jam)
-                                                                <option value="{{ $jam->id_sesi }}"
-                                                                    {{ old('sesi_id', $data->sesi_id) == $jam->id_sesi ? 'selected' : '' }}>
-                                                                    {{ $jam->jam }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                            </div>
-                                            <div class="modal-footer justify-content-between">
-                                                <button type="submit" class="btn btn-primary">Ya, Edit</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                {{-- Modal Nilai Sempro --}}
-                                <div class="modal fade" id="nilai{{ $data->id_sempro }}" data-bs-backdrop="static"
-                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai Sempro ->
-                                                    {{ $data->r_mahasiswa->nama }}
-                                                </h4>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-
-                                                <form id="nilai{{ $data->id_sempro }}">
-
-                                                    <div class="form-group">
-                                                        <label for="">Nilai Pembimbing 1 -
-                                                            {{ $data->r_pembimbing_satu->nama_dosen ?? '' }}</label>
-                                                        <input type="text" class="form-control"
-                                                            value="{{ $data->r_nilai_pembimbing_satu->nilai_sempro ?? '' }}"
-                                                            readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="">Nilai Pembimbing 2-
-                                                            {{ $data->r_pembimbing_dua->nama_dosen ?? '' }}</label>
-                                                        <input type="text" class="form-control"
-                                                            value="{{ $data->r_nilai_pembimbing_dua->nilai_sempro ?? '' }}"
-                                                            readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="">Nilai Penguji-
-                                                            {{ $data->r_penguji ? $data->r_penguji->nama_dosen : '-' }}</label>
-                                                        <input type="text" class="form-control"
-                                                            value="{{ $data->r_nilai_penguji->nilai_sempro ?? '' }}"
-                                                            readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="nilai_bimbingan">Total Nilai</label>
-                                                        <input type="text" class="form-control nilai_bimbingan"
-                                                            name="nilai_bimbingan" placeholder="Total Nilai"
-                                                            value="{{ $data->nilai_mahasiswa ?? '' }}" readonly
-                                                            style="background-color: #f0f0f0; color: #6c757d; cursor: not-allowed;">
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             @endif
                         @endforeach
                     </tbody>
                 </table>
+
+
+
+
+                @foreach ($data_mahasiswa_sempro as $data)
+                    {{-- Modal Daftar Sidang --}}
+                    <div class="modal fade" id="daftar{{ $data->id_sempro }}" data-bs-backdrop="static"
+                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Daftar Sidang</h5>
+                                    <!-- Close Button (Tombol silang) -->
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <p>Apakah kamu yakin ingin mendaftarkan sidang
+                                        <b>{{ $data->r_mahasiswa->nama }}</b>
+                                    </p>
+
+                                    <form id="daftar_sidang{{ $data->id_sempro }}"
+                                        action="{{ route('daftar_sidang_sempro_kaprodi.update', ['id' => $data->id_sempro]) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <input type="hidden" id="pembimbing_satu{{ $data->id_sempro }}"
+                                            value="{{ $data->r_pembimbing_satu->id_dosen ?? '' }}">
+                                        <input type="hidden" id="pembimbing_dua{{ $data->id_sempro }}"
+                                            value="{{ $data->r_pembimbing_dua->id_dosen ?? '' }}">
+
+
+
+                                        <!-- Dosen Penguji -->
+                                        <div class="form-group">
+                                            <label for="penguji{{ $data->id_sempro }}">Pilih Dosen
+                                                Penguji</label>
+                                            <select id="penguji{{ $data->id_sempro }}" name="penguji" class="form-select"
+                                                required>
+                                                <option value="" disabled selected>Pilih Dosen Penguji
+                                                </option>
+                                                @foreach ($dosen as $dosenItem)
+                                                    @if (!isset($data->r_pembimbing_satu) || $data->r_pembimbing_satu->id_dosen != $dosenItem->id_dosen)
+                                                        @if (!isset($data->r_pembimbing_dua) || $data->r_pembimbing_dua->id_dosen != $dosenItem->id_dosen)
+                                                            <option value="{{ $dosenItem->id_dosen }}"
+                                                                {{ (isset($data->r_penguji) && $data->r_penguji->id_dosen == $dosenItem->id_dosen) || old('penguji') == $dosenItem->id_dosen ? 'selected' : '' }}>
+                                                                {{ $dosenItem->nama_dosen }}
+                                                            </option>
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <!-- Tanggal Sidang -->
+                                        <div class="form-group">
+                                            <label for="tanggal_sempro{{ $data->id_sempro }}">Tanggal
+                                                Sidang</label>
+                                            <input type="date" id="tanggal_sempro{{ $data->id_sempro }}"
+                                                name="tanggal_sempro" class="form-control" required
+                                                value="{{ old('tanggal_sempro', $data->tanggal_sempro) }}"
+                                                {{ !isset($data->penguji) || empty($data->penguji) ? 'disabled' : '' }}>
+                                        </div>
+
+                                        <!-- Ruang Sidang -->
+                                        <div class="form-group">
+                                            <label for="ruangan_id{{ $data->id_sempro }}">Pilih Ruang
+                                                Sidang</label>
+                                            <select id="ruangan_id{{ $data->id_sempro }}" name="ruangan_id"
+                                                class="form-select" required
+                                                {{ !isset($data->penguji) || empty($data->penguji) ? 'disabled' : '' }}>
+                                                <option value="" disabled selected>Pilih Ruangan</option>
+                                                @foreach ($data_ruangan as $ruang)
+                                                    <option value="{{ $ruang->id_ruang }}"
+                                                        {{ old('ruangan_id', $data->ruangan_id) == $ruang->id_ruang ? 'selected' : '' }}>
+                                                        {{ $ruang->kode_ruang }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <!-- Jam Sidang -->
+                                        <div class="form-group">
+                                            <label for="sesi_id{{ $data->id_sempro }}">Pilih Jam Sidang</label>
+                                            <select id="sesi_id{{ $data->id_sempro }}" name="sesi_id" class="form-select"
+                                                required
+                                                {{ !isset($data->penguji) || empty($data->penguji) ? 'disabled' : '' }}>
+                                                <option value="" disabled selected>Pilih Jam Sidang
+                                                </option>
+                                                @foreach ($jam_sidang as $jam)
+                                                    <option value="{{ $jam->id_sesi }}"
+                                                        {{ old('sesi_id', $data->sesi_id) == $jam->id_sesi ? 'selected' : '' }}>
+                                                        {{ $jam->jam }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+                                        <!-- Status -->
+                                        <input type="hidden" name="status" value="1">
+                                </div>
+
+                                <div class="modal-footer justify-content-between">
+                                    <button type="submit" class="btn btn-primary">Ya, Daftar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    {{-- Modal Edit Daftar Sidang --}}
+                    <div class="modal fade" id="edit{{ $data->id_sempro }}" data-bs-backdrop="static"
+                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Edit Daftar Sidang
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Apakah kamu yakin ingin mengubah daftar sidang
+                                        <b>{{ $data->r_mahasiswa->nama }}</b>
+                                    </p>
+
+                                    <form id="status_admin{{ $data->id_sempro }}"
+                                        action="{{ route('daftar_sidang_sempro_kaprodi.update', ['id' => $data->id_sempro]) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+                                        {{-- Dosen Penguji --}}
+                                        <div class="form-group">
+                                            <label for="penguji{{ $data->id_sempro }}">Pilih Dosen
+                                                Penguji</label>
+                                            <select id="penguji{{ $data->id_sempro }}" name="penguji"
+                                                class="form-select" required>
+                                                <option value="" disabled selected>Pilih Dosen Penguji
+                                                </option>
+                                                @foreach ($dosen as $dosenItem)
+                                                    @if (!isset($data->r_pembimbing_satu) || $data->r_pembimbing_satu->id_dosen != $dosenItem->id_dosen)
+                                                        @if (!isset($data->r_pembimbing_dua) || $data->r_pembimbing_dua->id_dosen != $dosenItem->id_dosen)
+                                                            <option value="{{ $dosenItem->id_dosen }}"
+                                                                {{ (isset($data->r_penguji) && $data->r_penguji->id_dosen == $dosenItem->id_dosen) || old('penguji') == $dosenItem->id_dosen ? 'selected' : '' }}>
+                                                                {{ $dosenItem->nama_dosen }}
+                                                            </option>
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        {{-- Tanggal Sidang --}}
+                                        <div class="form-group">
+                                            <label for="tanggal_sempro{{ $data->id_sempro }}">Tanggal
+                                                Sidang</label>
+                                            <input type="date" id="tanggal_sempro{{ $data->id_sempro }}"
+                                                name="tanggal_sempro" class="form-control" required
+                                                value="{{ old('tanggal_sempro', $data->tanggal_sempro) }}"
+                                                {{ empty($dosen) ? 'disabled' : '' }}>
+                                        </div>
+
+                                        {{-- Ruang Sidang --}}
+                                        <div class="form-group">
+                                            <label for="ruangan_id{{ $data->id_sempro }}">Pilih Ruang
+                                                Sidang</label>
+                                            <select id="ruangan_id{{ $data->id_sempro }}" name="ruangan_id"
+                                                class="form-select" {{ empty($dosen) ? 'disabled' : '' }} required>
+                                                <option value="" disabled selected>Pilih Ruangan</option>
+                                                @foreach ($data_ruangan as $ruang)
+                                                    <option value="{{ $ruang->id_ruang }}"
+                                                        {{ old('ruangan_id', $data->ruangan_id) == $ruang->id_ruang ? 'selected' : '' }}>
+                                                        {{ $ruang->kode_ruang }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        {{-- Jam Sidang --}}
+                                        <div class="form-group">
+                                            <label for="sesi_id{{ $data->id_sempro }}">Pilih Jam
+                                                Sidang</label>
+                                            <select id="sesi_id{{ $data->id_sempro }}" name="sesi_id"
+                                                class="form-select" {{ empty($dosen) ? 'disabled' : '' }} required>
+                                                <option value="" disabled selected>Pilih Jam Sidang
+                                                </option>
+                                                @foreach ($jam_sidang as $jam)
+                                                    <option value="{{ $jam->id_sesi }}"
+                                                        {{ old('sesi_id', $data->sesi_id) == $jam->id_sesi ? 'selected' : '' }}>
+                                                        {{ $jam->jam }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="submit" class="btn btn-primary">Ya, Edit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {{-- Modal Nilai Sempro --}}
+                    <div class="modal fade" id="nilai{{ $data->id_sempro }}" data-bs-backdrop="static"
+                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai Sempro ->
+                                        {{ $data->r_mahasiswa->nama }}
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <form id="nilai{{ $data->id_sempro }}">
+
+
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%;">No</th>
+                                                    <th style="width: 40%;">Jabatan</th>
+                                                    <th style="width: 20%;">Nama</th>
+                                                    <th style="width: 20%;">Total Nilai</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td style="width:80px; word-break: break-all; white-space: normal;">
+                                                        Pembimbing 1</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal;">
+                                                        {{ $data->r_pembimbing_satu->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_pembimbing_satu->nilai_sempro ?? '' }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Pembimbing 2</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_pembimbing_dua->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_pembimbing_dua->nilai_sempro ?? '' }}
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Penguji</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_penguji ? $data->r_penguji->nama_dosen : '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_penguji->nilai_sempro ?? '' }}
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" class="text-start"><strong>Total Nilai</strong>
+                                                    </td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->nilai_mahasiswa }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -368,7 +389,6 @@
         }, 5000);
 
         $(document).ready(function() {
-            // Handle when examiner (penguji) is selected
             $(document).on('change', '[id^="penguji"]', function() {
                 let penguji = $(this).val();
                 let modalId = $(this).attr('id').split('penguji')[1];
@@ -386,13 +406,11 @@
                     return;
                 }
 
-                // Reset date, room, and session if examiner changes
                 $('#tanggal_sempro' + modalId).val('').prop('disabled', false);
                 $('#ruangan_id' + modalId).prop('disabled', true).empty();
                 $('#sesi_id' + modalId).prop('disabled', true).empty();
             });
 
-            // Handle when date is selected
             $(document).on('change', '[id^="tanggal_sempro"]', function() {
                 let tanggal = $(this).val();
                 let modalId = $(this).attr('id').split('tanggal_sempro')[1];
@@ -403,7 +421,6 @@
                     return;
                 }
 
-                // Fetch available rooms for the selected date
                 $.ajax({
                     url: '/get-available-rooms',
                     type: 'GET',
@@ -426,7 +443,7 @@
                         } else {
                             $ruanganDropdown.append(
                                 '<option value="" disabled>Tidak ada ruangan tersedia</option>'
-                                );
+                            );
                         }
                     },
                     error: (xhr) => {
@@ -437,7 +454,6 @@
                 });
             });
 
-            // Handle when room is selected
             $(document).on('change', '[id^="ruangan_id"]', function() {
                 let modalId = $(this).attr('id').split('ruangan_id')[1];
                 let tanggal = $('#tanggal_sempro' + modalId).val();
@@ -448,7 +464,6 @@
                     return;
                 }
 
-                // Fetch available sessions for the selected room
                 $.ajax({
                     url: '/get-available-sessions',
                     type: 'GET',
@@ -471,7 +486,7 @@
                         } else {
                             $sesiDropdown.append(
                                 '<option value="" disabled>Tidak ada sesi tersedia</option>'
-                                );
+                            );
                         }
                     },
                     error: (xhr) => {
@@ -482,7 +497,6 @@
                 });
             });
 
-            // Function to reset dropdowns when needed
             function resetDropdowns(modalId) {
                 $('#ruangan_id' + modalId).prop('disabled', true).empty();
                 $('#sesi_id' + modalId).prop('disabled', true).empty();

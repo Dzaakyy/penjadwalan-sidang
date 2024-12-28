@@ -41,8 +41,7 @@ class MahasiswaPkl extends Model
             $nilaiIndustri = $sidangPkl->nilai_pembimbing_industri ?? null;
 
             if ($nilaiBimbingan !== null && $nilaiPembimbing !== null && $nilaiPenguji !== null && $nilaiIndustri !== null) {
-                // $nilaimahasiswa = ($nilaiBimbingan * 0.35) + ($nilaiPembimbing * 0.35) +  ($nilaiPenguji * 0.35) + ($nilaiIndustri * 0.3);
-                $nilaimahasiswa = ($nilaiBimbingan * 0.35) + ((($nilaiPembimbing + $nilaiPenguji) /2) * 0.35) + ($nilaiIndustri * 0.3);
+                $nilaimahasiswa = ($nilaiBimbingan * 0.35) + ($nilaiIndustri * 0.3) + ((($nilaiPembimbing + $nilaiPenguji) /2) * 0.35) ;
 
                 $sidangPkl->nilai_mahasiswa = $nilaimahasiswa;
 
