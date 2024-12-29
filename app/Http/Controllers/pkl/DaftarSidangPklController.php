@@ -80,7 +80,7 @@ class DaftarSidangPklController extends Controller
         ]);
 
         // Semua dosen yang harus diperiksa pada sesi yang sama
-        $roles = [
+        $roles = array_filter([
             'dosen_pembimbing' => $dosen_pembimbing,
             'dosen_penguji' => $dosen_penguji,
             'pembimbing_satu' => $pembimbing_satu,
@@ -90,7 +90,7 @@ class DaftarSidangPklController extends Controller
             'sekretaris' => $sekretaris,
             'penguji_1' => $penguji_1,
             'penguji_2' => $penguji_2,
-        ];
+        ]);
 
         // Ambil semua sesi yang sudah terpakai oleh dosen pada tanggal yang sama
         $scheduledDosenPkl = MahasiswaPkl::where('tgl_sidang', $tanggal)
@@ -100,7 +100,7 @@ class DaftarSidangPklController extends Controller
                         ->orWhere('dosen_penguji', $role);
                 }
             })
-            ->get(['jam_sidang', 'ruang_sidang'])
+            ->pluck('jam_sidang')
             ->toArray();
 
         $scheduledDosenSempro = MahasiswaSempro::where('tanggal_sempro', $tanggal)
@@ -111,7 +111,7 @@ class DaftarSidangPklController extends Controller
                         ->orWhere('penguji', $role);
                 }
             })
-            ->get(['sesi_id', 'ruangan_id'])
+            ->pluck('sesi_id')
             ->toArray();
 
         $scheduledDosenTa = MahasiswaTa::where('tanggal_ta', $tanggal)
@@ -123,31 +123,13 @@ class DaftarSidangPklController extends Controller
                         ->orWhere('penguji_2', $role);
                 }
             })
-            ->get(['sesi_id', 'ruangan_id'])
+            ->pluck('sesi_id')
             ->toArray();
 
-        $allScheduledSessions = array_merge($scheduledDosenPkl, $scheduledDosenSempro, $scheduledDosenTa);
+        // Gabungkan semua sesi yang terjadwal oleh dosen
+        $dosenUsedSessions = array_unique(array_merge($scheduledDosenPkl, $scheduledDosenSempro, $scheduledDosenTa));
 
-        foreach ($roles as $role) {
-            foreach ($allScheduledSessions as $scheduledSession) {
-                if (
-                    (isset($scheduledSession['dosen_pembimbing']) && $role == $scheduledSession['dosen_pembimbing']) ||
-                    (isset($scheduledSession['dosen_penguji']) && $role == $scheduledSession['dosen_penguji']) ||
-                    (isset($scheduledSession['pembimbing_satu']) && $role == $scheduledSession['pembimbing_satu']) ||
-                    (isset($scheduledSession['penguji']) && $role == $scheduledSession['penguji']) ||
-                    (isset($scheduledSession['ketua']) && $role == $scheduledSession['ketua']) ||
-                    (isset($scheduledSession['sekretaris']) && $role == $scheduledSession['sekretaris'])
-                ) {
-                    if (
-                        $scheduledSession['ruang_sidang'] == $request->ruang_sidang &&
-                        $scheduledSession['jam_sidang'] == $request->jam_sidang
-                    ) {
-                        return response()->json(['message' => 'Dosen sudah terjadwal di sesi yang sama di ruangan yang sama pada tanggal ini.'], 400);
-                    }
-                }
-            }
-        }
-
+        // Ambil data ruang dan sesi yang sudah terpakai
         $usedRoomsAndSessionsPkl = MahasiswaPkl::where('tgl_sidang', $tanggal)
             ->get(['ruang_sidang', 'jam_sidang']);
         $usedRoomsAndSessionsSempro = MahasiswaSempro::where('tanggal_sempro', $tanggal)
@@ -160,15 +142,19 @@ class DaftarSidangPklController extends Controller
             ->concat($usedRoomsAndSessionsSempro)
             ->concat($usedRoomsAndSessionsTa);
 
+        // Ambil semua ruang yang tersedia
         $availableRooms = Ruang::all();
 
-        $roomsWithAvailableSessions = $availableRooms->map(function ($room) use ($usedRoomsAndSessions) {
-            $usedSessions = $usedRoomsAndSessions
+        // Periksa ruangan yang tersedia dengan sesi yang belum digunakan
+        $roomsWithAvailableSessions = $availableRooms->map(function ($room) use ($usedRoomsAndSessions, $dosenUsedSessions) {
+            // Cari sesi yang sudah digunakan di ruangan tersebut
+            $usedSessionsByRoom = $usedRoomsAndSessions
                 ->where('ruang_sidang', $room->id_ruang)
                 ->pluck('jam_sidang')
                 ->toArray();
 
-            $availableSessions = Sesi::whereNotIn('id_sesi', $usedSessions)->get();
+            // Ambil sesi yang belum digunakan untuk ruangan tersebut dan dosen
+            $availableSessions = Sesi::whereNotIn('id_sesi', array_merge($usedSessionsByRoom, $dosenUsedSessions))->get();
 
             return [
                 'id_ruang' => $room->id_ruang,
@@ -183,10 +169,12 @@ class DaftarSidangPklController extends Controller
             ];
         });
 
+        // Filter ruangan dengan sesi yang tersedia
         $roomsAvailable = $roomsWithAvailableSessions->filter(function ($room) {
             return $room['sessions']->isNotEmpty();
         });
 
+        // Jika tidak ada ruangan yang tersedia, kembalikan pesan
         if ($roomsAvailable->isEmpty()) {
             $roomsAvailable = $availableRooms->map(function ($room) {
                 return [
@@ -198,12 +186,13 @@ class DaftarSidangPklController extends Controller
             });
         }
 
+        // Kembalikan ruangan dengan sesi yang tersedia
         return response()->json($roomsAvailable->values());
     }
 
-
     public function getAvailableSessions(Request $request)
     {
+        // Ambil parameter dari request
         $tanggal = $request->tanggal;
         $idRuangan = $request->id_ruang;
         $dosen_pembimbing = $request->dosen_pembimbing;
@@ -216,6 +205,7 @@ class DaftarSidangPklController extends Controller
         $penguji_1 = $request->penguji_1;
         $penguji_2 = $request->penguji_2;
 
+        // Validasi input
         $request->validate([
             'tanggal' => 'required|date',
             'id_ruang' => 'required|exists:ruang,id_ruang',
@@ -230,7 +220,8 @@ class DaftarSidangPklController extends Controller
             'penguji_2' => 'nullable',
         ]);
 
-        $roles = [
+        // Semua dosen yang harus diperiksa pada sesi yang sama
+        $roles = array_filter([
             'dosen_pembimbing' => $dosen_pembimbing,
             'dosen_penguji' => $dosen_penguji,
             'pembimbing_satu' => $pembimbing_satu,
@@ -240,8 +231,46 @@ class DaftarSidangPklController extends Controller
             'sekretaris' => $sekretaris,
             'penguji_1' => $penguji_1,
             'penguji_2' => $penguji_2,
-        ];
+        ]);
 
+        // Cek apakah ada dosen yang sudah terjadwal pada tanggal dan sesi yang sama
+        $scheduledDosenPkl = MahasiswaPkl::where('tgl_sidang', $tanggal)
+            ->where(function ($query) use ($roles) {
+                foreach ($roles as $role) {
+                    $query->orWhere('dosen_pembimbing', $role)
+                        ->orWhere('dosen_penguji', $role);
+                }
+            })
+            ->pluck('jam_sidang')
+            ->toArray();
+
+        $scheduledDosenSempro = MahasiswaSempro::where('tanggal_sempro', $tanggal)
+            ->where(function ($query) use ($roles) {
+                foreach ($roles as $role) {
+                    $query->orWhere('pembimbing_satu', $role)
+                        ->orWhere('pembimbing_dua', $role)
+                        ->orWhere('penguji', $role);
+                }
+            })
+            ->pluck('sesi_id')
+            ->toArray();
+
+        $scheduledDosenTa = MahasiswaTa::where('tanggal_ta', $tanggal)
+            ->where(function ($query) use ($roles) {
+                foreach ($roles as $role) {
+                    $query->orWhere('ketua', $role)
+                        ->orWhere('sekretaris', $role)
+                        ->orWhere('penguji_1', $role)
+                        ->orWhere('penguji_2', $role);
+                }
+            })
+            ->pluck('sesi_id')
+            ->toArray();
+
+        // Gabungkan semua sesi yang terjadwal oleh dosen
+        $dosenUsedSessions = array_unique(array_merge($scheduledDosenPkl, $scheduledDosenSempro, $scheduledDosenTa));
+
+        // Cek apakah ada sesi yang sudah digunakan pada tanggal dan ruangan ini
         $usedSessions = MahasiswaPkl::where('tgl_sidang', $tanggal)
             ->where('ruang_sidang', $idRuangan)
             ->pluck('jam_sidang')
@@ -257,18 +286,21 @@ class DaftarSidangPklController extends Controller
             ->pluck('sesi_id')
             ->toArray();
 
-        $usedSessions = array_merge($usedSessions, $usedSessionsSempro, $usedSessionsTa);
+        // Gabungkan semua sesi yang digunakan
+        $usedSessions = array_unique(array_merge($usedSessions, $usedSessionsSempro, $usedSessionsTa));
 
-        $availableSessions = Sesi::whereNotIn('id_sesi', $usedSessions)
+        // Ambil sesi yang tersedia dan belum terjadwal oleh dosen
+        $availableSessions = Sesi::whereNotIn('id_sesi', array_merge($usedSessions, $dosenUsedSessions))
             ->get(['id_sesi', 'sesi', 'jam']);
 
+        // Jika tidak ada sesi yang tersedia, kembalikan pesan error
         if ($availableSessions->isEmpty()) {
             return response()->json(['message' => 'Tidak ada sesi yang tersedia pada tanggal ini untuk ruangan ini.'], 404);
         }
 
+        // Kembalikan sesi yang tersedia
         return response()->json($availableSessions);
     }
-
 
 
     // public function getAvailableRooms(Request $request)

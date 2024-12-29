@@ -95,6 +95,7 @@
                                         method="POST">
                                         @csrf
                                         @method('PUT')
+                                        <input type="hidden" name="dosen_pembimbing" value="{{ $data->dosen_pembimbing }}">
 
                                         {{-- Dosen Penguji --}}
                                         <div class="form-group">
@@ -292,6 +293,7 @@
                 let tanggal = $(this).val();
                 let modalId = $(this).attr('id').split('tgl_sidang')[1];
                 let penguji = $('#dosen_penguji' + modalId).val();
+                let pembimbing = $('input[name="dosen_pembimbing"]').val();
 
                 if (!tanggal || !penguji) {
                     alert('Harap pilih penguji dan tanggal terlebih dahulu.');
@@ -303,7 +305,8 @@
                     type: 'GET',
                     data: {
                         tanggal: tanggal,
-                        penguji: penguji
+                        penguji: penguji,
+                        pembimbing: pembimbing
                     },
                     beforeSend: () => $('#loader').show(),
                     success: (data) => {

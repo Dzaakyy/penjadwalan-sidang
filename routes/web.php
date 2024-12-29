@@ -47,7 +47,7 @@ use App\Http\Controllers\Ta\VerifikasiBerkasTAController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('landing-page/landing_page');
 });
 
 
