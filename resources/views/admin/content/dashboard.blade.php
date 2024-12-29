@@ -5,8 +5,6 @@
     <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
 
     <style>
-
-
         .apexcharts-legend {
             display: flex;
             flex-wrap: wrap;
@@ -258,6 +256,9 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="mt-5">
+                                                <div id="calendarKaprodi"></div>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -265,6 +266,30 @@
 
                             </div>
                         </div>
+                        {{-- <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var calendarEl = document.getElementById('calendarKaprodi');
+                                var calendar = new FullCalendar.Calendar(calendarEl, {
+                                    themeSystem: 'bootstrap5',
+                                    initialView: 'dayGridMonth',
+                                    locale: 'id',
+                                    events: @json($eventsKaprodi),
+                                    eventBackgroundColor: '#213555',
+                                    eventContent: function(arg) {
+                                        // Custom tampilan event
+                                        return {
+                                            html: `
+                    <div style="white-space: normal; word-wrap: break-word; padding: 2px;">
+                        <b>${arg.event.title}</b><br>
+                        ${arg.event.extendedProps.room} - ${arg.event.extendedProps.session}
+                    </div>
+                `
+                                        };
+                                    }
+                                });
+                                calendar.render();
+                            });
+                        </script> --}}
                     @endhasrole
 
 
@@ -580,6 +605,9 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="mt-5">
+                                                <div id="calendarPembimbing"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -590,16 +618,13 @@
 
 
 
-                    @hasrole('pengujiPkl|pengujiSempro')
+                    @hasrole('pengujiPkl|pengujiSempro|pengujiTa')
                         <div class="tab-pane fade {{ $activeTab === 'penguji' ? 'show active' : '' }}" id="penguji"
                             role="tabpanel" aria-labelledby="penguji-tab">
                             <div class="container-fluid">
-
                                 <div class="container-fluid">
                                     <div class="container-fluid">
-
                                         <h3 class="fw-semibold text-center mb-5">Penguji</h3>
-
                                         <div class="row">
                                             <div class="col-lg-8 d-flex flex-column align-items-stretch">
                                                 <div class="card h-50 w-100">
@@ -615,7 +640,6 @@
                                                 <div class="card h-100 mt-3">
                                                     <div class="card-body">
                                                         <div class="row">
-
                                                             <div class="col-lg-4 chart-container mt-4">
                                                                 <h3 class="text-center">PKL</h3>
                                                                 <div id="chartPengujiPKL"></div>
@@ -632,8 +656,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
                                             <div class="col-lg-4">
                                                 <div class="col-lg-12">
                                                     <div class="card">
@@ -643,20 +665,15 @@
                                                                     <h3 class="card-title mb-2 fw-semibold">PKL</h3>
                                                                 </div>
                                                                 <div class="col-8">
-                                                                    <h5 class="card-title mb-9 fw-semibold">
-                                                                        Mahasiswa Diterima</h5>
-                                                                    <h4 class="fw-semibold mb-9">
-                                                                        {{ $pklDiterimaPenguji }}
-                                                                    </h4>
-                                                                    <div class="d-flex align-items-center pb-1">
-                                                                    </div>
-                                                                    <h5 class="card-title my-9 fw-semibold">Mahasiswa
-                                                                        Selesai
+                                                                    <h5 class="card-title mb-9 fw-semibold">Mahasiswa Diterima
                                                                     </h5>
-                                                                    <h4 class="fw-semibold">
-                                                                        {{ $pklSelesaiPenguji }}</h4>
-                                                                    <div class="d-flex align-items-center pb-1">
-                                                                    </div>
+                                                                    <h4 class="fw-semibold mb-9">{{ $pklDiterimaPenguji }}
+                                                                    </h4>
+                                                                    <div class="d-flex align-items-center pb-1"></div>
+                                                                    <h5 class="card-title my-9 fw-semibold">Mahasiswa Selesai
+                                                                    </h5>
+                                                                    <h4 class="fw-semibold">{{ $pklSelesaiPenguji }}</h4>
+                                                                    <div class="d-flex align-items-center pb-1"></div>
                                                                 </div>
                                                                 <div class="col-4">
                                                                     <div class="d-flex justify-content-end">
@@ -679,18 +696,14 @@
                                                                     <h3 class="card-title mb-2 fw-semibold">Sempro</h3>
                                                                 </div>
                                                                 <div class="col-8">
-                                                                    <h5 class="card-title mb-9 fw-semibold">
-                                                                        Mahasiswa
-                                                                        Diterima</h5>
-                                                                    <h4 class="fw-semibold mb-9">
-                                                                        {{ $semproDiterimaPenguji }}
+                                                                    <h5 class="card-title mb-9 fw-semibold">Mahasiswa Diterima
+                                                                    </h5>
+                                                                    <h4 class="fw-semibold mb-9">{{ $semproDiterimaPenguji }}
                                                                     </h4>
-                                                                    <div class="d-flex align-items-center pb-1">
-                                                                    </div>
-                                                                    <h5 class="card-title my-9 fw-semibold">
-                                                                        Mahasiswa Selesai</h5>
-                                                                    <h4 class="fw-semibold">
-                                                                        {{ $semproSelesaiPenguji }}</h4>
+                                                                    <div class="d-flex align-items-center pb-1"></div>
+                                                                    <h5 class="card-title my-9 fw-semibold">Mahasiswa Selesai
+                                                                    </h5>
+                                                                    <h4 class="fw-semibold">{{ $semproSelesaiPenguji }}</h4>
                                                                 </div>
                                                                 <div class="col-4">
                                                                     <div class="d-flex justify-content-end">
@@ -713,17 +726,12 @@
                                                                     <h3 class="card-title mb-2 fw-semibold">TA</h3>
                                                                 </div>
                                                                 <div class="col-8">
-                                                                    <h5 class="card-title mb-9 fw-semibold">
-                                                                        Mahasiswa</h5>
-                                                                    <h4 class="fw-semibold mb-9">
-                                                                        {{ $taDiterimaPenguji }}
-                                                                    </h4>
-                                                                    <div class="d-flex align-items-center pb-1">
-                                                                    </div>
-                                                                    <h5 class="card-title my-9 fw-semibold">
-                                                                        Mahasiswa Selesai</h5>
-                                                                    <h4 class="fw-semibold">
-                                                                        {{ $taSelesaiPenguji }}</h4>
+                                                                    <h5 class="card-title mb-9 fw-semibold">Mahasiswa</h5>
+                                                                    <h4 class="fw-semibold mb-9">{{ $taDiterimaPenguji }}</h4>
+                                                                    <div class="d-flex align-items-center pb-1"></div>
+                                                                    <h5 class="card-title my-9 fw-semibold">Mahasiswa Selesai
+                                                                    </h5>
+                                                                    <h4 class="fw-semibold">{{ $taSelesaiPenguji }}</h4>
                                                                 </div>
                                                                 <div class="col-4">
                                                                     <div class="d-flex justify-content-end">
@@ -739,12 +747,38 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="mt-5">
+                                                <div id="calendarPenguji"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
+
+                        {{-- <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var calendarEl = document.getElementById('calendarPenguji');
+                                var calendar = new FullCalendar.Calendar(calendarEl, {
+                                    themeSystem: 'bootstrap5',
+                                    initialView: 'dayGridMonth',
+                                    locale: 'id',
+                                    events: @json($eventsPenguji),
+                                    eventBackgroundColor: '#213555',
+                                    eventContent: function(arg) {
+                                        return {
+                                            html: `
+                                            <div style="white-space: normal; word-wrap: break-word; padding: 2px;">
+                                                <b>${arg.event.title}</b><br>
+                                                ${arg.event.extendedProps.room} - ${arg.event.extendedProps.session}
+                                            </div>
+                                        `
+                                        };
+                                    }
+                                });
+                                calendar.render();
+                            });
+                        </script> --}}
                     @endhasrole
 
                     @hasrole('mahasiswa')
@@ -755,7 +789,7 @@
                                     <div class="container-fluid">
                                         <h3 class="fw-semibold text-center mb-5">Mahasiswa</h3>
                                         <div class="row">
-                                            <div id="calender"></div>
+                                            <div id="calendarMahasiswa"></div>
                                         </div>
                                         <div id="earning"></div>
                                     </div>
@@ -763,6 +797,37 @@
 
                             </div>
                         </div>
+                        {{-- <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var calendarEl = document.getElementById('calender');
+                                var calendar = new FullCalendar.Calendar(calendarEl, {
+                                    themeSystem: 'bootstrap5',
+                                    initialView: 'dayGridMonth',
+                                    locale: 'id',
+                                    events: @json($eventsMahasiswa),
+                                    eventBackgroundColor: '#213555',
+
+                                    eventContent: function(info) {
+                                        var session = info.event.extendedProps.session || 'No session info';
+                                        var room = info.event.extendedProps.room || 'No room info';
+
+                                        var content = document.createElement('div');
+                                        content.innerHTML = `
+                        <strong>${info.event.title}</strong><br>
+                       ${room} (${session})
+                    `;
+
+                                        content.style.whiteSpace = 'normal';
+                                        content.style.wordBreak = 'break-word';
+
+                                        return {
+                                            domNodes: [content]
+                                        };
+                                    },
+                                });
+                                calendar.render();
+                            });
+                        </script> --}}
                     @endhasrole
 
                 </div>
@@ -773,50 +838,62 @@
 
 
 @section('scripts')
-<script src='fullcalendar/dist/index.global.js'></script>
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/index.global.min.js"></script>
-{{-- <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.15/index.global.min.js'></script> --}}
+    <script src='fullcalendar/dist/index.global.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/index.global.min.js"></script>
+    {{-- <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.15/index.global.min.js'></script> --}}
     <script>
-        @hasrole('mahasiswa')
         document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calender');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                themeSystem: 'bootstrap5',
-                initialView: 'dayGridMonth',
-                locale: 'id',
-                events: @json($events),
-                eventBackgroundColor: '#213555',
+            // Fungsi untuk menginisialisasi FullCalendar
+            function initCalendar(calendarId, events) {
+                var calendarEl = document.getElementById(calendarId);
+                if (calendarEl) {
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        themeSystem: 'bootstrap5',
+                        initialView: 'dayGridMonth',
+                        locale: 'id',
+                        events: events,
+                        eventBackgroundColor: '#213555',
+                        eventContent: function(arg) {
+                            return {
+                                html: `
+                            <div style="white-space: normal; word-wrap: break-word; padding: 2px;">
+                                <b>${arg.event.title}</b><br>
+                                ${arg.event.extendedProps.room} - ${arg.event.extendedProps.session}
+                            </div>
+                        `
+                            };
+                        }
+                    });
+                    calendar.render();
+                }
+            }
 
-                eventContent: function(info) {
-                    var session = info.event.extendedProps.session || 'No session info';
-                    var room = info.event.extendedProps.room || 'No room info';
+            var activeTab = "{{ $activeTab }}";
+            if (activeTab === 'pimpinan') {
+                initCalendar('calendarKaprodi', @json($eventsKaprodi ?? []));
+            } else if (activeTab === 'penguji') {
+                initCalendar('calendarPenguji', @json($eventsPenguji ?? []));
+            } else if (activeTab === 'pembimbing') {
+                initCalendar('calendarPembimbing', @json($eventsPembimbing ?? []));
+            } else if (activeTab === 'mahasiswa') {
+                initCalendar('calendarMahasiswa', @json($eventsMahasiswa ?? []));
+            }
 
-                    var content = document.createElement('div');
-                    content.innerHTML = `
-                        <strong>${info.event.title}</strong><br>
-                       ${room} (${session})
-                    `;
-
-                    content.style.whiteSpace = 'normal';
-                    content.style.wordBreak = 'break-word';
-
-                    return {
-                        domNodes: [content]
-                    };
-                },
-
-
-
+            // Inisialisasi ulang kalender saat berpindah tab
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+                var target = $(e.target).attr("href"); // Dapatkan ID tab yang aktif
+                if (target === '#pimpinan') {
+                    initCalendar('calendarKaprodi', @json($eventsKaprodi ?? []));
+                } else if (target === '#penguji') {
+                    initCalendar('calendarPenguji', @json($eventsPenguji ?? []));
+                } else if (target === '#pembimbing') {
+                    initCalendar('calendarPembimbing', @json($eventsPembimbing ?? []));
+                } else if (target === '#mahasiswa') {
+                    initCalendar('calendarMahasiswa', @json($eventsMahasiswa ?? []));
+                }
             });
-
-
-            calendar.render();
         });
-        @endhasrole
-
-
-
 
 
 
@@ -1978,5 +2055,4 @@
             chartpengujiTA.render();
         });
     </script>
-
 @endsection
