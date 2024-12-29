@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Ta;
 
 use App\Models\NilaiTa;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\MahasiswaTa;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use App\Models\MahasiswaSempro;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
-class NilaiSidangTaController extends Controller
+class NilaiSidangTaPembimbingController extends Controller
 {
     public function index()
     {
@@ -45,13 +46,20 @@ class NilaiSidangTaController extends Controller
             ->where(function ($query) use ($dosen_penilai) {
                 $query->where('ketua', $dosen_penilai)
                     ->orWhere('sekretaris', $dosen_penilai)
+                    ->orWhere('pembimbing_satu_id', $dosen_penilai)
+                    ->orWhere('pembimbing_dua_id', $dosen_penilai)
                     ->orWhere('penguji_1', $dosen_penilai)
                     ->orWhere('penguji_2', $dosen_penilai);
             })
             ->distinct('mahasiswa_id')
             ->get();
 
-        $data_dosen_penguji_ta = MahasiswaTa::with([
+            $judulSempro = [];
+            foreach ($data_dosen_ta as $ta) {
+                $judulSempro[$ta->mahasiswa_id] = MahasiswaSempro::where('mahasiswa_id', $ta->mahasiswa_id)->value('judul');
+            }
+
+            $data_dosen_penguji_ta = MahasiswaTa::with([
             'r_mahasiswa',
             'r_penguji_1',
             'r_penguji_2',
@@ -74,10 +82,8 @@ class NilaiSidangTaController extends Controller
         $rolesPerMahasiswa = $data_dosen_ta->mapWithKeys(function ($item) use ($dosen_penilai) {
             return [
                 $item->mahasiswa_id => [
-                    'isKetua' => $item->ketua == $dosen_penilai,
-                    'isSekretaris' => $item->sekretaris == $dosen_penilai,
-                    'isPenguji1' => $item->penguji_1 == $dosen_penilai,
-                    'isPenguji2' => $item->penguji_2 == $dosen_penilai,
+                    'isPembimbing1' => $item->pembimbing_satu_id == $dosen_penilai,
+                    'isPembimbing2' => $item->pembimbing_dua_id == $dosen_penilai,
                 ],
             ];
         });
@@ -85,8 +91,9 @@ class NilaiSidangTaController extends Controller
         // Debugging: Periksa daftar peran dosen untuk setiap mahasiswa
         // dd($rolesPerMahasiswa);
 
-        return view('admin.content.ta.sidang.sidang_ta', compact(
+        return view('admin.content.ta.pembimbing.sidang_ta_pembimbing', compact(
             'data_nilai_sidang_ta',
+            'judulSempro',
             'rolesPerMahasiswa',
             'data_dosen_ta',
             'data_dosen_penguji_ta',
@@ -157,7 +164,7 @@ class NilaiSidangTaController extends Controller
             ? 'Nilai berhasil disimpan!'
             : 'Nilai berhasil diperbarui!';
 
-        return redirect()->route('nilai_sidang_ta')
+        return redirect()->route('nilai_sidang_pembimbing')
             ->with('success', $message);
     }
 
@@ -174,4 +181,5 @@ class NilaiSidangTaController extends Controller
         }
         return $i;
     }
+
 }

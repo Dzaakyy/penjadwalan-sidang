@@ -273,6 +273,40 @@
                                                 <tr>
                                                     <td>1</td>
                                                     <td style="width:80px; word-break: break-all; white-space: normal;">
+                                                        Pembimbing 1</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal;">
+                                                        {{ $data->r_pembimbing_satu->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_pembimbing_1->nilai_sidang ?? '' }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td style="width:80px; word-break: break-all; white-space: normal;">
+                                                        Pembimbing 2</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal;">
+                                                        {{ $data->r_pembimbing_dua->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_pembimbing_2->nilai_sidang ?? '' }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="text-start"><strong>Nilai Rata - Rata
+                                                            Pendidikan : </strong>
+                                                        @php
+                                                            $nilaiPembimbing1 =
+                                                                $data->r_nilai_pembimbing_1->nilai_sidang ?? 0;
+                                                            $nilaiPembimbing2 =
+                                                                $data->r_nilai_pembimbing_2->nilai_sidang ?? 0;
+
+                                                            $nilaiRataRata =
+                                                                ($nilaiPembimbing1 + $nilaiPembimbing2) / 2;
+                                                        @endphp
+                                                        {{ number_format($nilaiRataRata, 2) }}
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td style="width:80px; word-break: break-all; white-space: normal;">
                                                         Ketua</td>
                                                     <td style="width: 20px; word-wrap: break-word; white-space: normal;">
                                                         {{ $data->r_ketua->nama_dosen ?? '' }}</td>
@@ -281,7 +315,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>2</td>
+                                                    <td>4</td>
                                                     <td style="width: 80px; word-break: break-all; white-space: normal;">
                                                         Sekretaris</td>
                                                     <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
@@ -292,7 +326,7 @@
 
                                                 </tr>
                                                 <tr>
-                                                    <td>3</td>
+                                                    <td>5</td>
                                                     <td style="width: 80px; word-break: break-all; white-space: normal;">
                                                         Penguji 1</td>
                                                     <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
@@ -303,7 +337,7 @@
 
                                                 </tr>
                                                 <tr>
-                                                    <td>4</td>
+                                                    <td>6</td>
                                                     <td style="width: 80px; word-break: break-all; white-space: normal;">
                                                         Penguji 2</td>
                                                     <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
@@ -311,14 +345,31 @@
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
                                                         {{ $data->r_nilai_penguji_2->nilai_sidang ?? '' }}
                                                     </td>
-
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="3" class="text-start"><strong>Total Nilai</strong>
+                                                    <td colspan="4" class="text-start"><strong>Nilai Rata - Rata Pengji
+                                                            : </strong>
+                                                            @php
+                                                            $nilaiKetua =
+                                                                $data->r_nilai_ketua->nilai_sidang ?? 0;
+                                                            $nilaiSekretaris =
+                                                                $data->r_nilai_sekretaris->nilai_sidang ?? 0;
+                                                            $nilaiPenguji1 =
+                                                                $data->r_nilai_penguji_1->nilai_sidang ?? 0;
+                                                            $nilaiPenguji2 =
+                                                                $data->r_nilai_penguji_2->nilai_sidang ?? 0;
+                                                            $nilaiRataRata =
+                                                                ($nilaiKetua + $nilaiSekretaris + $nilaiPenguji1 + $nilaiPenguji2) / 4;
+                                                        @endphp
+                                                        {{ number_format($nilaiRataRata, 2) }}
                                                     </td>
-                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
-                                                        {{ $data->nilai_mahasiswa }}
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="text-start"><strong>Nilai Akhir</strong>
+                                                        {{ number_format($data->nilai_mahasiswa, 2) }}
                                                     </td>
+
+
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="text-start"><strong>Keterangan : </strong>

@@ -25,12 +25,11 @@
                         <tr class="table-info">
                             <th>#</th>
                             <th>Nama</th>
+                            <th>Prodi</th>
+                            <th>Jadwal Sidang</th>
+                            <th>Judul</th>
                             <th>Pembimbing 1</th>
                             <th>Pembimbing 2</th>
-                            <th>Ketua</th>
-                            <th>Seketaris</th>
-                            <th>Penguji 1</th>
-                            <th>Penguji 2</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -51,8 +50,12 @@
                                     !is_null($data->sesi_id))
                                 <tr class="table-light">
                                     <td>{{ $counter++ }}</td>
-                                    <td>{{ $data->r_mahasiswa->nama }}</td>
-                                    <td>
+                                    <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">{{ $data->r_mahasiswa->nama }}</td>
+                                    <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">{{ $data->r_mahasiswa->r_prodi->prodi }}</td>
+                                    <td style="max-width: 30px; word-wrap: break-word; white-space: normal;">{{ \Carbon\Carbon::parse($data->tanggal_ta)->locale('id')->translatedFormat('l, d-m-Y') }} {{ $data->r_sesi->jam }}</td>
+
+                                    <td style="max-width: 80px; word-wrap: break-word; white-space: normal;">{{ $judulSempro[$data->mahasiswa_id] ?? 'Judul tidak tersedia' }}</td>
+                                    <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">
                                         @if ($data->r_pembimbing_satu)
                                             @if ($data->r_nilai_pembimbing_1)
                                                 {{ $data->r_pembimbing_satu->nama_dosen . ' - ' . $data->r_nilai_pembimbing_1->nilai_sidang }}
@@ -60,10 +63,10 @@
                                                 {{ $data->r_pembimbing_satu->nama_dosen . ' - ' }}
                                             @endif
                                         @else
-                                            {{ 'Belum Ada Ketua' }}
+                                            {{ 'Belum Ada Pembimbing 1' }}
                                         @endif
                                     </td>
-                                    <td>
+                                    <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">
                                         @if ($data->r_pembimbing_dua)
                                             @if ($data->r_nilai_pembimbing_2)
                                                 {{ $data->r_pembimbing_dua->nama_dosen . ' - ' . $data->r_nilai_pembimbing_2->nilai_sidang }}
@@ -71,71 +74,23 @@
                                                 {{ $data->r_pembimbing_dua->nama_dosen . ' - ' }}
                                             @endif
                                         @else
-                                            {{ 'Belum Ada Ketua' }}
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($data->r_ketua)
-                                            @if ($data->r_nilai_ketua)
-                                                {{ $data->r_ketua->nama_dosen . ' - ' . $data->r_nilai_ketua->nilai_sidang }}
-                                            @else
-                                                {{ $data->r_ketua->nama_dosen . ' - ' }}
-                                            @endif
-                                        @else
-                                            {{ 'Belum Ada Ketua' }}
-                                        @endif
-                                    </td>
-
-                                    <td>
-                                        @if ($data->r_sekretaris)
-                                            @if ($data->r_nilai_sekretaris)
-                                                {{ $data->r_sekretaris->nama_dosen . ' - ' . $data->r_nilai_sekretaris->nilai_sidang }}
-                                            @else
-                                                {{ $data->r_sekretaris->nama_dosen . ' - ' }}
-                                            @endif
-                                        @else
-                                            {{ 'Belum Ada Sekrearis' }}
-                                        @endif
-
-                                    </td>
-
-                                    <td>
-                                        @if ($data->r_penguji_1)
-                                            @if ($data->r_nilai_penguji_1)
-                                                {{ $data->r_penguji_1->nama_dosen . ' - ' . $data->r_nilai_penguji_1->nilai_sidang }}
-                                            @else
-                                                {{ $data->r_penguji_1->nama_dosen . ' - ' }}
-                                            @endif
-                                        @else
-                                            {{ 'Belum Ada Penguji 1' }}
-                                        @endif
-                                    </td>
-
-                                    <td>
-                                        @if ($data->r_penguji_2)
-                                            @if ($data->r_nilai_penguji_2)
-                                                {{ $data->r_penguji_2->nama_dosen . ' - ' . $data->r_nilai_penguji_2->nilai_sidang }}
-                                            @else
-                                                {{ $data->r_penguji_2->nama_dosen . ' - ' }}
-                                            @endif
-                                        @else
-                                            {{ 'Belum Ada Penguji 2' }}
+                                            {{ 'Belum Ada Pembimbing 2' }}
                                         @endif
                                     </td>
 
 
-                                    <td>
+                                    <td style="max-width: 80px; word-wrap: break-word; white-space: normal;"">
                                         @php
                                             $roles = $rolesPerMahasiswa[$data->mahasiswa_id] ?? [
-                                                'isKetua' => false,
-                                                'isSekretaris' => false,
-                                                'isPenguji1' => false,
-                                                'isPenguji2' => false,
+                                                'isPembimbing1' => $item->pembimbing_satu_id == $dosen_penilai,
+                                                'isPembimbing2' => $item->pembimbing_dua_id == $dosen_penilai,
                                             ];
                                         @endphp
 
-                                        @if ($roles['isKetua'])
-                                            @if (isset($data->r_nilai_ketua) && !is_null($data->r_nilai_ketua->nilai_sidang) && $data->r_nilai_ketua->status == 0)
+                                        @if ($roles['isPembimbing1'])
+                                            @if (isset($data->r_nilai_pembimbing_1) &&
+                                                    !is_null($data->r_nilai_pembimbing_1->nilai_sidang) &&
+                                                    $data->r_nilai_pembimbing_1->status == 4)
                                                 <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_ta }}"
                                                     class="btn btn-success">
                                                     <span class="bi bi-pencil-square"></span> Edit
@@ -146,38 +101,10 @@
                                                     <span class="bi bi-pencil-square"></span> Nilai
                                                 </a>
                                             @endif
-                                        @elseif ($roles['isSekretaris'])
-                                            @if (isset($data->r_nilai_sekretaris) &&
-                                                    !is_null($data->r_nilai_sekretaris->nilai_sidang) &&
-                                                    $data->r_nilai_sekretaris->status == 1)
-                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_ta }}"
-                                                    class="btn btn-success">
-                                                    <span class="bi bi-pencil-square"></span> Edit
-                                                </a>
-                                            @else
-                                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_ta }}"
-                                                    class="btn btn-primary">
-                                                    <span class="bi bi-pencil-square"></span> Nilai
-                                                </a>
-                                            @endif
-                                        @elseif ($roles['isPenguji1'])
-                                            @if (isset($data->r_nilai_penguji_1) &&
-                                                    !is_null($data->r_nilai_penguji_1->nilai_sidang) &&
-                                                    $data->r_nilai_penguji_1->status == 2)
-                                                <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_ta }}"
-                                                    class="btn btn-success">
-                                                    <span class="bi bi-pencil-square"></span> Edit
-                                                </a>
-                                            @else
-                                                <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_ta }}"
-                                                    class="btn btn-primary">
-                                                    <span class="bi bi-pencil-square"></span> Nilai
-                                                </a>
-                                            @endif
-                                        @elseif ($roles['isPenguji2'])
-                                            @if (isset($data->r_nilai_penguji_2) &&
-                                                    !is_null($data->r_nilai_penguji_2->nilai_sidang) &&
-                                                    $data->r_nilai_penguji_2->status == 3)
+                                        @elseif ($roles['isPembimbing2'])
+                                            @if (isset($data->r_nilai_pembimbing_2) &&
+                                                    !is_null($data->r_nilai_pembimbing_2->nilai_sidang) &&
+                                                    $data->r_nilai_pembimbing_2->status == 5)
                                                 <a data-bs-toggle="modal" data-bs-target="#Editnilai{{ $data->id_ta }}"
                                                     class="btn btn-success">
                                                     <span class="bi bi-pencil-square"></span> Edit
@@ -199,12 +126,9 @@
 
                 @foreach ($data_dosen_ta as $data)
                     @php
-
                         $roles = $rolesPerMahasiswa[$data->mahasiswa_id] ?? [
-                            'isKetua' => false,
-                            'isSekretaris' => false,
-                            'isPenguji1' => false,
-                            'isPenguji2' => false,
+                            'isPembimbing1' => false,
+                            'isPembimbing2' => false,
                         ];
                     @endphp
                     <div class="modal fade" id="nilai{{ $data->id_ta }}" data-bs-backdrop="static"
@@ -222,7 +146,7 @@
                                 <div class="modal-body">
 
                                     <form id="nilai_sidang_ta{{ $data->id_ta }}"
-                                        action="{{ route('nilai_sidang_ta.post', ['id' => $data->id_ta]) }}"
+                                        action="{{ route('nilai_sidang_pembimbing.post', ['id' => $data->id_ta]) }}"
                                         method="POST">
                                         @csrf
                                         @method('POST')
@@ -262,15 +186,11 @@
                                                     <td>
                                                         <input type="number" class="form-control sikap_penampilan"
                                                             name="sikap_penampilan" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->sikap_penampilan ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->sikap_penampilan ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->sikap_penampilan ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->sikap_penampilan ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->sikap_penampilan ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->sikap_penampilan ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -288,21 +208,16 @@
                                                     <td>
                                                         <input type="number" class="form-control komunikasi_sistematika"
                                                             name="komunikasi_sistematika" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->komunikasi_sistematika ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->komunikasi_sistematika ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->komunikasi_sistematika ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->komunikasi_sistematika ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->komunikasi_sistematika ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->komunikasi_sistematika ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
                                                         <input type="text" class="form-control nilai_persen"
-                                                            name="nilai_persen" placeholder="Nilai" value=""
-                                                            readonly
+                                                            name="nilai_persen" placeholder="Nilai" value="" readonly
                                                             style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
                                                     </td>
                                                 </tr>
@@ -316,15 +231,11 @@
                                                     <td>
                                                         <input type="number" class="form-control penguasaan_materi"
                                                             name="penguasaan_materi" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->penguasaan_materi ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->penguasaan_materi ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->penguasaan_materi ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->penguasaan_materi ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->penguasaan_materi ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->penguasaan_materi ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -347,15 +258,11 @@
                                                     <td>
                                                         <input type="number" class="form-control identifikasi_masalah"
                                                             name="identifikasi_masalah" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->identifikasi_masalah ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->identifikasi_masalah ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->identifikasi_masalah ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->identifikasi_masalah ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->identifikasi_masalah ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->identifikasi_masalah ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -375,15 +282,11 @@
                                                     <td>
                                                         <input type="number" class="form-control relevansi_teori"
                                                             name="relevansi_teori" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->relevansi_teori ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->relevansi_teori ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->relevansi_teori ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->relevansi_teori ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->relevansi_teori ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->relevansi_teori ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -402,15 +305,11 @@
                                                     <td>
                                                         <input type="number" class="form-control metode_algoritma"
                                                             name="metode_algoritma" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->metode_algoritma ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->metode_algoritma ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->metode_algoritma ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->metode_algoritma ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->metode_algoritma ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->metode_algoritma ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -429,15 +328,11 @@
                                                     <td>
                                                         <input type="number" class="form-control hasil_pembahasan"
                                                             name="hasil_pembahasan" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->hasil_pembahasan ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->hasil_pembahasan ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->hasil_pembahasan ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->hasil_pembahasan ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->hasil_pembahasan ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->hasil_pembahasan ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -456,15 +351,11 @@
                                                     <td>
                                                         <input type="number" class="form-control kesimpulan_saran"
                                                             name="kesimpulan_saran" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->kesimpulan_saran ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->kesimpulan_saran ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->kesimpulan_saran ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->kesimpulan_saran ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->kesimpulan_saran ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->kesimpulan_saran ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -483,15 +374,11 @@
                                                     <td>
                                                         <input type="number" class="form-control bahasa_tata_tulis"
                                                             name="bahasa_tata_tulis" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->bahasa_tata_tulis ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->bahasa_tata_tulis ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->bahasa_tata_tulis ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->bahasa_tata_tulis ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->bahasa_tata_tulis ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->bahasa_tata_tulis ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -514,15 +401,11 @@
                                                     <td>
                                                         <input type="number" class="form-control kesesuaian_fungsional"
                                                             name="kesesuaian_fungsional" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->kesesuaian_fungsional ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->kesesuaian_fungsional ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->kesesuaian_fungsional ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->kesesuaian_fungsional ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->kesesuaian_fungsional ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->kesesuaian_fungsional ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -538,15 +421,11 @@
                                                     <td>
                                                         <input type="text" class="form-control nilai_sidang"
                                                             name="nilai_sidang" placeholder="Total Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->nilai_sidang ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->nilai_sidang ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->nilai_sidang ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->nilai_sidang ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->nilai_sidang ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->nilai_sidang ?? ''
+                                                                    : '') }}"
                                                             readonly
                                                             style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
                                                     </td>
@@ -554,7 +433,7 @@
 
 
                                                 <input type="hidden" name="status"
-                                                    value="{{ $data->status ?? ($roles['isKetua'] ? '0' : ($roles['isSekretaris'] ? '1' : ($roles['isPenguji1'] ? '2' : ($roles['isPenguji2'] ? '3' : '')))) }}">
+                                                    value="{{ $data->status ?? ($roles['isPembimbing1'] ? '4' : ($roles['isPembimbing2'] ? '5' : '')) }}">
                                         </table>
 
                                         <div class="modal-footer text-end">
@@ -585,30 +464,22 @@
                                 <div class="modal-body">
 
                                     <form id="nilai_sidang_ta{{ $data->id_ta }}"
-                                        action="{{ route('nilai_sidang_ta.update', ['id' => $data->id_ta]) }}"
+                                        action="{{ route('nilai_sidang_pembimbing.update', ['id' => $data->id_ta]) }}"
                                         method="POST">
                                         @csrf
                                         @method('PUT')
                                         <div class="form-group">
                                             <input type="hidden" class="form-control" id="id_nilai_sidang_ta"
                                                 name="id_nilai_sidang_ta"
-                                                value="{{ $roles['isKetua']
-                                                    ? (isset($data->r_nilai_ketua)
-                                                        ? $data->r_nilai_ketua->id_nilai_sidang_ta
+                                                value="{{ $roles['isPembimbing1']
+                                                    ? (isset($data->r_nilai_pembimbing_1)
+                                                        ? $data->r_nilai_pembimbing_1->id_nilai_sidang_ta
                                                         : '')
-                                                    : ($roles['isSekretaris']
-                                                        ? (isset($data->r_nilai_sekretaris)
-                                                            ? $data->r_nilai_sekretaris->id_nilai_sidang_ta
+                                                    : ($roles['isPembimbing2']
+                                                        ? (isset($data->r_nilai_pembimbing_2)
+                                                            ? $data->r_nilai_pembimbing_2->id_nilai_sidang_ta
                                                             : '')
-                                                        : ($roles['isPenguji1']
-                                                            ? (isset($data->r_nilai_penguji_1)
-                                                                ? $data->r_nilai_penguji_1->id_nilai_sidang_ta
-                                                                : '')
-                                                            : ($roles['isPenguji2']
-                                                                ? (isset($data->r_nilai_penguji_2)
-                                                                    ? $data->r_nilai_penguji_2->id_nilai_sidang_ta
-                                                                    : '')
-                                                                : ''))) }}"
+                                                        : '') }}"
                                                 readonly>
                                         </div>
 
@@ -644,15 +515,11 @@
                                                     <td>
                                                         <input type="number" class="form-control sikap_penampilan"
                                                             name="sikap_penampilan" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->sikap_penampilan ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->sikap_penampilan ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->sikap_penampilan ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->sikap_penampilan ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->sikap_penampilan ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->sikap_penampilan ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -671,15 +538,11 @@
                                                     <td>
                                                         <input type="number" class="form-control komunikasi_sistematika"
                                                             name="komunikasi_sistematika" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->komunikasi_sistematika ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->komunikasi_sistematika ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->komunikasi_sistematika ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->komunikasi_sistematika ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->komunikasi_sistematika ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->komunikasi_sistematika ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -699,15 +562,11 @@
                                                     <td>
                                                         <input type="number" class="form-control penguasaan_materi"
                                                             name="penguasaan_materi" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->penguasaan_materi ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->penguasaan_materi ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->penguasaan_materi ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->penguasaan_materi ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->penguasaan_materi ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->penguasaan_materi ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -730,15 +589,11 @@
                                                     <td>
                                                         <input type="number" class="form-control identifikasi_masalah"
                                                             name="identifikasi_masalah" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->identifikasi_masalah ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->identifikasi_masalah ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->identifikasi_masalah ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->identifikasi_masalah ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->identifikasi_masalah ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->identifikasi_masalah ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -758,15 +613,11 @@
                                                     <td>
                                                         <input type="number" class="form-control relevansi_teori"
                                                             name="relevansi_teori" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->relevansi_teori ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->relevansi_teori ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->relevansi_teori ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->relevansi_teori ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->relevansi_teori ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->relevansi_teori ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -785,15 +636,11 @@
                                                     <td>
                                                         <input type="number" class="form-control metode_algoritma"
                                                             name="metode_algoritma" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->metode_algoritma ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->metode_algoritma ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->metode_algoritma ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->metode_algoritma ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->metode_algoritma ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->metode_algoritma ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -812,15 +659,11 @@
                                                     <td>
                                                         <input type="number" class="form-control hasil_pembahasan"
                                                             name="hasil_pembahasan" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->hasil_pembahasan ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->hasil_pembahasan ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->hasil_pembahasan ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->hasil_pembahasan ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->hasil_pembahasan ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->hasil_pembahasan ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -839,15 +682,11 @@
                                                     <td>
                                                         <input type="number" class="form-control kesimpulan_saran"
                                                             name="kesimpulan_saran" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->kesimpulan_saran ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->kesimpulan_saran ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->kesimpulan_saran ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->kesimpulan_saran ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->kesimpulan_saran ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->kesimpulan_saran ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -866,15 +705,11 @@
                                                     <td>
                                                         <input type="number" class="form-control bahasa_tata_tulis"
                                                             name="bahasa_tata_tulis" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->bahasa_tata_tulis ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->bahasa_tata_tulis ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->bahasa_tata_tulis ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->bahasa_tata_tulis ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->bahasa_tata_tulis ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->bahasa_tata_tulis ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -897,15 +732,11 @@
                                                     <td>
                                                         <input type="number" class="form-control kesesuaian_fungsional"
                                                             name="kesesuaian_fungsional" placeholder="Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->kesesuaian_fungsional ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->kesesuaian_fungsional ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->kesesuaian_fungsional ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->kesesuaian_fungsional ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->kesesuaian_fungsional ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->kesesuaian_fungsional ?? ''
+                                                                    : '') }}"
                                                             required oninput="hitungTotalNilai(this)">
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
@@ -921,15 +752,11 @@
                                                     <td>
                                                         <input type="text" class="form-control nilai_sidang"
                                                             name="nilai_sidang" placeholder="Total Nilai"
-                                                            value="{{ $roles['isKetua']
-                                                                ? $data->r_nilai_ketua->nilai_sidang ?? ''
-                                                                : ($roles['isSekretaris']
-                                                                    ? $data->r_nilai_sekretaris->nilai_sidang ?? ''
-                                                                    : ($roles['isPenguji1']
-                                                                        ? $data->r_nilai_penguji_1->nilai_sidang ?? ''
-                                                                        : ($roles['isPenguji2']
-                                                                            ? $data->r_nilai_penguji_2->nilai_sidang ?? ''
-                                                                            : ''))) }}"
+                                                            value="{{ $roles['isPembimbing1']
+                                                                ? $data->r_nilai_pembimbing_1->nilai_sidang ?? ''
+                                                                : ($roles['isPembimbing2']
+                                                                    ? $data->r_nilai_pembimbing_2->nilai_sidang ?? ''
+                                                                    : '') }}"
                                                             readonly
                                                             style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
                                                     </td>
@@ -937,7 +764,7 @@
 
 
                                                 <input type="hidden" name="status"
-                                                    value="{{ $data->status ?? ($roles['isKetua'] ? '0' : ($roles['isSekretaris'] ? '1' : ($roles['isPenguji1'] ? '2' : ($roles['isPenguji2'] ? '3' : '')))) }}">
+                                                    value="{{ $data->status ?? ($roles['isPembimbing1'] ? '4' : ($roles['isPembimbing2'] ? '5' : '')) }}">
                                         </table>
 
                                         <div class="modal-footer text-end">
@@ -1071,7 +898,7 @@
         function hitungSaatLoad() {
             document.querySelectorAll(
                 ".sikap_penampilan, .komunikasi_sistematika, .penguasaan_materi, .identifikasi_masalah, .relevansi_teori, .metode_algoritma, .hasil_pembahasan, .kesimpulan_saran, .bahasa_tata_tulis, .kesesuaian_fungsional"
-                ).forEach(input => {
+            ).forEach(input => {
 
                 hitungTotalNilai(input);
             });

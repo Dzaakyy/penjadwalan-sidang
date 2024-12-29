@@ -7,8 +7,10 @@ use App\Models\User;
 use App\Models\Dosen;
 use App\Models\Ruang;
 use App\Models\Pimpinan;
+use App\Models\MahasiswaTa;
 use App\Models\MahasiswaPkl;
 use Illuminate\Http\Request;
+use App\Models\MahasiswaSempro;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +50,329 @@ class DaftarSidangPklController extends Controller
 
         return view('admin.content.pkl.kaprodi.daftar_sidang_pkl', compact('data_ruangan', 'data_mahasiswa_pkl', 'dosen_penguji', 'jam_sidang'));
     }
+
+    public function getAvailableRooms(Request $request)
+    {
+        // Ambil parameter dari request
+        $tanggal = $request->tanggal;
+        $dosen_pembimbing = $request->dosen_pembimbing;
+        $dosen_penguji = $request->dosen_penguji;
+        $pembimbing_satu = $request->pembimbing_satu;
+        $pembimbing_dua = $request->pembimbing_dua;
+        $penguji = $request->penguji;
+        $ketua = $request->ketua;
+        $sekretaris = $request->sekretaris;
+        $penguji_1 = $request->penguji_1;
+        $penguji_2 = $request->penguji_2;
+
+        // Validasi input
+        $request->validate([
+            'tanggal' => 'required|date',
+            'dosen_pembimbing' => 'nullable',
+            'dosen_penguji' => 'nullable',
+            'pembimbing_satu' => 'nullable',
+            'pembimbing_dua' => 'nullable',
+            'penguji' => 'nullable',
+            'ketua' => 'nullable',
+            'sekretaris' => 'nullable',
+            'penguji_1' => 'nullable',
+            'penguji_2' => 'nullable',
+        ]);
+
+        // Semua dosen yang harus diperiksa pada sesi yang sama
+        $roles = [
+            'dosen_pembimbing' => $dosen_pembimbing,
+            'dosen_penguji' => $dosen_penguji,
+            'pembimbing_satu' => $pembimbing_satu,
+            'pembimbing_dua' => $pembimbing_dua,
+            'penguji' => $penguji,
+            'ketua' => $ketua,
+            'sekretaris' => $sekretaris,
+            'penguji_1' => $penguji_1,
+            'penguji_2' => $penguji_2,
+        ];
+
+        // Ambil semua sesi yang sudah terpakai oleh dosen pada tanggal yang sama
+        $scheduledDosenPkl = MahasiswaPkl::where('tgl_sidang', $tanggal)
+            ->where(function ($query) use ($roles) {
+                foreach ($roles as $role) {
+                    $query->orWhere('dosen_pembimbing', $role)
+                        ->orWhere('dosen_penguji', $role);
+                }
+            })
+            ->get(['jam_sidang', 'ruang_sidang'])
+            ->toArray();
+
+        $scheduledDosenSempro = MahasiswaSempro::where('tanggal_sempro', $tanggal)
+            ->where(function ($query) use ($roles) {
+                foreach ($roles as $role) {
+                    $query->orWhere('pembimbing_satu', $role)
+                        ->orWhere('pembimbing_dua', $role)
+                        ->orWhere('penguji', $role);
+                }
+            })
+            ->get(['sesi_id', 'ruangan_id'])
+            ->toArray();
+
+        $scheduledDosenTa = MahasiswaTa::where('tanggal_ta', $tanggal)
+            ->where(function ($query) use ($roles) {
+                foreach ($roles as $role) {
+                    $query->orWhere('ketua', $role)
+                        ->orWhere('sekretaris', $role)
+                        ->orWhere('penguji_1', $role)
+                        ->orWhere('penguji_2', $role);
+                }
+            })
+            ->get(['sesi_id', 'ruangan_id'])
+            ->toArray();
+
+        $allScheduledSessions = array_merge($scheduledDosenPkl, $scheduledDosenSempro, $scheduledDosenTa);
+
+        foreach ($roles as $role) {
+            foreach ($allScheduledSessions as $scheduledSession) {
+                if (
+                    (isset($scheduledSession['dosen_pembimbing']) && $role == $scheduledSession['dosen_pembimbing']) ||
+                    (isset($scheduledSession['dosen_penguji']) && $role == $scheduledSession['dosen_penguji']) ||
+                    (isset($scheduledSession['pembimbing_satu']) && $role == $scheduledSession['pembimbing_satu']) ||
+                    (isset($scheduledSession['penguji']) && $role == $scheduledSession['penguji']) ||
+                    (isset($scheduledSession['ketua']) && $role == $scheduledSession['ketua']) ||
+                    (isset($scheduledSession['sekretaris']) && $role == $scheduledSession['sekretaris'])
+                ) {
+                    if (
+                        $scheduledSession['ruang_sidang'] == $request->ruang_sidang &&
+                        $scheduledSession['jam_sidang'] == $request->jam_sidang
+                    ) {
+                        return response()->json(['message' => 'Dosen sudah terjadwal di sesi yang sama di ruangan yang sama pada tanggal ini.'], 400);
+                    }
+                }
+            }
+        }
+
+        $usedRoomsAndSessionsPkl = MahasiswaPkl::where('tgl_sidang', $tanggal)
+            ->get(['ruang_sidang', 'jam_sidang']);
+        $usedRoomsAndSessionsSempro = MahasiswaSempro::where('tanggal_sempro', $tanggal)
+            ->get(['ruangan_id as ruang_sidang', 'sesi_id as jam_sidang']);
+        $usedRoomsAndSessionsTa = MahasiswaTa::where('tanggal_ta', $tanggal)
+            ->get(['ruangan_id as ruang_sidang', 'sesi_id as jam_sidang']);
+
+        $usedRoomsAndSessions = collect()
+            ->concat($usedRoomsAndSessionsPkl)
+            ->concat($usedRoomsAndSessionsSempro)
+            ->concat($usedRoomsAndSessionsTa);
+
+        $availableRooms = Ruang::all();
+
+        $roomsWithAvailableSessions = $availableRooms->map(function ($room) use ($usedRoomsAndSessions) {
+            $usedSessions = $usedRoomsAndSessions
+                ->where('ruang_sidang', $room->id_ruang)
+                ->pluck('jam_sidang')
+                ->toArray();
+
+            $availableSessions = Sesi::whereNotIn('id_sesi', $usedSessions)->get();
+
+            return [
+                'id_ruang' => $room->id_ruang,
+                'nama_ruangan' => $room->kode_ruang,
+                'sessions' => $availableSessions->map(function ($session) {
+                    return [
+                        'id_sesi' => $session->id_sesi,
+                        'sesi' => $session->sesi,
+                        'jam' => $session->jam,
+                    ];
+                })->values(),
+            ];
+        });
+
+        $roomsAvailable = $roomsWithAvailableSessions->filter(function ($room) {
+            return $room['sessions']->isNotEmpty();
+        });
+
+        if ($roomsAvailable->isEmpty()) {
+            $roomsAvailable = $availableRooms->map(function ($room) {
+                return [
+                    'id_ruang' => $room->id_ruang,
+                    'nama_ruangan' => $room->kode_ruang,
+                    'sessions' => [],
+                    'message' => 'Tidak ada sesi tersedia di ruangan ini',
+                ];
+            });
+        }
+
+        return response()->json($roomsAvailable->values());
+    }
+
+
+    public function getAvailableSessions(Request $request)
+    {
+        $tanggal = $request->tanggal;
+        $idRuangan = $request->id_ruang;
+        $dosen_pembimbing = $request->dosen_pembimbing;
+        $dosen_penguji = $request->dosen_penguji;
+        $pembimbing_satu = $request->pembimbing_satu;
+        $pembimbing_dua = $request->pembimbing_dua;
+        $penguji = $request->penguji;
+        $ketua = $request->ketua;
+        $sekretaris = $request->sekretaris;
+        $penguji_1 = $request->penguji_1;
+        $penguji_2 = $request->penguji_2;
+
+        $request->validate([
+            'tanggal' => 'required|date',
+            'id_ruang' => 'required|exists:ruang,id_ruang',
+            'dosen_pembimbing' => 'nullable',
+            'dosen_penguji' => 'nullable',
+            'pembimbing_satu' => 'nullable',
+            'pembimbing_dua' => 'nullable',
+            'penguji' => 'nullable',
+            'ketua' => 'nullable',
+            'sekretaris' => 'nullable',
+            'penguji_1' => 'nullable',
+            'penguji_2' => 'nullable',
+        ]);
+
+        $roles = [
+            'dosen_pembimbing' => $dosen_pembimbing,
+            'dosen_penguji' => $dosen_penguji,
+            'pembimbing_satu' => $pembimbing_satu,
+            'pembimbing_dua' => $pembimbing_dua,
+            'penguji' => $penguji,
+            'ketua' => $ketua,
+            'sekretaris' => $sekretaris,
+            'penguji_1' => $penguji_1,
+            'penguji_2' => $penguji_2,
+        ];
+
+        $usedSessions = MahasiswaPkl::where('tgl_sidang', $tanggal)
+            ->where('ruang_sidang', $idRuangan)
+            ->pluck('jam_sidang')
+            ->toArray();
+
+        $usedSessionsSempro = MahasiswaSempro::where('tanggal_sempro', $tanggal)
+            ->where('ruangan_id', $idRuangan)
+            ->pluck('sesi_id')
+            ->toArray();
+
+        $usedSessionsTa = MahasiswaTa::where('tanggal_ta', $tanggal)
+            ->where('ruangan_id', $idRuangan)
+            ->pluck('sesi_id')
+            ->toArray();
+
+        $usedSessions = array_merge($usedSessions, $usedSessionsSempro, $usedSessionsTa);
+
+        $availableSessions = Sesi::whereNotIn('id_sesi', $usedSessions)
+            ->get(['id_sesi', 'sesi', 'jam']);
+
+        if ($availableSessions->isEmpty()) {
+            return response()->json(['message' => 'Tidak ada sesi yang tersedia pada tanggal ini untuk ruangan ini.'], 404);
+        }
+
+        return response()->json($availableSessions);
+    }
+
+
+
+    // public function getAvailableRooms(Request $request)
+    // {
+    //     $tanggal = $request->tanggal;
+    //     $penguji = $request->penguji;
+
+    //     $request->validate([
+    //         'tanggal' => 'required|date',
+    //         'penguji' => 'required',
+    //     ]);
+
+    //     $usedRoomsAndSessionsPkl = MahasiswaPkl::where('tgl_sidang', $tanggal)
+    //         ->get(['ruang_sidang', 'jam_sidang']);
+    //     $usedRoomsAndSessionsSempro = MahasiswaSempro::where('tanggal_sempro', $tanggal)
+    //         ->get(['ruangan_id as ruang_sidang', 'sesi_id as jam_sidang']);
+    //     $usedRoomsAndSessionsTa = MahasiswaTa::where('tanggal_ta', $tanggal)
+    //         ->get(['ruangan_id as ruang_sidang', 'sesi_id as jam_sidang']);
+
+    //     $usedRoomsAndSessions = collect()
+    //         ->concat($usedRoomsAndSessionsPkl)
+    //         ->concat($usedRoomsAndSessionsSempro)
+    //         ->concat($usedRoomsAndSessionsTa);
+
+    //     $availableRooms = Ruang::all();
+
+    //     $roomsWithAvailableSessions = $availableRooms->map(function ($room) use ($usedRoomsAndSessions) {
+    //         $usedSessions = $usedRoomsAndSessions
+    //             ->where('ruang_sidang', $room->id_ruang)
+    //             ->pluck('jam_sidang')
+    //             ->toArray();
+
+    //         $availableSessions = Sesi::whereNotIn('id_sesi', $usedSessions)->get();
+
+    //         return [
+    //             'id_ruang' => $room->id_ruang,
+    //             'nama_ruangan' => $room->kode_ruang,
+    //             'sessions' => $availableSessions->map(function ($session) {
+    //                 return [
+    //                     'id_sesi' => $session->id_sesi,
+    //                     'sesi' => $session->sesi,
+    //                     'jam' => $session->jam,
+    //                 ];
+    //             })->values(),
+    //         ];
+    //     });
+
+    //     $roomsAvailable = $roomsWithAvailableSessions->filter(function ($room) {
+    //         return $room['sessions']->isNotEmpty();
+    //     });
+
+    //     if ($roomsAvailable->isEmpty()) {
+    //         $roomsAvailable = $availableRooms->map(function ($room) {
+    //             return [
+    //                 'id_ruang' => $room->id_ruang,
+    //                 'nama_ruangan' => $room->kode_ruang,
+    //                 'sessions' => [],
+    //                 'message' => 'Tidak ada sesi tersedia di ruangan ini',
+    //             ];
+    //         });
+    //     }
+
+    //     return response()->json($roomsAvailable->values());
+    // }
+
+
+
+
+    // public function getAvailableSessions(Request $request)
+    // {
+    //     $tanggal = $request->tanggal;
+    //     $idRuangan = $request->id_ruang;
+
+    //     $request->validate([
+    //         'tanggal' => 'required|date',
+    //         'id_ruang' => 'required|exists:ruang,id_ruang'
+    //     ]);
+
+    //     $usedSessionsPkl = MahasiswaPkl::where('tgl_sidang', $tanggal)
+    //         ->where('ruang_sidang', $idRuangan)
+    //         ->pluck('jam_sidang')
+    //         ->toArray();
+
+    //     $usedSessionsSempro = MahasiswaSempro::where('tanggal_sempro', $tanggal)
+    //         ->where('ruangan_id', $idRuangan)
+    //         ->pluck('sesi_id')
+    //         ->toArray();
+
+    //     $usedSessionsTa = MahasiswaTa::where('tanggal_ta', $tanggal)
+    //         ->where('ruangan_id', $idRuangan)
+    //         ->pluck('sesi_id')
+    //         ->toArray();
+
+    //     $usedSessions = array_merge($usedSessionsPkl, $usedSessionsSempro, $usedSessionsTa);
+
+    //     $availableSessions = Sesi::whereNotIn('id_sesi', $usedSessions)
+    //         ->get(['id_sesi', 'sesi', 'jam']);
+
+    //     if ($availableSessions->isEmpty()) {
+    //         return response()->json(['message' => 'Tidak ada sesi yang tersedia pada tanggal ini untuk ruangan ini.'], 404);
+    //     }
+
+    //     return response()->json($availableSessions);
+    // }
 
 
     public function update(Request $request, $id)
@@ -104,12 +429,12 @@ class DaftarSidangPklController extends Controller
         }
 
         $data_sidang_pkl = MahasiswaPkl::with(['r_pkl.r_mahasiswa.r_prodi', 'r_dosen_pembimbing', 'r_dosen_penguji', 'r_sesi', 'r_ruang'])
-        ->where('id_mhs_pkl', $id)
-        ->first();
+            ->where('id_mhs_pkl', $id)
+            ->first();
 
-    if (!$data_sidang_pkl) {
-        abort(404, 'Data Mahasiswa PKL tidak ditemukan.');
-    }
+        if (!$data_sidang_pkl) {
+            abort(404, 'Data Mahasiswa PKL tidak ditemukan.');
+        }
 
 
         if (!$data_sidang_pkl) {

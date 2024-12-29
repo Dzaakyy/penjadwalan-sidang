@@ -22,7 +22,7 @@ class MahasiswaSempro extends Model
         'nilai_mahasiswa',
         'status_judul',
         'status_berkas',
-    ];
+    ]; 
     protected $table = 'mhs_sempro';
     protected $primaryKey = 'id_sempro';
     public $timestamps = false;

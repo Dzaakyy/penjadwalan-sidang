@@ -25,7 +25,7 @@ return new class extends Migration
             $table->double('bahasa_tata_tulis')->nullable();
             $table->double('kesesuaian_fungsional')->nullable();
             $table->double('nilai_sidang')->nullable();
-            $table->enum('status', ['0', '1', '2' ,'3'])->comment('0: Ketua, 1: Sekretaris, 3: Penguji 1, 4: Penguji 2');
+            $table->enum('status', ['0', '1', '2' ,'3', '4', '5'])->comment('0: Ketua, 1: Sekretaris, 2: Penguji 1, 3: Penguji 2, 4: Pembimbing 1, 5: Pembimbing 2');
         });
         Schema::table('nilai_sidang_ta', function (Blueprint $table) {
             $table->foreign('ta_id')->references('id_ta')->on('mhs_ta')

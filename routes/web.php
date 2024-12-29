@@ -31,6 +31,7 @@ use App\Http\Controllers\Ta\AccPembimbingController;
 use App\Http\Controllers\Ta\DaftarSidangTaController;
 use App\Http\Controllers\Ta\DaftarTaController;
 use App\Http\Controllers\Ta\NilaiSidangTaController;
+use App\Http\Controllers\Ta\NilaiSidangTaPembimbingController;
 use App\Http\Controllers\Ta\VerifikasiBerkaController;
 use App\Http\Controllers\Ta\VerifikasiBerkasTAController;
 
@@ -182,7 +183,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 
-// -- PKL --  //
+// ======================================================================= PKL =========================================================================================
 
 // Tempat PKL
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -261,6 +262,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Daftar Sidang PKL (Kaprodi)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/daftar_sidang_kaprodi', [DaftarSidangPklController::class, 'index'])->middleware(['auth', 'verified'])->name('daftar_sidang_kaprodi');
+    Route::get('/get-available-dates-pkl', [DaftarSidangPklController::class, 'getAvailableDates']);
+    Route::get('/get-available-rooms-pkl', [DaftarSidangPklController::class, 'getAvailableRooms']);
+    Route::get('/get-available-sessions-pkl', [DaftarSidangPklController::class, 'getAvailableSessions']);
     Route::put('/daftar_sidang_kaprodi/update/{id}', [DaftarSidangPklController::class, 'update'])->middleware(['auth', 'verified'])->name('daftar_sidang_kaprodi.update');
     Route::get('/cetak-surat-tugas-pkl/download/{id}', [DaftarSidangPklController::class, 'download_pdf'])->name('cetak_surat_tugas_pkl.download');
 });
@@ -347,6 +351,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/acc-pembimbing', [AccPembimbingController::class, 'index'])->middleware(['auth', 'verified'])->name('acc_pembimbing');
     Route::put('/acc-pembimbing-satu/update/{id}', [AccPembimbingController::class, 'update_pembimbing_satu'])->middleware(['auth', 'verified'])->name('acc_pembimbing_satu.update');
     Route::put('/acc-pembimbing-dua/update/{id}', [AccPembimbingController::class, 'update_pembimbing_dua'])->middleware(['auth', 'verified'])->name('acc_pembimbing_dua.update');
+    Route::get('/nilai-sidang-ta-pembibingg', [NilaiSidangTaPembimbingController::class, 'index'])->middleware(['auth', 'verified'])->name('nilai_sidang_pembimbing');
+    Route::post('/nilai-sidang-ta-pembibing/nilai/{id}', [NilaiSidangTaPembimbingController::class, 'nilai_sidang_ta'])->middleware(['auth', 'verified'])->name('nilai_sidang_pembimbing.post');
+    Route::put('/nilai-sidang-ta-pembibing/edit/nilai/{id}', [NilaiSidangTaPembimbingController::class, 'nilai_sidang_ta'])->middleware(['auth', 'verified'])->name('nilai_sidang_pembimbing.update');
 
 });
 

@@ -46,8 +46,10 @@
                 <div class="collapse" id="pkl_admin">
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"> <a class="nav-link large-text" href="{{ route('verif_pkl') }}">PKL</a></li>
-                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('verifikasi_berkas_sempro_admin') }}">Sempro</a></li>
-                        <li class="nav-item"> <a class="nav-link large-text" href="{{ route('verifikasi_berkas_ta_admin') }}">TA</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text"
+                                href="{{ route('verifikasi_berkas_sempro_admin') }}">Sempro</a></li>
+                        <li class="nav-item"> <a class="nav-link large-text"
+                                href="{{ route('verifikasi_berkas_ta_admin') }}">TA</a></li>
                         {{-- <li class="nav-item"> <a class="nav-link large-text" href="#">Verifikasi Berkas PKL</a></li> --}}
                     </ul>
                 </div>
@@ -117,41 +119,44 @@
         @hasrole('pembimbingPkl|pembimbingTa')
             <li class="nav-item nav-category">Pembimbing</li>
             @hasrole('pembimbingPkl')
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#dosen_bimbingan_PKL" aria-expanded="false"
-                aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-handshake"></i>
-                <span class="menu-title">Bimbingan PKL</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="dosen_bimbingan_PKL">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link large-text"
-                        href="{{ route('dosen_bimbingan_pkl') }}">Bimbingan PKL</a></li>
-                    </ul>
-                </div>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#dosen_bimbingan_PKL" aria-expanded="false"
+                        aria-controls="form-elements">
+                        <i class="menu-icon mdi mdi-handshake"></i>
+                        <span class="menu-title">Bimbingan PKL</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="dosen_bimbingan_PKL">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link large-text"
+                                    href="{{ route('dosen_bimbingan_pkl') }}">Bimbingan PKL</a></li>
+                        </ul>
+                    </div>
+                </li>
             @endhasrole
 
             @hasrole('pembimbingTa')
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#dosen_pembimbing_ta" aria-expanded="false"
-                aria-controls="form-elements">
-                <i class="menu-icon mdi mdi-handshake"></i>
-                <span class="menu-title">Ta</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="dosen_pembimbing_ta">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link large-text"
-                        href="{{ route('acc_pembimbing') }}">Acc Mahasiswa</a></li>
-                    </ul>
-                </div>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#dosen_pembimbing_ta" aria-expanded="false"
+                        aria-controls="form-elements">
+                        <i class="menu-icon mdi mdi-handshake"></i>
+                        <span class="menu-title">Ta</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="dosen_pembimbing_ta">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link large-text" href="{{ route('acc_pembimbing') }}">Acc
+                                    Mahasiswa</a></li>
+                            <li class="nav-item"> <a class="nav-link large-text"
+                                    href="{{ route('nilai_sidang_pembimbing') }}">Sidang</a></li>
+                        </ul>
+
+                    </div>
+                </li>
             @endhasrole
         @endhasrole
 
-        @hasanyrole('pembimbingPkl|pengujiPkl|pembimbingSempro|pengujiSempro|pengujiTa')
+        @hasanyrole('pembimbingPkl|pengujiPkl|pembimbingSempro|pengujiSempro|pembimbingTa|pengujiTa')
             <li class="nav-item nav-category">Pembimbing | Penguji</li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#sidang" aria-expanded="false"
@@ -163,7 +168,7 @@
                 <div class="collapse" id="sidang">
                     <ul class="nav flex-column sub-menu">
                         @hasrole('pembimbingPkl|pengujiPkl')
-                        <li class="nav-item"> <a class="nav-link large-text"
+                            <li class="nav-item"> <a class="nav-link large-text"
                                     href="{{ route('nilai_sidang_pkl') }}">PKL</a></li>
                         @endhasrole
                         @hasrole('pembimbingSempro|pengujiSempro')

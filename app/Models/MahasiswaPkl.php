@@ -24,7 +24,7 @@ class MahasiswaPkl extends Model
         'jam_sidang',
         'tgl_sidang',
         'nilai_mahasiswa',
-    ];
+    ]; 
     protected $table = 'mhs_pkl';
     protected $primaryKey = 'id_mhs_pkl';
     public $timestamps = false;
