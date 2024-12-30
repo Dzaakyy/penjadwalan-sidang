@@ -145,6 +145,8 @@
                     </a>
                     <div class="collapse" id="dosen_pembimbing_ta">
                         <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link large-text"
+                                    href="{{ route('dosen_bimbingan_ta') }}">Bimbingan</a></li>
                             <li class="nav-item"> <a class="nav-link large-text" href="{{ route('acc_pembimbing') }}">Acc
                                     Mahasiswa</a></li>
                             <li class="nav-item"> <a class="nav-link large-text"
@@ -232,8 +234,8 @@
                 </a>
                 <div class="collapse" id="ta_mahasiswa">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link  large-text"href="{{ route('daftar_ta') }}">Daftar
-                                TA</a></li>
+                        <li class="nav-item"> <a class="nav-link  large-text"href="{{ route('daftar_ta') }}">DaftarTA</a></li>
+                        <li class="nav-item"> <a class="nav-link  large-text"href="{{ route('bimbingan_ta') }}">Bimbingan</a></li>
                     </ul>
                 </div>
             </li>

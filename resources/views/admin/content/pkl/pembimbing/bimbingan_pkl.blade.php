@@ -27,7 +27,7 @@
                                 <th>Nama</th>
                                 <th>Tempat Magang</th>
                                 <th>Nilai</th>
-                                <th>Log Book</th>
+                                <th>Aksi</th>
                                 <th>Bimbingan</th>
                             </tr>
                         </thead>
@@ -345,35 +345,28 @@
             }, 5000);
 
 
-            // Fungsi untuk menghitung total nilai
             function hitungTotalNilai(element) {
                 let container = element.closest("table");
 
-                // Ambil nilai skor dari setiap input
                 let keaktifan = parseFloat(container.querySelector(".keaktifan").value) || 0;
                 let komunikatif = parseFloat(container.querySelector(".komunikatif").value) || 0;
                 let problemSolving = parseFloat(container.querySelector(".problem_solving").value) || 0;
 
-                // Bobot
                 const bobotKeaktifan = 30;
                 const bobotKomunikatif = 30;
                 const bobotProblemSolving = 40;
 
-                // Hitung total nilai
                 let totalNilai = (keaktifan * 0.3) + (komunikatif * 0.3) + (problemSolving * 0.4);
 
-                // Tampilkan total nilai
                 let totalInput = container.querySelector(".nilai_bimbingan");
                 if (totalInput) {
                     totalInput.value = totalNilai.toFixed(2);
                 }
 
-                // Hitung persentase masing-masing
                 let nilaiKeaktifan = (keaktifan * bobotKeaktifan / 100).toFixed(2);
                 let nilaiKomunikatif = (komunikatif * bobotKomunikatif / 100).toFixed(2);
                 let nilaiProblemSolving = (problemSolving * bobotProblemSolving / 100).toFixed(2);
 
-                // Tampilkan persentase di kolom masing-masing
                 let rows = container.querySelectorAll("tr");
                 rows.forEach(row => {
                     if (row.querySelector(".keaktifan")) {
@@ -386,15 +379,12 @@
                 });
             }
 
-            // Fungsi untuk menghitung nilai saat halaman pertama kali dimuat
             function hitungSaatLoad() {
                 document.querySelectorAll(".keaktifan, .komunikatif, .problem_solving").forEach(input => {
-                    // Simulasikan pemanggilan fungsi hitungTotalNilai untuk setiap input
                     hitungTotalNilai(input);
                 });
             }
 
-            // Panggil fungsi hitungSaatLoad saat halaman selesai dimuat
             window.addEventListener("load", hitungSaatLoad);
         </script>
     @endsection

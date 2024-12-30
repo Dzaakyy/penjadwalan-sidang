@@ -34,7 +34,6 @@ class MahasiswaTa extends Model
     public $timestamps = false;
 
 
-
     public static function boot()
     {
         parent::boot();
@@ -69,10 +68,114 @@ class MahasiswaTa extends Model
         });
     }
 
+    // public static function boot()
+    // {
+    //     parent::boot();
+    //     MahasiswaTa::all()->each(function ($sidangTA) {
+
+    //         $nilaiPembimbing1 = $sidangTA->r_nilai_pembimbing_1->nilai_sidang ?? null;
+    //         $nilaiPembimbing2 = $sidangTA->r_nilai_pembimbing_2->nilai_sidang ?? null;
+    //         $nilaiKetua = $sidangTA->r_nilai_ketua->nilai_sidang ?? null;
+    //         $nilaiSekretaris = $sidangTA->r_nilai_sekretaris->nilai_sidang ?? null;
+    //         $nilaiPenguji_1 = $sidangTA->r_nilai_penguji_1->nilai_sidang ?? null;
+    //         $nilaiPenguji_2 = $sidangTA->r_nilai_penguji_2->nilai_sidang ?? null;
+
+    //         if (
+    //             $nilaiPembimbing1 !== null && $nilaiPembimbing1 > 0 &&
+    //             $nilaiPembimbing2 !== null && $nilaiPembimbing2 > 0 &&
+    //             $nilaiKetua !== null && $nilaiKetua > 0 &&
+    //             $nilaiSekretaris !== null && $nilaiSekretaris > 0 &&
+    //             $nilaiPenguji_1 !== null && $nilaiPenguji_1 > 0 &&
+    //             $nilaiPenguji_2 !== null && $nilaiPenguji_2 > 0
+    //         ) {
+
+    //             $rataRataPembimbing = ($nilaiPembimbing1 + $nilaiPembimbing2) / 2;
+    //             $rataRataPenguji = ($nilaiKetua + $nilaiSekretaris + $nilaiPenguji_1 + $nilaiPenguji_2) / 4;
+    //             $nilaimahasiswa = ($rataRataPembimbing + $rataRataPenguji) / 2;
+
+    //             if ($sidangTA->nilai_mahasiswa !== $nilaimahasiswa) {
+    //                 $sidangTA->nilai_mahasiswa = $nilaimahasiswa;
+    //             }
+
+    //             if ($nilaimahasiswa >= 74) {
+    //                 $sidangTA->keterangan = '2';
+    //             } else {
+    //                 $sidangTA->keterangan = '1';
+
+    //                 $sidangTA->nilai_mahasiswa = null;
+    //                 $sidangTA->tanggal_ta = null;
+    //                 $sidangTA->ruangan_id = null;
+    //                 $sidangTA->sesi_id = null;
+
+    //                 $relations = [
+    //                     $sidangTA->r_nilai_ketua,
+    //                     $sidangTA->r_nilai_sekretaris,
+    //                     $sidangTA->r_nilai_penguji_1,
+    //                     $sidangTA->r_nilai_penguji_2,
+    //                 ];
+
+    //                 foreach ($relations as $relation) {
+    //                     if ($relation) {
+    //                         $relation->nilai_sidang = 0;
+    //                         $relation->save();
+    //                     }
+    //                 }
+    //             }
+    //         } else {
+    //             $sidangTA->keterangan = '0';
+    //         }
+
+    //         $sidangTA->save();
+    //     });
+    // }
+
+
+
+    // public static function boot()
+    // {
+    //     parent::boot();
+    //     MahasiswaTa::all()->each(function ($sidangTA) {
+    //         $nilaiPembimbing1 = $sidangTA->r_nilai_pembimbing_1->nilai_sidang ?? null;
+    //         $nilaiPembimbing2 = $sidangTA->r_nilai_pembimbing_2->nilai_sidang ?? null;
+    //         $nilaiKetua = $sidangTA->r_nilai_ketua->nilai_sidang ?? null;
+    //         $nilaiSekretaris = $sidangTA->r_nilai_sekretaris->nilai_sidang ?? null;
+    //         $nilaiPenguji_1 = $sidangTA->r_nilai_penguji_1->nilai_sidang ?? null;
+    //         $nilaiPenguji_2 = $sidangTA->r_nilai_penguji_2->nilai_sidang ?? null;
+
+    //         if ($nilaiPembimbing1 !== null && $nilaiPembimbing2 !== null && $nilaiKetua !== null && $nilaiSekretaris !== null && $nilaiPenguji_1 !== null && $nilaiPenguji_2 !== null) {
+    //             $rataRataPembimbing = ($nilaiPembimbing1 + $nilaiPembimbing2) / 2;
+    //             $rataRataPenguji = ($nilaiKetua + $nilaiSekretaris + $nilaiPenguji_1 + $nilaiPenguji_2) / 4;
+    //             $nilaimahasiswa = ($rataRataPembimbing + $rataRataPenguji) / 2;
+
+    //             $sidangTA->nilai_mahasiswa = $nilaimahasiswa;
+
+    //             if ($nilaimahasiswa >= 74) {
+    //                 $sidangTA->keterangan = '2';
+    //             } else {
+    //                 $sidangTA->keterangan = '1';
+
+    //                 if (!is_null($sidangTA->tanggal_ta) || !is_null($sidangTA->ruangan_id) || !is_null($sidangTA->sesi_id)) {
+    //                     $sidangTA->tanggal_ta = null;
+    //                     $sidangTA->ruangan_id = null;
+    //                     $sidangTA->sesi_id = null;
+    //                 }
+    //             }
+    //         } else {
+    //             $sidangTA->keterangan = '0'; // Belum sidang
+    //         }
+
+    //         $sidangTA->save();
+    //     });
+    // }
     public function r_mahasiswa()
     {
         return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id', 'id_mahasiswa');
     }
+    public function r_bimbingan()
+    {
+        return $this->hasMany(BimbinganTa::class, 'ta_id', 'id_ta');
+    }
+
     public function r_pembimbing_satu()
     {
         return $this->belongsTo(Dosen::class, 'pembimbing_satu_id', 'id_dosen');

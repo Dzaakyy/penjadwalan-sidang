@@ -301,6 +301,7 @@ class DashboardController extends Controller
                 ->count();
             $dosenId = $user->r_dosen->id_dosen;
 
+            $dosenId = $user->r_dosen->id_dosen;
             $jadwal_sidang_pkl_penguji = MahasiswaPkl::where('dosen_penguji', $dosenId)->get();
             $jadwal_sidang_sempro_penguji = MahasiswaSempro::where('penguji', $dosenId)->get();
             $jadwal_sidang_ta_penguji = MahasiswaTa::where(function ($query) use ($dosenId) {
@@ -310,7 +311,11 @@ class DashboardController extends Controller
                     ->orWhere('penguji_2', $dosenId);
             })->get();
 
-            $eventsPenguji = $jadwal_sidang_pkl_penguji->map(function ($sidang) {
+            // Inisialisasi koleksi kosong untuk eventsPenguji
+            $eventsPenguji = collect();
+
+            // Tambahkan data PKL ke eventsPenguji
+            $eventsPenguji = $eventsPenguji->merge($jadwal_sidang_pkl_penguji->map(function ($sidang) {
                 return [
                     'title' => 'Sidang PKL - ' . ($sidang->r_pkl->r_mahasiswa->nama ?? ''),
                     'start' => $sidang->tgl_sidang ? \Carbon\Carbon::parse($sidang->tgl_sidang)->toDateString() : '',
@@ -318,7 +323,10 @@ class DashboardController extends Controller
                     'room' => $sidang->r_ruang ? $sidang->r_ruang->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
-            })->merge($jadwal_sidang_sempro_penguji->map(function ($sidang) {
+            }));
+
+            // Tambahkan data Sempro ke eventsPenguji
+            $eventsPenguji = $eventsPenguji->merge($jadwal_sidang_sempro_penguji->map(function ($sidang) {
                 return [
                     'title' => 'Sidang Sempro - ' . ($sidang->r_mahasiswa->nama ?? ''),
                     'start' => $sidang->tanggal_sempro ? \Carbon\Carbon::parse($sidang->tanggal_sempro)->toDateString() : '',
@@ -326,7 +334,10 @@ class DashboardController extends Controller
                     'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
-            }))->merge($jadwal_sidang_ta_penguji->map(function ($sidang) {
+            }));
+
+            // Tambahkan data TA ke eventsPenguji
+            $eventsPenguji = $eventsPenguji->merge($jadwal_sidang_ta_penguji->map(function ($sidang) {
                 return [
                     'title' => 'Sidang TA - ' . ($sidang->r_mahasiswa->nama ?? ''),
                     'start' => $sidang->tanggal_ta ? \Carbon\Carbon::parse($sidang->tanggal_ta)->toDateString() : '',
@@ -334,7 +345,10 @@ class DashboardController extends Controller
                     'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
-            }))->values();
+            }));
+
+            // Konversi ke array dan hapus key yang tidak diperlukan
+            $eventsPenguji = $eventsPenguji->values()->toArray();
             // dd($eventsPenguji);
 
             $data = array_merge($data, compact(
@@ -413,11 +427,11 @@ class DashboardController extends Controller
             $jadwal_sidang_pkl_pembimbing = MahasiswaPkl::where('dosen_pembimbing', $dosenId)->get();
             $jadwal_sidang_sempro_pembimbing = MahasiswaSempro::where(function ($query) use ($dosenId) {
                 $query->where('pembimbing_satu', $dosenId)
-                      ->orWhere('pembimbing_dua', $dosenId);
+                    ->orWhere('pembimbing_dua', $dosenId);
             })->get();
             $jadwal_sidang_ta_pembimbing = MahasiswaTa::where(function ($query) use ($dosenId) {
                 $query->where('pembimbing_satu_id', $dosenId)
-                      ->orWhere('pembimbing_dua_id', $dosenId);
+                    ->orWhere('pembimbing_dua_id', $dosenId);
             })->get();
 
             $eventsPembimbing = collect();
@@ -458,12 +472,12 @@ class DashboardController extends Controller
                 }));
             }
 
-            if ($eventsPembimbing->isEmpty()) {
-                return response()->json([
-                    'message' => 'Tidak ada mahasiswa yang dibimbing oleh dosen ini.',
-                    'eventsPembimbing' => []
-                ], 200);
-            }
+            // if ($eventsPembimbing->isEmpty()) {
+            //     return response()->json([
+            //         'message' => 'Tidak ada mahasiswa yang dibimbing oleh dosen ini.',
+            //         'eventsPembimbing' => []
+            //     ], 200);
+            // }
 
 
             // dd($semproDiterimaPenguji);

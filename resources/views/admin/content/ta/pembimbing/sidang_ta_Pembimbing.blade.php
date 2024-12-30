@@ -49,12 +49,12 @@
                                     !is_null($data->ruangan_id) &&
                                     !is_null($data->sesi_id))
                                 <tr class="table-light">
-                                    <td>{{ $counter++ }}</td>
+                                    <td style="max-width: 60px; word-wrap: break-word; white-space: normal;">{{ $counter++ }}</td>
                                     <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">{{ $data->r_mahasiswa->nama }}</td>
                                     <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">{{ $data->r_mahasiswa->r_prodi->prodi }}</td>
-                                    <td style="max-width: 30px; word-wrap: break-word; white-space: normal;">{{ \Carbon\Carbon::parse($data->tanggal_ta)->locale('id')->translatedFormat('l, d-m-Y') }} {{ $data->r_sesi->jam }}</td>
-
-                                    <td style="max-width: 80px; word-wrap: break-word; white-space: normal;">{{ $judulSempro[$data->mahasiswa_id] ?? 'Judul tidak tersedia' }}</td>
+                                    <td style="max-width: 20px; word-wrap: break-word; white-space: normal;">{{ \Carbon\Carbon::parse($data->tanggal_ta)->locale('id')->translatedFormat('l, d-m-Y') }}
+                                        {{ $data->r_sesi->jam }}</td>
+                                    <td style="max-width: 60px; word-wrap: break-word; white-space: normal;">{{ $judulSempro[$data->mahasiswa_id] ?? 'Judul tidak tersedia' }}</td>
                                     <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">
                                         @if ($data->r_pembimbing_satu)
                                             @if ($data->r_nilai_pembimbing_1)
@@ -77,13 +77,11 @@
                                             {{ 'Belum Ada Pembimbing 2' }}
                                         @endif
                                     </td>
-
-
-                                    <td style="max-width: 80px; word-wrap: break-word; white-space: normal;"">
+                                    <td>
                                         @php
                                             $roles = $rolesPerMahasiswa[$data->mahasiswa_id] ?? [
-                                                'isPembimbing1' => $item->pembimbing_satu_id == $dosen_penilai,
-                                                'isPembimbing2' => $item->pembimbing_dua_id == $dosen_penilai,
+                                                'isPembimbing1' => $data->pembimbing_satu_id == $dosen_penilai,
+                                                'isPembimbing2' => $data->pembimbing_dua_id == $dosen_penilai,
                                             ];
                                         @endphp
 

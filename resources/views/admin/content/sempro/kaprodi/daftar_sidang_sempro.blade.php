@@ -363,8 +363,19 @@
                                                     <td colspan="3" class="text-start"><strong>Total Nilai</strong>
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
-                                                        {{ $data->nilai_mahasiswa }}
+                                                        {{ number_format($data->nilai_mahasiswa, 2) }}
                                                     </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="text-start"><strong>Keterangan : </strong>
+                                                        @if ($data->keterangan == '0')
+                                                        @elseif ($data->keterangan == '1')
+                                                            Lulus
+                                                        @elseif ($data->keterangan == '2')
+                                                           Tidak Lulus
+                                                        @endif
+                                                    </td>
+
                                                 </tr>
                                             </tbody>
                                         </table>

@@ -30,10 +30,13 @@ use App\Http\Controllers\Sempro\VerifikasiSemproController;
 use App\Http\Controllers\Ta\AccPembimbingController;
 use App\Http\Controllers\Ta\DaftarSidangTaController;
 use App\Http\Controllers\Ta\DaftarTaController;
+use App\Http\Controllers\Ta\DosenBimbinganController;
+use App\Http\Controllers\Ta\MahasiswaBimbinganController;
 use App\Http\Controllers\Ta\NilaiSidangTaController;
 use App\Http\Controllers\Ta\NilaiSidangTaPembimbingController;
 use App\Http\Controllers\Ta\VerifikasiBerkaController;
 use App\Http\Controllers\Ta\VerifikasiBerkasTAController;
+use App\Models\BimbinganTa;
 
 /*
 |--------------------------------------------------------------------------
@@ -334,7 +337,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/daftar_ta', [DaftarTaController::class, 'index'])->middleware(['auth', 'verified'])->name('daftar_ta');
     Route::put('/daftar_ta/mahasiswa/', [DaftarTaController::class, 'store'])->middleware(['auth', 'verified'])->name('daftar_ta.post');
-    Route::get('/get-pembimbing/{mahasiswa_id}', [DaftarTaController::class, 'getPembimbing']);
+    Route::get('/bimbingan_ta', [MahasiswaBimbinganController::class, 'index'])->middleware(['auth', 'verified'])->name('bimbingan_ta');
+    Route::post('/bimbingan_ta/create', [MahasiswaBimbinganController::class, 'store'])->middleware(['auth', 'verified'])->name('bimbingan_ta.create');
 });
 
 
@@ -349,12 +353,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Pembimbing
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/acc-pembimbing', [AccPembimbingController::class, 'index'])->middleware(['auth', 'verified'])->name('acc_pembimbing');
-    Route::put('/acc-pembimbing-satu/update/{id}', [AccPembimbingController::class, 'update_pembimbing_satu'])->middleware(['auth', 'verified'])->name('acc_pembimbing_satu.update');
-    Route::put('/acc-pembimbing-dua/update/{id}', [AccPembimbingController::class, 'update_pembimbing_dua'])->middleware(['auth', 'verified'])->name('acc_pembimbing_dua.update');
+    Route::put('/acc-pembimbing-satu/update/{id}', [DosenBimbinganController::class, 'update_pembimbing_satu'])->middleware(['auth', 'verified'])->name('acc_pembimbing_satu.update');
+    Route::put('/acc-pembimbing-dua/update/{id}', [DosenBimbinganController::class, 'update_pembimbing_dua'])->middleware(['auth', 'verified'])->name('acc_pembimbing_dua.update');
     Route::get('/nilai-sidang-ta-pembibingg', [NilaiSidangTaPembimbingController::class, 'index'])->middleware(['auth', 'verified'])->name('nilai_sidang_pembimbing');
     Route::post('/nilai-sidang-ta-pembibing/nilai/{id}', [NilaiSidangTaPembimbingController::class, 'nilai_sidang_ta'])->middleware(['auth', 'verified'])->name('nilai_sidang_pembimbing.post');
     Route::put('/nilai-sidang-ta-pembibing/edit/nilai/{id}', [NilaiSidangTaPembimbingController::class, 'nilai_sidang_ta'])->middleware(['auth', 'verified'])->name('nilai_sidang_pembimbing.update');
-
+    Route::get('/dosen-bimbingan', [DosenBimbinganController::class, 'index'])->middleware(['auth', 'verified'])->name('dosen_bimbingan_ta');
+    Route::get('/dosen-bimbingan-ta/detail/{id}', [DosenBimbinganController::class, 'detail'])->middleware(['auth', 'verified'])->name('dosen_bimbingan_ta.detail');
+    Route::put('/dosen-bimbingan-ta/update/{id}', [DosenBimbinganController::class, 'update'])->middleware(['auth', 'verified'])->name('dosen_bimbingan_ta.update');
 });
 
 // Kaprodi

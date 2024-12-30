@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('nilai_mahasiswa')->nullable();
             $table->enum('status_judul', ['0', '1','2'])->default('0')->comment('0: Belum, 1: Ditolak, 2:Diterima')->nullable();
             $table->enum('status_berkas', ['0', '1'])->default('0')->comment('0: Belum, 1: Sudah')->nullable();
+            $table->enum('keterangan', ['0', '1','2'])->default('0')->comment('0: Belum, 1: Lulus, 2: Tidak Lulus')->nullable();
         });
 
         Schema::table('mhs_sempro', function (Blueprint $table) {

@@ -14,6 +14,7 @@ class NilaiSidangTaPembimbingController extends Controller
 {
     public function index()
     {
+
         $dosen_penilai = Auth::user()->r_dosen->id_dosen;
 
         $data_dosen_ta = MahasiswaTa::with([
@@ -43,39 +44,21 @@ class NilaiSidangTaPembimbingController extends Controller
                 $query->where('status', '5');
             },
         ])
-            ->where(function ($query) use ($dosen_penilai) {
-                $query->where('ketua', $dosen_penilai)
-                    ->orWhere('sekretaris', $dosen_penilai)
-                    ->orWhere('pembimbing_satu_id', $dosen_penilai)
-                    ->orWhere('pembimbing_dua_id', $dosen_penilai)
-                    ->orWhere('penguji_1', $dosen_penilai)
-                    ->orWhere('penguji_2', $dosen_penilai);
-            })
-            ->distinct('mahasiswa_id')
-            ->get();
+        ->where(function ($query) use ($dosen_penilai) {
+            $query->where('pembimbing_satu_id', $dosen_penilai)
+                  ->orWhere('pembimbing_dua_id', $dosen_penilai);
+        })
+        ->distinct('mahasiswa_id')
+        ->get();
 
             $judulSempro = [];
             foreach ($data_dosen_ta as $ta) {
                 $judulSempro[$ta->mahasiswa_id] = MahasiswaSempro::where('mahasiswa_id', $ta->mahasiswa_id)->value('judul');
             }
 
-            $data_dosen_penguji_ta = MahasiswaTa::with([
-            'r_mahasiswa',
-            'r_penguji_1',
-            'r_penguji_2',
-            'r_nilai_penguji_1' => function ($query) {
-                $query->where('status', '1');
-            },
-            'r_nilai_penguji_2' => function ($query) {
-                $query->where('status', '2');
-            }
-        ])
-            ->where('penguji_1', $dosen_penilai)
-            ->where('penguji_2', $dosen_penilai)
-            ->distinct('mahasiswa_id')
-            ->get();
 
-        $data_nilai_sidang_ta = $data_dosen_ta->merge($data_dosen_penguji_ta);
+
+
 
         $nextNumber = $this->getCariNomor();
 
@@ -92,11 +75,9 @@ class NilaiSidangTaPembimbingController extends Controller
         // dd($rolesPerMahasiswa);
 
         return view('admin.content.ta.pembimbing.sidang_ta_pembimbing', compact(
-            'data_nilai_sidang_ta',
             'judulSempro',
             'rolesPerMahasiswa',
             'data_dosen_ta',
-            'data_dosen_penguji_ta',
             'nextNumber'
         ));
     }

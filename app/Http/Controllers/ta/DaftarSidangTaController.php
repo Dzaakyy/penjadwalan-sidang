@@ -548,6 +548,7 @@ class DaftarSidangTaController extends Controller
             'tanggal_ta' => 'required',
             'ruangan_id' => 'required|exists:ruang,id_ruang',
             'sesi_id' => 'required|exists:sesi,id_sesi',
+            'keterangan' => 'required|in:0,1',
         ]);
 
         $existingConflict = MahasiswaTa::where('tanggal_ta', $request->tanggal_ta)
@@ -570,6 +571,7 @@ class DaftarSidangTaController extends Controller
         $mahasiswa_ta->tanggal_ta = $request->tanggal_ta;
         $mahasiswa_ta->ruangan_id = $request->ruangan_id;
         $mahasiswa_ta->sesi_id = $request->sesi_id;
+        $mahasiswa_ta->keterangan = $request->keterangan;
 
         $mahasiswa_ta->save();
 

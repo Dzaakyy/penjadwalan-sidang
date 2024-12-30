@@ -86,13 +86,14 @@
                                                     target="_blank">
                                                     <i class="bi bi-pencil-square"></i>Cetak
                                                 </a>
-                                                @if (!is_null($data->nilai_mahasiswa))
-                                                    <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_ta }}"
-                                                        class="btn btn-dark mb-2 me-2 align-items-center">
-                                                        <span class="bi bi-pencil-square"></span>Nilai
-                                                    </a>
-                                                @endif
+
                                             @endif
+                                            @if (!is_null($data->nilai_mahasiswa))
+                                            <a data-bs-toggle="modal" data-bs-target="#nilai{{ $data->id_ta }}"
+                                                class="btn btn-dark mb-2 me-2 align-items-center">
+                                                <span class="bi bi-pencil-square"></span>Nilai
+                                            </a>
+                                        @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -263,7 +264,7 @@
 
 
 
-                                        <input type="hidden" name="status" value="1">
+                                        <input type="hidden" name="keterangan" value="0">
                                 </div>
 
                                 <div class="modal-footer justify-content-between">
@@ -277,100 +278,6 @@
 
 
 
-                    {{-- Modal Edit Daftar Sidang --}}
-                    <div class="modal fade" id="edit{{ $data->id_ta }}" data-bs-backdrop="static"
-                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Edit Daftar Sidang
-                                    </h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Apakah kamu yakin ingin mengubah daftar sidang
-                                        <b>{{ $data->r_mahasiswa->nama }}</b>
-                                    </p>
-
-                                    <form id="status_admin{{ $data->id_ta }}"
-                                        action="{{ route('daftar_sidang_ta_kaprodi.update', ['id' => $data->id_ta]) }}"
-                                        method="POST">
-                                        @csrf
-                                        @method('PUT')
-
-
-                                        <div class="form-group">
-                                            <label for="penguji{{ $data->id_ta }}">Pilih Dosen
-                                                Penguji</label>
-                                            <select id="penguji{{ $data->id_ta }}" name="penguji" class="form-select"
-                                                required>
-                                                <option value="" disabled selected>Pilih Dosen Penguji
-                                                </option>
-                                                @foreach ($dosen as $dosenItem)
-                                                    @if (!isset($data->r_pembimbing_satu) || $data->r_pembimbing_satu->id_dosen != $dosenItem->id_dosen)
-                                                        @if (!isset($data->r_pembimbing_dua) || $data->r_pembimbing_dua->id_dosen != $dosenItem->id_dosen)
-                                                            <option value="{{ $dosenItem->id_dosen }}"
-                                                                {{ (isset($data->r_penguji) && $data->r_penguji->id_dosen == $dosenItem->id_dosen) || old('penguji') == $dosenItem->id_dosen ? 'selected' : '' }}>
-                                                                {{ $dosenItem->nama_dosen }}
-                                                            </option>
-                                                        @endif
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <label for="tanggal_ta{{ $data->id_ta }}">Tanggal
-                                                Sidang</label>
-                                            <input type="date" id="tanggal_ta{{ $data->id_ta }}" name="tanggal_ta"
-                                                class="form-control" required
-                                                value="{{ old('tanggal_ta', $data->tanggal_ta) }}"
-                                                {{ empty($dosen) ? 'disabled' : '' }}>
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <label for="ruangan_id{{ $data->id_ta }}">Pilih Ruang
-                                                Sidang</label>
-                                            <select id="ruangan_id{{ $data->id_ta }}" name="ruangan_id"
-                                                class="form-select" {{ empty($dosen) ? 'disabled' : '' }} required>
-                                                <option value="" disabled selected>Pilih Ruangan</option>
-                                                @foreach ($data_ruangan as $ruang)
-                                                    <option value="{{ $ruang->id_ruang }}"
-                                                        {{ old('ruangan_id', $data->ruangan_id) == $ruang->id_ruang ? 'selected' : '' }}>
-                                                        {{ $ruang->kode_ruang }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-                                        {{-- Jam Sidang --}}
-                                        <div class="form-group">
-                                            <label for="sesi_id{{ $data->id_ta }}">Pilih Jam
-                                                Sidang</label>
-                                            <select id="sesi_id{{ $data->id_ta }}" name="sesi_id" class="form-select"
-                                                {{ empty($dosen) ? 'disabled' : '' }} required>
-                                                <option value="" disabled selected>Pilih Jam Sidang
-                                                </option>
-                                                @foreach ($jam_sidang as $jam)
-                                                    <option value="{{ $jam->id_sesi }}"
-                                                        {{ old('sesi_id', $data->sesi_id) == $jam->id_sesi ? 'selected' : '' }}>
-                                                        {{ $jam->jam }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                </div>
-                                <div class="modal-footer justify-content-between">
-                                    <button type="submit" class="btn btn-primary">Ya, Edit</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
 
                     {{-- Modal Nilai ta --}}

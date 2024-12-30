@@ -22,7 +22,8 @@ class MahasiswaSempro extends Model
         'nilai_mahasiswa',
         'status_judul',
         'status_berkas',
-    ]; 
+        'keterangan',
+    ];
     protected $table = 'mhs_sempro';
     protected $primaryKey = 'id_sempro';
     public $timestamps = false;
@@ -31,23 +32,52 @@ class MahasiswaSempro extends Model
     public static function boot()
     {
         parent::boot();
+
         MahasiswaSempro::all()->each(function ($sidangSempro) {
             $nilaiPembimbingSatu = $sidangSempro->r_nilai_pembimbing_satu->nilai_sempro ?? null;
             $nilaiPembimbingDua = $sidangSempro->r_nilai_pembimbing_dua->nilai_sempro ?? null;
             $nilaiPenguji = $sidangSempro->r_nilai_penguji->nilai_sempro ?? null;
 
             if ($nilaiPembimbingSatu !== null && $nilaiPembimbingDua !== null && $nilaiPenguji !== null) {
-                $nilaimahasiswa = ($nilaiPembimbingSatu+$nilaiPembimbingDua+$nilaiPenguji) /3 ;
+                $nilaimahasiswa = ($nilaiPembimbingSatu + $nilaiPembimbingDua + $nilaiPenguji) / 3;
 
                 $sidangSempro->nilai_mahasiswa = $nilaimahasiswa;
 
-                $sidangSempro->save();
+                if ($nilaimahasiswa >= 74) {
+                    $sidangSempro->keterangan = '1';
+
+                    // Cek apakah mahasiswa_id sudah ada di tabel mhs_ta
+                    if (!MahasiswaTa::where('mahasiswa_id', $sidangSempro->mahasiswa_id)->exists()) {
+                        MahasiswaTa::create([
+                            'id_ta' => self::getCariNomor(), // Call the static method
+                            'mahasiswa_id' => $sidangSempro->mahasiswa_id,
+                            'pembimbing_satu_id' => $sidangSempro->pembimbing_satu,
+                            'pembimbing_dua_id' => $sidangSempro->pembimbing_dua,
+                            'keterangan' => '0',
+                        ]);
+                    }
+                } else {
+                    $sidangSempro->keterangan = '2';
+                }
             } else {
+                $sidangSempro->keterangan = '0';
             }
+
+            $sidangSempro->save();
         });
     }
 
 
+    public static function getCariNomor()
+    {
+        $id_ta = MahasiswaTa::pluck('id_ta')->toArray();
+
+        for ($i = 1;; $i++) {
+            if (!in_array($i, $id_ta)) {
+                return $i;
+            }
+        }
+    }
 
     public function r_mahasiswa()
     {

@@ -44,4 +44,8 @@ class Mahasiswa extends Model
     {
         return $this->hasMany(MahasiswaSempro::class, 'mahasiswa_id', 'id_mahasiswa');
     }
+    public function r_ta()
+    {
+        return $this->hasOne(MahasiswaTa::class, 'mahasiswa_id', 'id_mahasiswa');
+    }
 }

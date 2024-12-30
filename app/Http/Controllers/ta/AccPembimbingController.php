@@ -12,11 +12,14 @@ class AccPembimbingController extends Controller
 {
     public function index()
     {
-        $data_mahasiswa_ta = MahasiswaTa::all();
+        $dosen_penilai = Auth::user()->r_dosen->id_dosen;
+
+        $data_mahasiswa_ta = MahasiswaTa::where('pembimbing_satu_id', $dosen_penilai)
+            ->orWhere('pembimbing_dua_id', $dosen_penilai)
+            ->get();
 
         return view('admin.content.ta.pembimbing.acc_mahasiswa', compact('data_mahasiswa_ta'));
     }
-
 
     public function update_pembimbing_satu(Request $request, $id)
     {

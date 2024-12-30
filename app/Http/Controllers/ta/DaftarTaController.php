@@ -18,74 +18,33 @@ class DaftarTaController extends Controller
         $mahasiswa = Auth::user()->r_mahasiswa;
         $nextNumber = $this->getCariNomor();
         $data_mahasiswa_ta = MahasiswaTa::all();
-        return view('admin.content.ta.mahasiswa.daftar_sidang', compact('data_mahasiswa_ta', 'nextNumber', 'mahasiswa'));
+        $dosen = Dosen::all();
+        $mahasiswaTa = MahasiswaTa::where('mahasiswa_id', $mahasiswa->id_mahasiswa)->first();
+        return view('admin.content.ta.mahasiswa.daftar_sidang', compact('mahasiswaTa','dosen','data_mahasiswa_ta', 'nextNumber', 'mahasiswa'));
     }
-
-
-    public function getPembimbing($mahasiswaId)
-    {
-
-        $sempro = MahasiswaSempro::where('mahasiswa_id', $mahasiswaId)->first();
-
-        if (!$sempro) {
-            return response()->json([
-                'error' => 'Data Sempro tidak ditemukan untuk mahasiswa ini'
-            ], 404);
-        }
-
-
-        $pembimbingSatu = $sempro->r_pembimbing_satu;
-        $pembimbingDua = $sempro->r_pembimbing_dua;
-
-
-        // if (!$pembimbingSatu || !$pembimbingDua) {
-        //     \Log::info('Relasi Pembimbing Null', [
-        //         'pembimbing_satu' => $pembimbingSatu,
-        //         'pembimbing_dua' => $pembimbingDua,
-        //     ]);
-        // }
-
-        return response()->json([
-            'pembimbing_satu' => $pembimbingSatu->nama_dosen ?? 'Tidak ditemukan',
-            'pembimbing_dua' => $pembimbingDua->nama_dosen ?? 'Tidak ditemukan',
-        ]);
-    }
-
-
-
 
 
     public function store(Request $request)
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'id_ta' => 'required',
-            'mahasiswa_id' => 'required|exists:mahasiswa,id_mahasiswa',
+            'laporan_ta' => 'required',
+            'proposal_final' => 'required',
+            'tugas_akhir' => 'required',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
         }
 
-        // Ambil data pembimbing dari tabel sempro berdasarkan mahasiswa_id
-        $sempro = MahasiswaSempro::where('mahasiswa_id', $request->mahasiswa_id)->first();
-
-        if (!$sempro) {
-            return back()->with('error', 'Data Sempro untuk mahasiswa ini tidak ditemukan.');
-        }
-
-        // Siapkan data untuk disimpan ke tabel TA
         $data = [
-            'id_ta' => $request->id_ta,
-            'mahasiswa_id' => $request->mahasiswa_id,
             'proposal_final' => $request->proposal_final,
             'laporan_ta' => $request->laporan_ta,
             'tugas_akhir' => $request->tugas_akhir,
-            'pembimbing_satu_id' => $sempro->pembimbing_satu,
-            'pembimbing_dua_id' => $sempro->pembimbing_dua,
+            'pembimbing_satu_id' => $request->pembimbing_satu,
+            'pembimbing_dua_id' => $request->pembimbing_dua,
         ];
 
-        // Handle upload file jika ada
         if ($request->hasFile('proposal_final')) {
             $file = $request->file('proposal_final');
             $filename = $file->getClientOriginalName();
@@ -129,14 +88,12 @@ class DaftarTaController extends Controller
 
         if ($mahasiswaTa) {
             $mahasiswaTa->update($data);
-            $message = 'Data berhasil diupdate.';
+            $message = 'Dokumen berhasil diupload.';
         } else {
-            MahasiswaTa::create($data);
-            $message = 'Data berhasil ditambahkan.';
+            return back()->with('error', 'Data Mahasiswa TA tidak ditemukan.');
         }
 
-
-        $pembimbing_ids = [$sempro->pembimbing_satu, $sempro->pembimbing_dua];
+        $pembimbing_ids = [$request->pembimbing_satu, $request->pembimbing_dua];
         foreach ($pembimbing_ids as $pembimbing_id) {
             $dosen = Dosen::find($pembimbing_id);
 
