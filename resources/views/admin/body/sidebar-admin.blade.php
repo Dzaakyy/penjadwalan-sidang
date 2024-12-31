@@ -158,6 +158,27 @@
             @endhasrole
         @endhasrole
 
+        @hasrole('pengujiTa')
+            @if (app(\App\Http\Controllers\Ta\KeteranganMahasiswaController::class)->checkPengujiTaKetua())
+            <li class="nav-item nav-category">Ketua Sidang</li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#keterangan_ta" aria-expanded="false"
+                        aria-controls="charts">
+                        <i class="menu-icon mdi mdi-school"></i>
+                        <span class="menu-title">TA</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="keterangan_ta">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link large-text"
+                                    href="{{ route('keterangan_ta_ketua') }}">Keterangan</a></li>
+                        </ul>
+                    </div>
+                </li>
+            @endif
+        @endhasrole
+
+
         @hasanyrole('pembimbingPkl|pengujiPkl|pembimbingSempro|pengujiSempro|pembimbingTa|pengujiTa')
             <li class="nav-item nav-category">Pembimbing | Penguji</li>
             <li class="nav-item">
@@ -234,8 +255,10 @@
                 </a>
                 <div class="collapse" id="ta_mahasiswa">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link  large-text"href="{{ route('daftar_ta') }}">DaftarTA</a></li>
-                        <li class="nav-item"> <a class="nav-link  large-text"href="{{ route('bimbingan_ta') }}">Bimbingan</a></li>
+                        <li class="nav-item"> <a class="nav-link  large-text"href="{{ route('daftar_ta') }}">DaftarTA</a>
+                        </li>
+                        <li class="nav-item"> <a
+                                class="nav-link  large-text"href="{{ route('bimbingan_ta') }}">Bimbingan</a></li>
                     </ul>
                 </div>
             </li>

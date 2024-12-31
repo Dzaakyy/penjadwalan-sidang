@@ -142,6 +142,14 @@
                             'isPembimbing1' => false,
                             'isPembimbing2' => false,
                         ];
+                        $roleString = '';
+                                            if ($roles['isPembimbing1']) {
+                                                $roleString = 'Pembimbing 1';
+                                            } elseif ($roles['isPembimbing2']) {
+                                                $roleString = 'Pembimbing 2';
+                                            }else {
+                                                $roleString = 'Pembimbing';
+                                            }
                     @endphp
                     <div class="modal fade" id="nilai{{ $data->id_ta }}" data-bs-backdrop="static"
                         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

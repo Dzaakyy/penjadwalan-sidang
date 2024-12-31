@@ -122,26 +122,53 @@ class DashboardController extends Controller
             })->get();
 
             $eventsKaprodi = $jadwal_sidang_pkl_kaprodi->map(function ($sidang) {
+                $start = null;
+                $end = null;
+                if ($sidang->tgl_sidang && $sidang->r_sesi) {
+                    $times = explode(' - ', $sidang->r_sesi->jam);
+                    if (count($times) === 2) {
+                        $start = \Carbon\Carbon::parse($sidang->tgl_sidang . ' ' . trim($times[0]))->toDateTimeString();
+                        $end = \Carbon\Carbon::parse($sidang->tgl_sidang . ' ' . trim($times[1]))->toDateTimeString();
+                    }
+                }
                 return [
                     'title' => 'Sidang PKL - ' . ($sidang->r_pkl->r_mahasiswa->nama ?? ''),
-                    'start' => $sidang->tgl_sidang ? \Carbon\Carbon::parse($sidang->tgl_sidang)->toDateString() : '',
-                    'end' => $sidang->tgl_sidang ? \Carbon\Carbon::parse($sidang->tgl_sidang)->toDateString() : '',
+                    'start' => $start,
+                    'end' => $end,
                     'room' => $sidang->r_ruang ? $sidang->r_ruang->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
             })->merge($jadwal_sidang_sempro_kaprodi->map(function ($sidang) {
+                $start = null;
+                $end = null;
+                if ($sidang->tanggal_sempro && $sidang->r_sesi) {
+                    $times = explode(' - ', $sidang->r_sesi->jam);
+                    if (count($times) === 2) {
+                        $start = \Carbon\Carbon::parse($sidang->tanggal_sempro . ' ' . trim($times[0]))->toDateTimeString();
+                        $end = \Carbon\Carbon::parse($sidang->tanggal_sempro . ' ' . trim($times[1]))->toDateTimeString();
+                    }
+                }
                 return [
                     'title' => 'Sidang Sempro - ' . ($sidang->r_mahasiswa->nama ?? ''),
-                    'start' => $sidang->tanggal_sempro ? \Carbon\Carbon::parse($sidang->tanggal_sempro)->toDateString() : '',
-                    'end' => $sidang->tanggal_sempro ? \Carbon\Carbon::parse($sidang->tanggal_sempro)->toDateString() : '',
+                    'start' => $start,
+                    'end' => $end,
                     'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
             }))->merge($jadwal_sidang_ta_kaprodi->map(function ($sidang) {
+                $start = null;
+                $end = null;
+                if ($sidang->tanggal_ta && $sidang->r_sesi) {
+                    $times = explode(' - ', $sidang->r_sesi->jam);
+                    if (count($times) === 2) {
+                        $start = \Carbon\Carbon::parse($sidang->tanggal_ta . ' ' . trim($times[0]))->toDateTimeString();
+                        $end = \Carbon\Carbon::parse($sidang->tanggal_ta . ' ' . trim($times[1]))->toDateTimeString();
+                    }
+                }
                 return [
                     'title' => 'Sidang TA - ' . ($sidang->r_mahasiswa->nama ?? ''),
-                    'start' => $sidang->tanggal_ta ? \Carbon\Carbon::parse($sidang->tanggal_ta)->toDateString() : '',
-                    'end' => $sidang->tanggal_ta ? \Carbon\Carbon::parse($sidang->tanggal_ta)->toDateString() : '',
+                    'start' => $start,
+                    'end' => $end,
                     'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
@@ -215,27 +242,54 @@ class DashboardController extends Controller
             // dd($jadwal_sidang_sempro);
             $jadwal_sidang_ta = MahasiswaTa::where('mahasiswa_id', $user->r_mahasiswa ? $user->r_mahasiswa->id_mahasiswa : null)->get();
 
-            $eventsMahasiswa  = $jadwal_sidang_pkl->map(function ($sidang) {
+            $eventsMahasiswa = $jadwal_sidang_pkl->map(function ($sidang) {
+                $start = null;
+                $end = null;
+                if ($sidang->tgl_sidang && $sidang->r_sesi) {
+                    $times = explode(' - ', $sidang->r_sesi->jam);
+                    if (count($times) === 2) {
+                        $start = \Carbon\Carbon::parse($sidang->tgl_sidang . ' ' . trim($times[0]))->toDateTimeString();
+                        $end = \Carbon\Carbon::parse($sidang->tgl_sidang . ' ' . trim($times[1]))->toDateTimeString();
+                    }
+                }
                 return [
                     'title' => 'Sidang PKL',
-                    'start' => $sidang->tgl_sidang ? \Carbon\Carbon::parse($sidang->tgl_sidang)->toDateString() : '',
-                    'end' => $sidang->tgl_sidang ? \Carbon\Carbon::parse($sidang->tgl_sidang)->toDateString() : '',
+                    'start' => $start,
+                    'end' => $end,
                     'room' => $sidang->r_ruang ? $sidang->r_ruang->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
             })->merge($jadwal_sidang_sempro->map(function ($sidang) {
+                $start = null;
+                $end = null;
+                if ($sidang->tanggal_sempro && $sidang->r_sesi) {
+                    $times = explode(' - ', $sidang->r_sesi->jam);
+                    if (count($times) === 2) {
+                        $start = \Carbon\Carbon::parse($sidang->tanggal_sempro . ' ' . trim($times[0]))->toDateTimeString();
+                        $end = \Carbon\Carbon::parse($sidang->tanggal_sempro . ' ' . trim($times[1]))->toDateTimeString();
+                    }
+                }
                 return [
                     'title' => 'Sidang Sempro',
-                    'start' => $sidang->tanggal_sempro ? \Carbon\Carbon::parse($sidang->tanggal_sempro)->toDateString() : '',
-                    'end' => $sidang->tanggal_sempro ? \Carbon\Carbon::parse($sidang->tanggal_sempro)->toDateString() : '',
+                    'start' => $start,
+                    'end' => $end,
                     'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
             }))->merge($jadwal_sidang_ta->map(function ($sidang) {
+                $start = null;
+                $end = null;
+                if ($sidang->tanggal_ta && $sidang->r_sesi) {
+                    $times = explode(' - ', $sidang->r_sesi->jam);
+                    if (count($times) === 2) {
+                        $start = \Carbon\Carbon::parse($sidang->tanggal_ta . ' ' . trim($times[0]))->toDateTimeString();
+                        $end = \Carbon\Carbon::parse($sidang->tanggal_ta . ' ' . trim($times[1]))->toDateTimeString();
+                    }
+                }
                 return [
                     'title' => 'Sidang TA',
-                    'start' => $sidang->tanggal_ta ? \Carbon\Carbon::parse($sidang->tanggal_ta)->toDateString() : '',
-                    'end' => $sidang->tanggal_ta ? \Carbon\Carbon::parse($sidang->tanggal_ta)->toDateString() : '',
+                    'start' => $start,
+                    'end' => $end,
                     'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
@@ -311,43 +365,65 @@ class DashboardController extends Controller
                     ->orWhere('penguji_2', $dosenId);
             })->get();
 
-            // Inisialisasi koleksi kosong untuk eventsPenguji
             $eventsPenguji = collect();
 
-            // Tambahkan data PKL ke eventsPenguji
             $eventsPenguji = $eventsPenguji->merge($jadwal_sidang_pkl_penguji->map(function ($sidang) {
+                $start = null;
+                $end = null;
+                if ($sidang->tgl_sidang && $sidang->r_sesi) {
+                    $times = explode(' - ', $sidang->r_sesi->jam);
+                    if (count($times) === 2) {
+                        $start = \Carbon\Carbon::parse($sidang->tgl_sidang . ' ' . trim($times[0]))->toDateTimeString();
+                        $end = \Carbon\Carbon::parse($sidang->tgl_sidang . ' ' . trim($times[1]))->toDateTimeString();
+                    }
+                }
                 return [
                     'title' => 'Sidang PKL - ' . ($sidang->r_pkl->r_mahasiswa->nama ?? ''),
-                    'start' => $sidang->tgl_sidang ? \Carbon\Carbon::parse($sidang->tgl_sidang)->toDateString() : '',
-                    'end' => $sidang->tgl_sidang ? \Carbon\Carbon::parse($sidang->tgl_sidang)->toDateString() : '',
+                    'start' => $start,
+                    'end' => $end,
                     'room' => $sidang->r_ruang ? $sidang->r_ruang->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
             }));
 
-            // Tambahkan data Sempro ke eventsPenguji
             $eventsPenguji = $eventsPenguji->merge($jadwal_sidang_sempro_penguji->map(function ($sidang) {
+                $start = null;
+                $end = null;
+                if ($sidang->tanggal_sempro && $sidang->r_sesi) {
+                    $times = explode(' - ', $sidang->r_sesi->jam);
+                    if (count($times) === 2) {
+                        $start = \Carbon\Carbon::parse($sidang->tanggal_sempro . ' ' . trim($times[0]))->toDateTimeString();
+                        $end = \Carbon\Carbon::parse($sidang->tanggal_sempro . ' ' . trim($times[1]))->toDateTimeString();
+                    }
+                }
                 return [
                     'title' => 'Sidang Sempro - ' . ($sidang->r_mahasiswa->nama ?? ''),
-                    'start' => $sidang->tanggal_sempro ? \Carbon\Carbon::parse($sidang->tanggal_sempro)->toDateString() : '',
-                    'end' => $sidang->tanggal_sempro ? \Carbon\Carbon::parse($sidang->tanggal_sempro)->toDateString() : '',
+                    'start' => $start,
+                    'end' => $end,
                     'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
             }));
 
-            // Tambahkan data TA ke eventsPenguji
             $eventsPenguji = $eventsPenguji->merge($jadwal_sidang_ta_penguji->map(function ($sidang) {
+                $start = null;
+                $end = null;
+                if ($sidang->tanggal_ta && $sidang->r_sesi) {
+                    $times = explode(' - ', $sidang->r_sesi->jam);
+                    if (count($times) === 2) {
+                        $start = \Carbon\Carbon::parse($sidang->tanggal_ta . ' ' . trim($times[0]))->toDateTimeString();
+                        $end = \Carbon\Carbon::parse($sidang->tanggal_ta . ' ' . trim($times[1]))->toDateTimeString();
+                    }
+                }
                 return [
                     'title' => 'Sidang TA - ' . ($sidang->r_mahasiswa->nama ?? ''),
-                    'start' => $sidang->tanggal_ta ? \Carbon\Carbon::parse($sidang->tanggal_ta)->toDateString() : '',
-                    'end' => $sidang->tanggal_ta ? \Carbon\Carbon::parse($sidang->tanggal_ta)->toDateString() : '',
+                    'start' => $start,
+                    'end' => $end,
                     'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                     'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                 ];
             }));
 
-            // Konversi ke array dan hapus key yang tidak diperlukan
             $eventsPenguji = $eventsPenguji->values()->toArray();
             // dd($eventsPenguji);
 
@@ -438,10 +514,19 @@ class DashboardController extends Controller
 
             if ($jadwal_sidang_pkl_pembimbing->isNotEmpty()) {
                 $eventsPembimbing = $eventsPembimbing->merge($jadwal_sidang_pkl_pembimbing->map(function ($sidang) {
+                    $start = null;
+                    $end = null;
+                    if ($sidang->tgl_sidang && $sidang->r_sesi) {
+                        $times = explode(' - ', $sidang->r_sesi->jam);
+                        if (count($times) === 2) {
+                            $start = \Carbon\Carbon::parse($sidang->tgl_sidang . ' ' . trim($times[0]))->toDateTimeString();
+                            $end = \Carbon\Carbon::parse($sidang->tgl_sidang . ' ' . trim($times[1]))->toDateTimeString();
+                        }
+                    }
                     return [
-                        'title' => 'Sidang PKL - ' . ($sidang->r_mahasiswa->nama ?? ''),
-                        'start' => $sidang->tgl_sidang ? \Carbon\Carbon::parse($sidang->tgl_sidang)->toDateString() : '',
-                        'end' => $sidang->tgl_sidang ? \Carbon\Carbon::parse($sidang->tgl_sidang)->toDateString() : '',
+                        'title' => 'Sidang PKL - ' . ($sidang->r_pkl->r_mahasiswa->nama ?? ''),
+                        'start' => $start,
+                        'end' => $end,
                         'room' => $sidang->r_ruang ? $sidang->r_ruang->kode_ruang : '',
                         'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                     ];
@@ -450,10 +535,19 @@ class DashboardController extends Controller
 
             if ($jadwal_sidang_sempro_pembimbing->isNotEmpty()) {
                 $eventsPembimbing = $eventsPembimbing->merge($jadwal_sidang_sempro_pembimbing->map(function ($sidang) {
+                    $start = null;
+                    $end = null;
+                    if ($sidang->tanggal_sempro && $sidang->r_sesi) {
+                        $times = explode(' - ', $sidang->r_sesi->jam);
+                        if (count($times) === 2) {
+                            $start = \Carbon\Carbon::parse($sidang->tanggal_sempro . ' ' . trim($times[0]))->toDateTimeString();
+                            $end = \Carbon\Carbon::parse($sidang->tanggal_sempro . ' ' . trim($times[1]))->toDateTimeString();
+                        }
+                    }
                     return [
                         'title' => 'Sidang Sempro - ' . ($sidang->r_mahasiswa->nama ?? ''),
-                        'start' => $sidang->tanggal_sempro ? \Carbon\Carbon::parse($sidang->tanggal_sempro)->toDateString() : '',
-                        'end' => $sidang->tanggal_sempro ? \Carbon\Carbon::parse($sidang->tanggal_sempro)->toDateString() : '',
+                        'start' => $start,
+                        'end' => $end,
                         'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                         'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                     ];
@@ -462,22 +556,27 @@ class DashboardController extends Controller
 
             if ($jadwal_sidang_ta_pembimbing->isNotEmpty()) {
                 $eventsPembimbing = $eventsPembimbing->merge($jadwal_sidang_ta_pembimbing->map(function ($sidang) {
+                    $start = null;
+                    $end = null;
+                    if ($sidang->tanggal_ta && $sidang->r_sesi) {
+                        $times = explode(' - ', $sidang->r_sesi->jam);
+                        if (count($times) === 2) {
+                            $start = \Carbon\Carbon::parse($sidang->tanggal_ta . ' ' . trim($times[0]))->toDateTimeString();
+                            $end = \Carbon\Carbon::parse($sidang->tanggal_ta . ' ' . trim($times[1]))->toDateTimeString();
+                        }
+                    }
                     return [
                         'title' => 'Sidang TA - ' . ($sidang->r_mahasiswa->nama ?? ''),
-                        'start' => $sidang->tanggal_ta ? \Carbon\Carbon::parse($sidang->tanggal_ta)->toDateString() : '',
-                        'end' => $sidang->tanggal_ta ? \Carbon\Carbon::parse($sidang->tanggal_ta)->toDateString() : '',
+                        'start' => $start,
+                        'end' => $end,
                         'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                         'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
                     ];
                 }));
             }
 
-            // if ($eventsPembimbing->isEmpty()) {
-            //     return response()->json([
-            //         'message' => 'Tidak ada mahasiswa yang dibimbing oleh dosen ini.',
-            //         'eventsPembimbing' => []
-            //     ], 200);
-            // }
+            $eventsPembimbing = $eventsPembimbing->values()->toArray();
+
 
 
             // dd($semproDiterimaPenguji);

@@ -22283,17 +22283,69 @@ code {
   display: flex;
 }
 
+  .fc-event {
+        background-color: transparent !important; /* Hilangkan background default */
+        border: none !important; /* Hilangkan border default */
+        padding: 0 !important; /* Hilangkan padding default */
+    }
+    .fc-list-event {
+        background-color: transparent !important; /* Hilangkan background default */
+        border: none !important; /* Hilangkan border default */
+        padding: 0 !important; /* Hilangkan padding default */
+    }
+
+    /* Ubah warna titik (bullet point) di tampilan List */
+    .fc-list-event-dot {
+        border-color: #213555 !important; /* Warna titik sesuai dengan background kustom Anda */
+    }
+.fc-timegrid-event {
+    white-space: normal !important;
+    overflow: visible !important;
+    height: auto !important;
+}
+
+.fc-timegrid-slot {
+    height: 40px;
+}
+
+.fc-daygrid-more-link {
+    text-decoration: none !important;
+}
+.fc-daygrid-more-link .custom-more-link {
+    background-color: #213555;
+    color: white;
+    font-size: 15px;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+.fc-daygrid-more-link .custom-more-link:hover {
+    background-color: #213555;
+}
+
+.fc-event {
+    white-space: normal !important;
+    overflow: visible !important;
+}
+a {
+    color: rgba(var(--link-color-rgb), var(--link-opacity, 1));
+    text-decoration: none;
+  }
+
+  a:hover {
+    --link-color-rgb: var(--link-hover-color-rgb);
+  }
+
 .home-tab .btn {
-  padding: 8px 15px;
+  /* padding: 8px 15px;
   border: 1px solid #CADDFF;
   box-sizing: border-box;
   border-radius: 6px;
   color: #000000;
   font-weight: 500;
   font-size: 12px;
-  line-height: 12px;
+  line-height: 12px; */
   margin-bottom: 12px;
-  margin-right: 12px;
+  /* margin-right: 12px; */
   align-items: center;
 }
 @media (max-width: 991px) {
@@ -23016,7 +23068,7 @@ code {
   top: 50%;
 }
 .custom-carousel .carousel-control-prev span {
-  color: #1F3BB3;
+  color: #FFFFFF;
   font-size: 22px;
 }
 .custom-carousel .carousel-control-next {

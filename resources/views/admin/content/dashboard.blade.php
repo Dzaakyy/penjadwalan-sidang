@@ -1,10 +1,30 @@
 @extends('admin.admin_master')
 
 @section('styles')
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
-    <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/main.min.css' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.15/index.global.min.css' rel='stylesheet'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css' rel='stylesheet'>
+
 
     <style>
+        .fc-toolbar {
+            font-size: 1.2em;
+            padding: 10px;
+        }
+
+        .fc-toolbar .fc-button {
+            font-size: 1em;
+            padding: 5px 10px;
+        }
+
+        .event-detail {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
         .apexcharts-legend {
             display: flex;
             flex-wrap: wrap;
@@ -830,6 +850,23 @@
                         </script> --}}
                     @endhasrole
 
+
+                    <div class="modal fade" id="eventDetailModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="eventDetailModalLabel">Detail Jadwal</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" id="eventDetailContent">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -838,65 +875,94 @@
 
 
 @section('scripts')
-    <script src='fullcalendar/dist/index.global.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/index.global.min.js"></script>
-    {{-- <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.15/index.global.min.js'></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.15/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.15/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.15/index.global.min.js"></script>
+    {{-- <script src='fullcalendar/dist/index.global.js'></script> --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/index.global.min.js"></script> --}}
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.15/index.global.min.js'></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            function initCalendar(calendarId, events) {
-                var calendarEl = document.getElementById(calendarId);
-                if (calendarEl) {
-                    var calendar = new FullCalendar.Calendar(calendarEl, {
-                        themeSystem: 'bootstrap5',
-                        initialView: 'dayGridMonth',
-                        locale: 'id',
-                        events: events,
-                        eventBackgroundColor: '#213555',
-                        eventContent: function(arg) {
-                            return {
-                                html: `
-                            <div style="white-space: normal; word-wrap: break-word; padding: 2px;">
-                                <b>${arg.event.title}</b><br>
-                                ${arg.event.extendedProps.room} - ${arg.event.extendedProps.session}
-                            </div>
+   document.addEventListener('DOMContentLoaded', function() {
+    function initCalendar(calendarId, events) {
+        var calendarEl = document.getElementById(calendarId);
+        if (calendarEl) {
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                themeSystem: 'bootstrap',
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                },
+                dayMaxEvents: true,
+                locale: 'id',
+                events: events,
+                eventContent: function(arg) {
+                    if (arg.view.type === 'listMonth') {
+                        // Tampilan List: Tidak tambahkan background
+                        return {
+                            html: `
+                                <div style="white-space: normal; word-wrap: break-word; padding: 2px;">
+                                    <b>${arg.event.title}</b><br>
+                                    ${arg.event.extendedProps.room} - ${arg.event.extendedProps.session}
+                                </div>
+                            `
+                        };
+                    } else {
+                        return {
+                            html: `
+                                <div style="white-space: normal; word-wrap: break-word; padding: 2px; background-color: #213555; color: white; border-radius: 5px;">
+                                    <b>${arg.event.title}</b><br>
+                                    ${arg.event.extendedProps.room} - ${arg.event.extendedProps.session}
+                                </div>
+                            `
+                        };
+                    }
+                },
+                moreLinkContent: function(args) {
+                    return {
+                        html: `
+                            <span class="badge custom-more-link">
+                                ${args.num} Data
+                            </span>
                         `
-                            };
-                        }
-                    });
-                    calendar.render();
-                }
-            }
-
-            var activeTab = "{{ $activeTab }}";
-            if (activeTab === 'pimpinan') {
-                initCalendar('calendarKaprodi', @json($eventsKaprodi ?? []));
-            } else if (activeTab === 'penguji') {
-                initCalendar('calendarPenguji', @json($eventsPenguji ?? []));
-            } else if (activeTab === 'pembimbing') {
-                initCalendar('calendarPembimbing', @json($eventsPembimbing ?? []));
-            } else if (activeTab === 'mahasiswa') {
-                initCalendar('calendarMahasiswa', @json($eventsMahasiswa ?? []));
-            }
-
-            // Inisialisasi ulang kalender saat berpindah tab
-            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
-                var target = $(e.target).attr("href");
-                if (target === '#pimpinan') {
-                    initCalendar('calendarKaprodi', @json($eventsKaprodi ?? []));
-                } else if (target === '#penguji') {
-                    initCalendar('calendarPenguji', @json($eventsPenguji ?? []));
-                } else if (target === '#pembimbing') {
-                    initCalendar('calendarPembimbing', @json($eventsPembimbing ?? []));
-                } else if (target === '#mahasiswa') {
-                    initCalendar('calendarMahasiswa', @json($eventsMahasiswa ?? []));
-                }
+                    };
+                },
+                slotDuration: '00:15:00',
+                slotMinTime: '08:00:00',
+                slotMaxTime: '18:00:00'
             });
-        });
+            calendar.render();
+        }
+    }
 
+    var activeTab = "{{ $activeTab }}";
+    if (activeTab === 'pimpinan') {
+        initCalendar('calendarKaprodi', @json($eventsKaprodi ?? []));
+    } else if (activeTab === 'penguji') {
+        initCalendar('calendarPenguji', @json($eventsPenguji ?? []));
+    } else if (activeTab === 'pembimbing') {
+        initCalendar('calendarPembimbing', @json($eventsPembimbing ?? []));
+    } else if (activeTab === 'mahasiswa') {
+        initCalendar('calendarMahasiswa', @json($eventsMahasiswa ?? []));
+    }
 
-
-
+    $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+        var target = $(e.target).attr("href");
+        if (target === '#pimpinan') {
+            initCalendar('calendarKaprodi', @json($eventsKaprodi ?? []));
+        } else if (target === '#penguji') {
+            initCalendar('calendarPenguji', @json($eventsPenguji ?? []));
+        } else if (target === '#pembimbing') {
+            initCalendar('calendarPembimbing', @json($eventsPembimbing ?? []));
+        } else if (target === '#mahasiswa') {
+            initCalendar('calendarMahasiswa', @json($eventsMahasiswa ?? []));
+        }
+    });
+});
         document.addEventListener('DOMContentLoaded', function() {
 
             // Kaprodi

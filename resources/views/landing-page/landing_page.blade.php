@@ -196,8 +196,7 @@
                             <li><i class="bi bi-check-circle"></i> <span>Tugas Akhir: Karya penelitian sebagai syarat
                                     kelulusan.</span></li>
                         </ul>
-                        <a href="#" class="read-more"><span>Selengkapnya</span><i
-                                class="bi bi-arrow-right"></i></a>
+
                     </div>
 
                     <div class="col-lg-6 about-images" data-aos="fade-up" data-aos-delay="200">

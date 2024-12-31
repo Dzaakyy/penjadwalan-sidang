@@ -31,6 +31,7 @@ use App\Http\Controllers\Ta\AccPembimbingController;
 use App\Http\Controllers\Ta\DaftarSidangTaController;
 use App\Http\Controllers\Ta\DaftarTaController;
 use App\Http\Controllers\Ta\DosenBimbinganController;
+use App\Http\Controllers\Ta\KeteranganMahasiswaController;
 use App\Http\Controllers\Ta\MahasiswaBimbinganController;
 use App\Http\Controllers\Ta\NilaiSidangTaController;
 use App\Http\Controllers\Ta\NilaiSidangTaPembimbingController;
@@ -379,6 +380,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/nilai_sidang_ta', [NilaiSidangTaController::class, 'index'])->middleware(['auth', 'verified'])->name('nilai_sidang_ta');
     Route::post('/nilai_sidang_ta/nilai/{id}', [NilaiSidangTaController::class, 'nilai_sidang_ta'])->middleware(['auth', 'verified'])->name('nilai_sidang_ta.post');
     Route::put('/nilai_sidang_ta/edit/nilai/{id}', [NilaiSidangTaController::class, 'nilai_sidang_ta'])->middleware(['auth', 'verified'])->name('nilai_sidang_ta.update');
+});
+
+// Ketua Sidang
+// Admin
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/ketrangan-ta', [KeteranganMahasiswaController::class, 'index'])->middleware(['auth', 'verified'])->name('keterangan_ta_ketua');
+    Route::put('/ketrangan-ta/ketua/update/{id}', [KeteranganMahasiswaController::class, 'update'])->middleware(['auth', 'verified'])->name('keterangan_ta_ketua.update');
+
 });
 
 
