@@ -147,8 +147,8 @@
                         <ul class="nav flex-column sub-menu">
                             <li class="nav-item"> <a class="nav-link large-text"
                                     href="{{ route('dosen_bimbingan_ta') }}">Bimbingan</a></li>
-                            <li class="nav-item"> <a class="nav-link large-text" href="{{ route('acc_pembimbing') }}">Acc
-                                    Mahasiswa</a></li>
+                            {{-- <li class="nav-item"> <a class="nav-link large-text" href="{{ route('acc_pembimbing') }}">Acc
+                                    Mahasiswa</a></li> --}}
                             <li class="nav-item"> <a class="nav-link large-text"
                                     href="{{ route('nilai_sidang_pembimbing') }}">Sidang</a></li>
                         </ul>

@@ -30,42 +30,57 @@ class MahasiswaSempro extends Model
 
 
     public static function boot()
-    {
-        parent::boot();
+{
+    parent::boot();
 
-        MahasiswaSempro::all()->each(function ($sidangSempro) {
-            $nilaiPembimbingSatu = $sidangSempro->r_nilai_pembimbing_satu->nilai_sempro ?? null;
-            $nilaiPembimbingDua = $sidangSempro->r_nilai_pembimbing_dua->nilai_sempro ?? null;
-            $nilaiPenguji = $sidangSempro->r_nilai_penguji->nilai_sempro ?? null;
+    MahasiswaSempro::all()->each(function ($sidangSempro) {
+        $nilaiPembimbingSatu = $sidangSempro->r_nilai_pembimbing_satu->nilai_sempro ?? null;
+        $nilaiPembimbingDua = $sidangSempro->r_nilai_pembimbing_dua->nilai_sempro ?? null;
+        $nilaiPenguji = $sidangSempro->r_nilai_penguji->nilai_sempro ?? null;
 
-            if ($nilaiPembimbingSatu !== null && $nilaiPembimbingDua !== null && $nilaiPenguji !== null) {
-                $nilaimahasiswa = ($nilaiPembimbingSatu + $nilaiPembimbingDua + $nilaiPenguji) / 3;
+        if ($nilaiPembimbingSatu !== null && $nilaiPembimbingDua !== null && $nilaiPenguji !== null) {
+            $nilaimahasiswa = ($nilaiPembimbingSatu + $nilaiPembimbingDua + $nilaiPenguji) / 3;
 
-                $sidangSempro->nilai_mahasiswa = $nilaimahasiswa;
+            $sidangSempro->nilai_mahasiswa = $nilaimahasiswa;
 
-                if ($nilaimahasiswa >= 74) {
-                    $sidangSempro->keterangan = '1';
+            if ($nilaimahasiswa >= 74) {
+                $sidangSempro->keterangan = '1';
 
-                    // Cek apakah mahasiswa_id sudah ada di tabel mhs_ta
-                    if (!MahasiswaTa::where('mahasiswa_id', $sidangSempro->mahasiswa_id)->exists()) {
-                        MahasiswaTa::create([
-                            'id_ta' => self::getCariNomor(), // Call the static method
-                            'mahasiswa_id' => $sidangSempro->mahasiswa_id,
-                            'pembimbing_satu_id' => $sidangSempro->pembimbing_satu,
-                            'pembimbing_dua_id' => $sidangSempro->pembimbing_dua,
-                            'keterangan' => '0',
-                        ]);
+                // Cek apakah mahasiswa_id sudah ada di tabel mhs_ta
+                if (!MahasiswaTa::where('mahasiswa_id', $sidangSempro->mahasiswa_id)->exists()) {
+                    MahasiswaTa::create([
+                        'id_ta' => self::getCariNomor(), // Call the static method
+                        'mahasiswa_id' => $sidangSempro->mahasiswa_id,
+                        'pembimbing_satu_id' => $sidangSempro->pembimbing_satu,
+                        'pembimbing_dua_id' => $sidangSempro->pembimbing_dua,
+                        'keterangan' => '0',
+                    ]);
+
+                    $pembimbing_ids = [$sidangSempro->pembimbing_satu, $sidangSempro->pembimbing_dua];
+                    foreach ($pembimbing_ids as $pembimbing_id) {
+                        $dosen = Dosen::find($pembimbing_id);
+
+                        if ($dosen) {
+                            $user = User::where('email', $dosen->r_user->email)->first();
+
+                            if ($user) {
+                                if (!$user->hasRole('pembimbingTa')) {
+                                    $user->assignRole('pembimbingTa');
+                                }
+                            }
+                        }
                     }
-                } else {
-                    $sidangSempro->keterangan = '2';
                 }
             } else {
-                $sidangSempro->keterangan = '0';
+                $sidangSempro->keterangan = '2';
             }
+        } else {
+            $sidangSempro->keterangan = '0';
+        }
 
-            $sidangSempro->save();
-        });
-    }
+        $sidangSempro->save();
+    });
+}
 
 
     public static function getCariNomor()

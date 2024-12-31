@@ -67,6 +67,7 @@
                                                 $data->id_ta,
                                             )
                                                 ->where('dosen_id', $data->pembimbing_satu_id)
+                                                ->where('status', '1')
                                                 ->count();
 
                                             $bimbinganPembimbing2 = \App\Models\BimbinganTa::where(
@@ -74,6 +75,7 @@
                                                 $data->id_ta,
                                             )
                                                 ->where('dosen_id', $data->pembimbing_dua_id)
+                                                ->where('status', '1')
                                                 ->count();
 
                                             $sudahBimbingan9KaliPembimbing1 = $bimbinganPembimbing1 >= 1;

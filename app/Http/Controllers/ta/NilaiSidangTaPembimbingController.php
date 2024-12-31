@@ -57,9 +57,6 @@ class NilaiSidangTaPembimbingController extends Controller
             }
 
 
-
-
-
         $nextNumber = $this->getCariNomor();
 
         $rolesPerMahasiswa = $data_dosen_ta->mapWithKeys(function ($item) use ($dosen_penilai) {

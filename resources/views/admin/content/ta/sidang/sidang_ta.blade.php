@@ -206,6 +206,18 @@
                             'isPenguji1' => false,
                             'isPenguji2' => false,
                         ];
+                        $roleString = '';
+                        if ($roles['isKetua']) {
+                            $roleString = 'Ketua';
+                        } elseif ($roles['isSekretaris']) {
+                            $roleString = 'Sekretaris';
+                        } elseif ($roles['isPenguji1']) {
+                            $roleString = 'Penguji 1';
+                        } elseif ($roles['isPenguji2']) {
+                            $roleString = 'Penguji 2';
+                        } else {
+                            $roleString = 'Pembimbing'; // Default role jika tidak ada peran lain
+                        }
                     @endphp
                     <div class="modal fade" id="nilai{{ $data->id_ta }}" data-bs-backdrop="static"
                         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -574,10 +586,8 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Edit Nilai Sidang
-                                        ta
-                                        ->
-                                        {{ $data->r_mahasiswa->nama }}
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Edit Nilai Sidang TA -
+                                        {{ $data->r_mahasiswa->nama }} (Sebagai {{ $roleString }})
                                     </h4>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
@@ -1071,7 +1081,7 @@
         function hitungSaatLoad() {
             document.querySelectorAll(
                 ".sikap_penampilan, .komunikasi_sistematika, .penguasaan_materi, .identifikasi_masalah, .relevansi_teori, .metode_algoritma, .hasil_pembahasan, .kesimpulan_saran, .bahasa_tata_tulis, .kesesuaian_fungsional"
-                ).forEach(input => {
+            ).forEach(input => {
 
                 hitungTotalNilai(input);
             });

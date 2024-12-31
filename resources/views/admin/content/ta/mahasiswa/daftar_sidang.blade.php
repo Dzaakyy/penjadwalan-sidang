@@ -70,9 +70,9 @@
                                         </div>
 
                                         @if (
-                                            !empty($data->proposal_final) &&
-                                                !empty($data->laporan_ta) &&
-                                                !empty($data->tugas_akhir) &&
+                                            empty($data->proposal_final) &&
+                                                empty($data->laporan_ta) &&
+                                                empty($data->tugas_akhir) &&
                                                 ($data->acc_pembimbing_satu == '1' && $data->acc_pembimbing_dua == '1'))
                                             <a data-bs-toggle="modal" data-bs-target="#daftar_ta"
                                                 class="btn btn-primary me-2 mb-3">

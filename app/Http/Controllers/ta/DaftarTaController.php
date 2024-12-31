@@ -93,20 +93,20 @@ class DaftarTaController extends Controller
             return back()->with('error', 'Data Mahasiswa TA tidak ditemukan.');
         }
 
-        $pembimbing_ids = [$request->pembimbing_satu, $request->pembimbing_dua];
-        foreach ($pembimbing_ids as $pembimbing_id) {
-            $dosen = Dosen::find($pembimbing_id);
+        // $pembimbing_ids = [$request->pembimbing_satu, $request->pembimbing_dua];
+        // foreach ($pembimbing_ids as $pembimbing_id) {
+        //     $dosen = Dosen::find($pembimbing_id);
 
-            if ($dosen) {
-                $user = User::where('email', $dosen->r_user->email)->first();
+        //     if ($dosen) {
+        //         $user = User::where('email', $dosen->r_user->email)->first();
 
-                if ($user) {
-                    if (!$user->hasRole('pembimbingTa')) {
-                        $user->assignRole('pembimbingTa');
-                    }
-                }
-            }
-        }
+        //         if ($user) {
+        //             if (!$user->hasRole('pembimbingTa')) {
+        //                 $user->assignRole('pembimbingTa');
+        //             }
+        //         }
+        //     }
+        // }
 
         return redirect()->route('daftar_ta')->with('success', $message);
     }

@@ -19,13 +19,14 @@ class MahasiswaBimbinganController extends Controller
         $data_bimbingan_ta = BimbinganTa::with('r_ta.r_mahasiswa')->get();
         $mahasiswa_ta = MahasiswaTa::with('r_mahasiswa')->get();
         $ta_id = optional($mahasiswa->r_ta)->id_ta;
+        $isMahasiswaInTa = MahasiswaTa::where('mahasiswa_id', $mahasiswa->id_mahasiswa)->exists();
         // dd($ta_id);
         $dosen_pembimbing = [];
         if ($mahasiswa->r_ta) {
             $dosen_pembimbing[] = $mahasiswa->r_ta->r_pembimbing_satu;
             $dosen_pembimbing[] = $mahasiswa->r_ta->r_pembimbing_dua;
         }
-        return view('admin.content.ta.mahasiswa.bimbingan_ta', compact('mahasiswa_ta', 'dosen_pembimbing', 'data_bimbingan_ta', 'nextNumber', 'mahasiswa', 'ta_id'));
+        return view('admin.content.ta.mahasiswa.bimbingan_ta', compact('isMahasiswaInTa','mahasiswa_ta', 'dosen_pembimbing', 'data_bimbingan_ta', 'nextNumber', 'mahasiswa', 'ta_id'));
     }
 
 
