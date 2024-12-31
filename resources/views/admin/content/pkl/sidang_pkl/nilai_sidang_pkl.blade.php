@@ -97,6 +97,14 @@
                             'isPembimbing' => false,
                             'isPenguji' => false,
                         ];
+                        $roleString = '';
+                        if ($roles['isPembimbing']) {
+                            $roleString = 'Pembimbing';
+                        } elseif ($roles['isPenguji']) {
+                            $roleString = 'Penguji';
+                        } else {
+                            $roleString = 'Pembimbing';
+                        }
                     @endphp
                     {{-- Modal Nilai Sidang --}}
                     <div class="modal fade" id="nilai{{ $data->id_mhs_pkl }}" data-bs-backdrop="static"
@@ -104,14 +112,16 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">{{ $roleString }}
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
                                     <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai Sidang Pkl
                                         ->
                                         {{ $data->r_usulan_pkl->r_mahasiswa->nama }}
                                     </h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
 
                                     <form id="nilai_sidang_pkl{{ $data->id_mhs_pkl }}"
                                         action="{{ route('nilai_sidang_pkl.post', ['id' => $data->id_mhs_pkl]) }}"
@@ -323,15 +333,18 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">
+                                        {{ $roleString }}
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
                                     <h4 class="modal-title fs-5" id="staticBackdropLabel">Edit Nilai Sidang
                                         Pkl
                                         ->
                                         {{ $data->r_usulan_pkl->r_mahasiswa->nama }}
                                     </h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
 
                                     <form id="nilai_sidang_pkl{{ $data->id_mhs_pkl }}"
                                         action="{{ route('nilai_sidang_pkl.update', ['id' => $data->id_mhs_pkl]) }}"

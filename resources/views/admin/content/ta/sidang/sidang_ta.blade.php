@@ -216,7 +216,7 @@
                         } elseif ($roles['isPenguji2']) {
                             $roleString = 'Penguji 2';
                         } else {
-                            $roleString = 'Pembimbing'; // Default role jika tidak ada peran lain
+                            $roleString = 'Pembimbing'; 
                         }
                     @endphp
                     <div class="modal fade" id="nilai{{ $data->id_ta }}" data-bs-backdrop="static"
@@ -224,15 +224,18 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai Sidang ta
-                                        ->
-                                        {{ $data->r_mahasiswa->nama }}
-                                    </h4>
+                                    <h3 class="modal-title fs-5" id="staticBackdropLabel">
+                                        {{ $roleString }}
+                                   </h3>
+
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai Sidang ta
+                                        ->
+                                        {{ $data->r_mahasiswa->nama }}
+                                    </h4>
                                     <form id="nilai_sidang_ta{{ $data->id_ta }}"
                                         action="{{ route('nilai_sidang_ta.post', ['id' => $data->id_ta]) }}"
                                         method="POST">
@@ -586,14 +589,15 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Edit Nilai Sidang TA -
-                                        {{ $data->r_mahasiswa->nama }} (Sebagai {{ $roleString }})
-                                    </h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                    <h3 class="modal-title fs-5" id="staticBackdropLabel">
+                                         {{ $roleString }}
+                                    </h3>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Edit Nilai Sidang TA -
+                                        {{ $data->r_mahasiswa->nama }}
+                                    </h4>
                                     <form id="nilai_sidang_ta{{ $data->id_ta }}"
                                         action="{{ route('nilai_sidang_ta.update', ['id' => $data->id_ta]) }}"
                                         method="POST">

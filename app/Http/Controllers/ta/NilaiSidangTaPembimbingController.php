@@ -68,7 +68,6 @@ class NilaiSidangTaPembimbingController extends Controller
             ];
         });
 
-        // Debugging: Periksa daftar peran dosen untuk setiap mahasiswa
         // dd($rolesPerMahasiswa);
 
         return view('admin.content.ta.pembimbing.sidang_ta_pembimbing', compact(

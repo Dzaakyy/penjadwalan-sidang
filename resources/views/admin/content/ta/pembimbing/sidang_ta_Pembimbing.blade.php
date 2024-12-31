@@ -49,12 +49,17 @@
                                     !is_null($data->ruangan_id) &&
                                     !is_null($data->sesi_id))
                                 <tr class="table-light">
-                                    <td style="max-width: 60px; word-wrap: break-word; white-space: normal;">{{ $counter++ }}</td>
-                                    <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">{{ $data->r_mahasiswa->nama }}</td>
-                                    <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">{{ $data->r_mahasiswa->r_prodi->prodi }}</td>
-                                    <td style="max-width: 20px; word-wrap: break-word; white-space: normal;">{{ \Carbon\Carbon::parse($data->tanggal_ta)->locale('id')->translatedFormat('l, d-m-Y') }}
+                                    <td style="max-width: 60px; word-wrap: break-word; white-space: normal;">
+                                        {{ $counter++ }}</td>
+                                    <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">
+                                        {{ $data->r_mahasiswa->nama }}</td>
+                                    <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">
+                                        {{ $data->r_mahasiswa->r_prodi->prodi }}</td>
+                                    <td style="max-width: 20px; word-wrap: break-word; white-space: normal;">
+                                        {{ \Carbon\Carbon::parse($data->tanggal_ta)->locale('id')->translatedFormat('l, d-m-Y') }}
                                         {{ $data->r_sesi->jam }}</td>
-                                    <td style="max-width: 60px; word-wrap: break-word; white-space: normal;">{{ $judulSempro[$data->mahasiswa_id] ?? 'Judul tidak tersedia' }}</td>
+                                    <td style="max-width: 60px; word-wrap: break-word; white-space: normal;">
+                                        {{ $judulSempro[$data->mahasiswa_id] ?? 'Judul tidak tersedia' }}</td>
                                     <td style="max-width: 50px; word-wrap: break-word; white-space: normal;">
                                         @if ($data->r_pembimbing_satu)
                                             @if ($data->r_nilai_pembimbing_1)
@@ -83,6 +88,15 @@
                                                 'isPembimbing1' => $data->pembimbing_satu_id == $dosen_penilai,
                                                 'isPembimbing2' => $data->pembimbing_dua_id == $dosen_penilai,
                                             ];
+
+                                            $roleString = '';
+                                            if ($roles['isPembimbing1']) {
+                                                $roleString = 'Pembimbing 1';
+                                            } elseif ($roles['isPembimbing2']) {
+                                                $roleString = 'Pembimbing 2';
+                                            }else {
+                                                $roleString = 'Pembimbing';
+                                            }
                                         @endphp
 
                                         @if ($roles['isPembimbing1'])
@@ -134,14 +148,17 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">
+                                        {{ $roleString }}
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
                                     <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai Sidang ta
                                         ->
                                         {{ $data->r_mahasiswa->nama }}
                                     </h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
 
                                     <form id="nilai_sidang_ta{{ $data->id_ta }}"
                                         action="{{ route('nilai_sidang_pembimbing.post', ['id' => $data->id_ta]) }}"
@@ -215,7 +232,8 @@
                                                     </td>
                                                     <td style="width: 50px; word-break: break-all; white-space: normal;">
                                                         <input type="text" class="form-control nilai_persen"
-                                                            name="nilai_persen" placeholder="Nilai" value="" readonly
+                                                            name="nilai_persen" placeholder="Nilai" value=""
+                                                            readonly
                                                             style="background-color: #8fe44d63; color: #000000; cursor: not-allowed; text-align: center; vertical-align: middle;">
                                                     </td>
                                                 </tr>
@@ -451,16 +469,19 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">
+                                        {{ $roleString }}
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
                                     <h4 class="modal-title fs-5" id="staticBackdropLabel">Edit Nilai Sidang
                                         ta
                                         ->
                                         {{ $data->r_mahasiswa->nama }}
                                     </h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-
                                     <form id="nilai_sidang_ta{{ $data->id_ta }}"
                                         action="{{ route('nilai_sidang_pembimbing.update', ['id' => $data->id_ta]) }}"
                                         method="POST">

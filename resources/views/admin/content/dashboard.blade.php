@@ -844,7 +844,6 @@
     {{-- <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.15/index.global.min.js'></script> --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Fungsi untuk menginisialisasi FullCalendar
             function initCalendar(calendarId, events) {
                 var calendarEl = document.getElementById(calendarId);
                 if (calendarEl) {
@@ -882,7 +881,7 @@
 
             // Inisialisasi ulang kalender saat berpindah tab
             $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
-                var target = $(e.target).attr("href"); // Dapatkan ID tab yang aktif
+                var target = $(e.target).attr("href");
                 if (target === '#pimpinan') {
                     initCalendar('calendarKaprodi', @json($eventsKaprodi ?? []));
                 } else if (target === '#penguji') {
@@ -899,7 +898,6 @@
 
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Data from Blade variables
 
             // Kaprodi
             // var banyakPKLBelum = @json($pklBelumDiterima ?? 0);
@@ -1453,7 +1451,6 @@
                 }]
             };
 
-            // Render Bar Chart
             var kaprodiChart = new ApexCharts(document.querySelector("#chartKaprodi"), barChartKaprodi);
             var adminChart = new ApexCharts(document.querySelector("#chartAdmin"), barChartAdmin);
             var pengujiChart = new ApexCharts(document.querySelector("#pengujiChart"), barChartPenguji);
@@ -1465,7 +1462,6 @@
 
 
             // KAPRODI
-            // chart PKL
             var commonoptionsPKL = {
                 chart: {
                     type: 'donut',
@@ -1487,7 +1483,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return banyakPKL + ' data';
                             } else if (seriesIndex === 1) {
@@ -1503,18 +1498,15 @@
                 colors: ["#5D87FF", "#49BEFF"]
             };
 
-            // Options for RPS Chart
             var optionsPKL = {
                 ...commonoptionsPKL,
                 series: [banyakPKL, banyakSelesaiPKL],
                 labels: ['Mahasiswa', 'Selesai']
             };
 
-            // Render RPS Chart
             var chartPKL = new ApexCharts(document.querySelector("#chartkaprodiPKL"), optionsPKL);
             chartPKL.render();
 
-            // Options for UAS Chart
             var commonoptionsSempro = {
                 chart: {
                     type: 'donut',
@@ -1536,7 +1528,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return banyakAjukanJudul + ' data';
                             } else if (seriesIndex === 1) {
@@ -1558,11 +1549,9 @@
                 labels: ['Mahasiswa', 'Selesai']
             };
 
-            // Render UAS Chart
             var chartSempro = new ApexCharts(document.querySelector("#chartkaprodiSempro"), optionsSempro);
             chartSempro.render();
 
-            // Options for TA Chart
             var commonoptionsTA = {
                 chart: {
                     type: 'donut',
@@ -1584,7 +1573,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return banyakAjukanTA + ' data';
                             } else if (seriesIndex === 1) {
@@ -1612,7 +1600,6 @@
 
 
             // Admin
-            // chart PKL
             var commonoptionsPKLAdmin = {
                 chart: {
                     type: 'donut',
@@ -1634,7 +1621,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return percentpklMahasiswaAdmin + ' data';
                             } else if (seriesIndex === 1) {
@@ -1650,18 +1636,15 @@
                 colors: ["#5D87FF", "#49BEFF"]
             };
 
-            // Options for RPS Chart
             var optionsPKLAdmin = {
                 ...commonoptionsPKLAdmin,
                 series: [percentpklMahasiswaAdmin, percentpklSelesaiAdmin],
                 labels: ['Mahasiswa', 'Selesai']
             };
 
-            // Render RPS Chart
             var chartPKLAdmin = new ApexCharts(document.querySelector("#chartadminPKL"), optionsPKLAdmin);
             chartPKLAdmin.render();
 
-            // Options for UAS Chart
             var commonoptionsSemproAdmin = {
                 chart: {
                     type: 'donut',
@@ -1683,7 +1666,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return percentsemproMahasiswaAdmin + ' data';
                             } else if (seriesIndex === 1) {
@@ -1705,11 +1687,9 @@
                 labels: ['Mahasiswa', 'Selesai']
             };
 
-            // Render UAS Chart
             var chartSemproAdmin = new ApexCharts(document.querySelector("#chartadminSempro"), optionsSemproAdmin);
             chartSemproAdmin.render();
 
-            // Options for TA Chart
             var commonoptionsTAAdmin = {
                 chart: {
                     type: 'donut',
@@ -1731,7 +1711,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return percenttaMahasiswaAdmin + ' data';
                             } else if (seriesIndex === 1) {
@@ -1753,12 +1732,10 @@
                 labels: ['Mahasiswa', 'Selesai']
             };
 
-            // Render UAS Chart
             var chartTAAdmin = new ApexCharts(document.querySelector("#chartadminTA"), optionsTAAdmin);
             chartTAAdmin.render();
 
-            // PEMBIMBING
-            // chart PKL
+            // Pembimbing
             var pembimbingPKL = {
                 chart: {
                     type: 'donut',
@@ -1780,7 +1757,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return percentpklDiterimaPembimbing + ' data';
                             } else if (seriesIndex === 1) {
@@ -1796,19 +1772,16 @@
                 colors: ["#001A6E", "#5D87FF", "#49BEFF"]
             };
 
-            // Options for RPS Chart
             var optionspembimbingPKL = {
                 ...pembimbingPKL,
                 series: [percentpklDiterimaPembimbing, percentpklSelesaiPembimbing],
                 labels: ['Mahasiswa', 'Selesai']
             };
 
-            // Render RPS Chart
             var chartpembimbingPKL = new ApexCharts(document.querySelector("#chartPembimbingPKL"),
                 optionspembimbingPKL);
             chartpembimbingPKL.render();
 
-            // Options for UAS Chart
             var pembimbingSempro = {
                 chart: {
                     type: 'donut',
@@ -1830,7 +1803,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return percentsemproDiterimaPembimbing + ' data';
                             } else if (seriesIndex === 1) {
@@ -1852,7 +1824,6 @@
                 labels: ['Mahasiswa', 'Selesai']
             };
 
-            // Render UAS Chart
             var chartpembimbingSempro = new ApexCharts(document.querySelector("#chartPembimbingSempro"),
                 optionspembimbingSempro);
             chartpembimbingSempro.render();
@@ -1878,7 +1849,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return percenttaDiterimaPembimbing + ' data';
                             } else if (seriesIndex === 1) {
@@ -1900,14 +1870,12 @@
                 labels: ['Mahasiswa', 'Selesai']
             };
 
-            // Render UAS Chart
             var chartpembimbingTA = new ApexCharts(document.querySelector("#chartPembimbingTA"),
                 optionspembimbingTA);
             chartpembimbingTA.render();
 
 
-            // PENGUJI
-            // chart PKL
+            // Penguji
             var pengujiPKL = {
                 chart: {
                     type: 'donut',
@@ -1929,7 +1897,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return percentpklDiterimaPenguji + ' data';
                             } else if (seriesIndex === 1) {
@@ -1945,18 +1912,16 @@
                 colors: ["#001A6E", "#5D87FF", "#49BEFF"]
             };
 
-            // Options for RPS Chart
             var optionspengujiPKL = {
                 ...pengujiPKL,
                 series: [percentpklDiterimaPenguji, percentpklSelesaiPenguji],
                 labels: ['Mahasiswa', 'Selesai']
             };
 
-            // Render RPS Chart
+
             var chartpengujiPKL = new ApexCharts(document.querySelector("#chartPengujiPKL"), optionspengujiPKL);
             chartpengujiPKL.render();
 
-            // Options for UAS Chart
             var pengujiSempro = {
                 chart: {
                     type: 'donut',
@@ -1978,7 +1943,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return percentsemproDiterimaPenguji + ' data';
                             } else if (seriesIndex === 1) {
@@ -2000,12 +1964,10 @@
                 labels: ['Mahasiswa', 'Selesai']
             };
 
-            // Render UAS Chart
             var chartpengujiSempro = new ApexCharts(document.querySelector("#chartPengujiSempro"),
                 optionspengujiSempro);
             chartpengujiSempro.render();
 
-            // Options for UAS Chart
             var pengujiTA = {
                 chart: {
                     type: 'donut',
@@ -2027,7 +1989,6 @@
                         formatter: function(value, {
                             seriesIndex
                         }) {
-                            // Custom tooltip text based on the series index
                             if (seriesIndex === 0) {
                                 return percenttaDiterimaPenguji + ' data';
                             } else if (seriesIndex === 1) {
@@ -2049,7 +2010,6 @@
                 labels: ['Mahasiswa', 'Selesai']
             };
 
-            // Render TA Chart
             var chartpengujiTA = new ApexCharts(document.querySelector("#chartPengujiTA"),
                 optionspengujiTA);
             chartpengujiTA.render();
