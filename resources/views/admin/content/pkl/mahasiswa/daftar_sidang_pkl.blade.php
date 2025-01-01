@@ -16,13 +16,15 @@
         </div>
     @endif
 
+
+
     <div class="col-12 grid-margin d-flex justify-content-center">
         <div class="row" style="width: 100%;">
 
             @foreach ($data_mahasiswa_pkl as $data)
                 @if (auth()->user()->id == $data->r_pkl->r_mahasiswa->user_id)
                     <div class="col-md-7 mb-3">
-                        <div class="card" style="width: 100%; max-width: 800px;">
+                        <div class="card shadow-sm" style="width: 100%; max-width: 800px;">
                             <div class="card-body">
                                 <form action="{{ route('daftar_sidang.update', $data->id_mhs_pkl) }}" method="POST"
                                     enctype="multipart/form-data">
@@ -120,7 +122,9 @@
                                             </div>
 
                                             @if (!empty($data->r_nilai_bimbingan) && !empty($data->r_nilai_bimbingan->nilai_bimbingan))
-                                                <button type="submit" class="btn btn-primary">Upload</button>
+                                                @if ($data->status_admin != 1)
+                                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                                @endif
                                             @else
                                                 <span class="badge badge-dark" style="font-weight: bold;">Belum Ada Nilai
                                                     Bimbingan</span>
@@ -135,7 +139,7 @@
                     </div>
 
                     <div class="col-md-5 mb-3">
-                        <div class="card" style="width: 100%; max-width: 800px;">
+                        <div class="card shadow-sm" style="width: 100%; max-width: 800px;">
                             <div class="card-body">
                                 <h5 class="card-title">Status <i class="menu-icon mdi mdi-school"></i></h5>
                                 <div class="form-group row mb-3">
@@ -191,104 +195,105 @@
                         </div>
                     </div>
 
-  {{-- Modal Nilai PKL --}}
-  <div class="modal fade" id="nilai{{ $data->id_mhs_pkl }}" data-bs-backdrop="static"
-    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai PKL ->
-                    {{ $data->r_pkl->r_mahasiswa->nama }}
-                </h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
+                    {{-- Modal Nilai PKL --}}
+                    <div class="modal fade" id="nilai{{ $data->id_mhs_pkl }}" data-bs-backdrop="static"
+                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fs-5" id="staticBackdropLabel">Nilai PKL ->
+                                        {{ $data->r_pkl->r_mahasiswa->nama }}
+                                    </h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
 
-                <form id="nilai{{ $data->id_mhs_pkl }}">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th style="width: 5%;">No</th>
-                                <th style="width: 40%;">Jabatan</th>
-                                <th style="width: 20%;">Nama</th>
-                                <th style="width: 10%;">Nilai</th>
-                                <th style="width: 10%;">Bobot(%)</th>
-                                <th style="width: 20%;">Total Nilai</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td style="width:80px; word-break: break-all; white-space: normal;">
-                                    Pembimbing Program Studi</td>
-                                <td style="width: 20px; word-wrap: break-word; white-space: normal;">
-                                    {{ $data->r_dosen_pembimbing->nama_dosen ?? '' }}</td>
-                                <td style="width: 50px; word-break: break-all; white-space: normal;">
-                                    {{ $data->r_nilai_bimbingan->nilai_bimbingan ?? '' }}
-                                </td>
-                                <td>35</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td style="width: 80px; word-break: break-all; white-space: normal;">
-                                    Pembimbing dari Industri</td>
-                                <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
-                                    {{ $data->pembimbing_pkl ?? '' }}</td>
-                                <td style="width: 50px; word-break: break-all; white-space: normal;">
-                                    {{ $data->nilai_pembimbing_industri ?? '' }}
-                                </td>
-                                <td>30</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td colspan="6" class="text-start"><strong>PENGUJI</strong></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td style="width: 80px; word-break: break-all; white-space: normal;">
-                                    Penguji 1</td>
-                                <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
-                                    {{ $data->r_dosen_pembimbing->nama_dosen ?? '' }}</td>
-                                <td style="width: 50px; word-break: break-all; white-space: normal;">
-                                    {{ $data->r_nilai_pembimbing->nilai_pkl ?? '' }}
-                                </td>
-                                <td rowspan="2">35</td>
-                                <td rowspan="2"></td>
+                                    <form id="nilai{{ $data->id_mhs_pkl }}">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%;">No</th>
+                                                    <th style="width: 40%;">Jabatan</th>
+                                                    <th style="width: 20%;">Nama</th>
+                                                    <th style="width: 10%;">Nilai</th>
+                                                    <th style="width: 10%;">Bobot(%)</th>
+                                                    <th style="width: 20%;">Total Nilai</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td style="width:80px; word-break: break-all; white-space: normal;">
+                                                        Pembimbing Program Studi</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal;">
+                                                        {{ $data->r_dosen_pembimbing->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_bimbingan->nilai_bimbingan ?? '' }}
+                                                    </td>
+                                                    <td>35</td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Pembimbing dari Industri</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->pembimbing_pkl ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->nilai_pembimbing_industri ?? '' }}
+                                                    </td>
+                                                    <td>30</td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6" class="text-start"><strong>PENGUJI</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Penguji 1</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_dosen_pembimbing->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_pembimbing->nilai_pkl ?? '' }}
+                                                    </td>
+                                                    <td rowspan="2">35</td>
+                                                    <td rowspan="2"></td>
 
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td style="width: 80px; word-break: break-all; white-space: normal;">
-                                    Penguji 2</td>
-                                <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
-                                    {{ $data->r_dosen_penguji->nama_dosen ?? '' }}</td>
-                                <td style="width: 50px; word-break: break-all; white-space: normal;">
-                                    {{ $data->r_nilai_penguji->nilai_pkl ?? '' }}
-                                </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>4</td>
+                                                    <td style="width: 80px; word-break: break-all; white-space: normal;">
+                                                        Penguji 2</td>
+                                                    <td style="width: 20px; word-wrap: break-word; white-space: normal; ">
+                                                        {{ $data->r_dosen_penguji->nama_dosen ?? '' }}</td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ $data->r_nilai_penguji->nilai_pkl ?? '' }}
+                                                    </td>
 
-                            </tr>
-                            <tr>
-                                <td colspan="5" class="text-start"><strong>Total Nilai</strong>
-                                </td>
-                                <td style="width: 50px; word-break: break-all; white-space: normal;">
-                                    {{ number_format($data->nilai_mahasiswa, 2) }}
-                                </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="5" class="text-start"><strong>Total Nilai</strong>
+                                                    </td>
+                                                    <td style="width: 50px; word-break: break-all; white-space: normal;">
+                                                        {{ number_format($data->nilai_mahasiswa, 2) }}
+                                                    </td>
 
-                            </tr>
+                                                </tr>
 
 
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endif
             @endforeach
+
         </div>
     </div>
 @endsection
@@ -303,7 +308,7 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             function hitungTotalNilai(container) {
-                let totalNilai = 0; 
+                let totalNilai = 0;
                 let nilaiPenguji1 = 0;
                 let nilaiPenguji2 = 0;
                 let bobotPenguji = 0.35;
@@ -333,7 +338,7 @@
                             }
                         } else if (index !== 2) {
                             const bobot = parseFloat(bobotCell?.textContent) ||
-                            0;
+                                0;
                             const nilaiPersen = (nilai * bobot) / 100;
 
                             if (totalCell) {

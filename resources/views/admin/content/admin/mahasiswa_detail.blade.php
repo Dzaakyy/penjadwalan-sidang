@@ -10,7 +10,7 @@
             <div class="d-flex justify-content-between">
 
 
-                <div class="card me-3" style="width: 60%;">
+                <div class="card me-3 shadow-sm" style="width: 60%;">
                     <div class="card-body">
                         <form class="form-sample">
                             <div class="row">
@@ -74,7 +74,7 @@
                 </div>
 
 
-                <div class="card" style="width: 35%; max-height: 300px;">
+                <div class="card shadow-sm" style="width: 35%; max-height: 300px;">
                     <div class="card-body d-flex justify-content-center align-items-center">
                         @if (isset($data_mahasiswa) && $data_mahasiswa->image && $data_mahasiswa->image !== 'default.png')
                             <img src="{{ asset('storage/uploads/mahasiswa/image/' . $data_mahasiswa->image) }}"
@@ -85,7 +85,7 @@
                         @endif
                     </div>
 
-                
+
                     <div class="d-flex justify-content-end mt-3">
                         <a href="{{ route('mahasiswa') }}" class="btn btn-success">Kembali</a>
                     </div>

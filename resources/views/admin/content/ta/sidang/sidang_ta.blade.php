@@ -1,7 +1,7 @@
 @extends('admin.admin_master')
 
 @section('admin')
-    <div class="card">
+    <div class="card shadow-sm">
         <div class="card-body">
             <h4 class="card-title">Data Nilai Sidang TA</h4>
 
@@ -216,7 +216,7 @@
                         } elseif ($roles['isPenguji2']) {
                             $roleString = 'Penguji 2';
                         } else {
-                            $roleString = 'Pembimbing'; 
+                            $roleString = 'Pembimbing';
                         }
                     @endphp
                     <div class="modal fade" id="nilai{{ $data->id_ta }}" data-bs-backdrop="static"

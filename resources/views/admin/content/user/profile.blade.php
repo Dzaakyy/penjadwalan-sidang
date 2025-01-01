@@ -21,7 +21,7 @@
     <div class="row" style="width: 100%;">
         <div class="d-flex justify-content-between">
 
-            <div class="card me-3" style="width: 60%;">
+            <div class="card me-3 shadow-sm" style="width: 60%;">
                 <div class="card-body">
                     <form action="{{ route('profile.update') }}" method="post">
                         @csrf
@@ -64,13 +64,13 @@
                         </div>
                     </form>
                 </div>
-                <!-- Place the "Kembali" button below the card body -->
+               
                 <div class="card-footer">
                     <a href="{{ route('dashboard') }}" class="btn btn-success ms-2">Kembali</a>
                 </div>
             </div>
 
-            <div class="card" style="width: 35%;">
+            <div class="card shadow-sm" style="width: 35%;">
                 <div class="card-body d-flex flex-column justify-content-center align-items-center">
                     @if (Auth::user()->r_dosen && Auth::user()->r_dosen->image)
                         <img src="{{ asset('storage/uploads/dosen/image/' . Auth::user()->r_dosen->image) }}"

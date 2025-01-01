@@ -442,7 +442,7 @@ class DashboardController extends Controller
                         'end' => $end,
                         'room' => $sidang->r_ruang ? $sidang->r_ruang->kode_ruang : '',
                         'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
-                        'role' => $role, // Tambahkan informasi peran
+                        'role' => $role, 
                     ];
                 }));
             }
@@ -458,14 +458,14 @@ class DashboardController extends Controller
                             $end = \Carbon\Carbon::parse($sidang->tanggal_sempro . ' ' . trim($times[1]))->toDateTimeString();
                         }
                     }
-                    $role = 'Penguji'; // Role untuk Sempro
+                    $role = 'Penguji';
                     return [
                         'title' => 'Sidang Sempro - ' . ($sidang->r_mahasiswa->nama ?? ''),
                         'start' => $start,
                         'end' => $end,
                         'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                         'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
-                        'role' => $role, // Tambahkan informasi peran
+                        'role' => $role,
                     ];
                 }));
             }
@@ -497,7 +497,7 @@ class DashboardController extends Controller
                         'end' => $end,
                         'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                         'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
-                        'role' => $role, // Tambahkan informasi peran
+                        'role' => $role,
                     ];
                 }));
             }
@@ -601,14 +601,14 @@ class DashboardController extends Controller
                             $end = \Carbon\Carbon::parse($sidang->tgl_sidang . ' ' . trim($times[1]))->toDateTimeString();
                         }
                     }
-                    $role = 'Pembimbing'; // Role untuk PKL
+                    $role = 'Pembimbing';
                     return [
                         'title' => 'Sidang PKL - ' . ($sidang->r_pkl->r_mahasiswa->nama ?? ''),
                         'start' => $start,
                         'end' => $end,
                         'room' => $sidang->r_ruang ? $sidang->r_ruang->kode_ruang : '',
                         'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
-                        'role' => $role, // Tambahkan informasi peran
+                        'role' => $role,
                     ];
                 }));
             }
@@ -624,14 +624,14 @@ class DashboardController extends Controller
                             $end = \Carbon\Carbon::parse($sidang->tanggal_sempro . ' ' . trim($times[1]))->toDateTimeString();
                         }
                     }
-                    $role = ($sidang->pembimbing_satu == $dosenId) ? 'Pembimbing 1' : 'Pembimbing 2'; // Role untuk Sempro
+                    $role = ($sidang->pembimbing_satu == $dosenId) ? 'Pembimbing 1' : 'Pembimbing 2';
                     return [
                         'title' => 'Sidang Sempro - ' . ($sidang->r_mahasiswa->nama ?? ''),
                         'start' => $start,
                         'end' => $end,
                         'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                         'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
-                        'role' => $role, // Tambahkan informasi peran
+                        'role' => $role,
                     ];
                 }));
             }
@@ -647,14 +647,14 @@ class DashboardController extends Controller
                             $end = \Carbon\Carbon::parse($sidang->tanggal_ta . ' ' . trim($times[1]))->toDateTimeString();
                         }
                     }
-                    $role = ($sidang->pembimbing_satu_id == $dosenId) ? 'Pembimbing 1' : 'Pembimbing 2'; // Role untuk TA
+                    $role = ($sidang->pembimbing_satu_id == $dosenId) ? 'Pembimbing 1' : 'Pembimbing 2';
                     return [
                         'title' => 'Sidang TA - ' . ($sidang->r_mahasiswa->nama ?? ''),
                         'start' => $start,
                         'end' => $end,
                         'room' => $sidang->r_ruangan ? $sidang->r_ruangan->kode_ruang : '',
                         'session' => $sidang->r_sesi ? $sidang->r_sesi->jam : '',
-                        'role' => $role, // Tambahkan informasi peran
+                        'role' => $role,
                     ];
                 }));
             }

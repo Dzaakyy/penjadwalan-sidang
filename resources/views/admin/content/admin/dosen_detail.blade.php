@@ -6,16 +6,13 @@
 
     <div class="col-12 grid-margin d-flex justify-content-center">
         <div class="row" style="width: 100%;">
-            <!-- Wrapper Flexbox untuk menampilkan kedua card bersebelahan -->
             <div class="d-flex justify-content-between">
 
-                <!-- Card Pertama -->
-                <div class="card me-3" style="width: 60%;">
+                <div class="card me-3 shadow-sm" style="width: 60%;">
                     <div class="card-body">
                         <form class="form-sample">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <!-- Form Fields -->
                                     <div class="form-group row mb-1">
                                         <label class="col-sm-4 col-form-label" style="font-size: 15px;">Nama Dosen</label>
                                         <div class="col-sm-8">
@@ -94,8 +91,7 @@
                     </div>
                 </div>
 
-                <!-- Card Kedua untuk Gambar -->
-                <div class="card" style="width: 35%; max-height: 300px;">
+                <div class="card shadow-sm" style="width: 35%; max-height: 300px;">
                     <div class="card-body d-flex justify-content-center align-items-center">
                         @if (isset($data_dosen) && $data_dosen->image && $data_dosen->image !== 'default.png')
                             <img src="{{ asset('storage/uploads/dosen/image/' . $data_dosen->image) }}"
@@ -108,7 +104,6 @@
 
                     </div>
 
-                    <!-- Button Kembali di bawah gambar -->
                     <div class="d-flex justify-content-end mt-3">
                         <a href="{{ route('dosen') }}" class="btn btn-success">Kembali</a>
                     </div>

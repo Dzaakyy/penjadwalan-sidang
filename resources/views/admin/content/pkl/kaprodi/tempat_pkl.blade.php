@@ -1,6 +1,6 @@
 @extends('admin.admin_master')
 @section('admin')
-    <div class="card">
+    <div class="card shadow-sm">
         <div class="card-body">
             <h4 class="card-title">Data Perusahaan</h4>
             @if (Session::has('success'))
@@ -26,42 +26,6 @@
             <a href="{{ route('tempat_pkl.create') }}" class="btn btn-primary me-2 mb-3">
                 <i class="bi bi-file-earmark-plus"></i> New
             </a>
-
-            {{-- <a href="{{ route('tempat_pkl.export') }}" class="btn btn-primary me-2 mb-3">
-                <i class="bi bi-file-earmark-plus"></i> Export
-            </a>
-            <a data-bs-toggle="modal" data-bs-target="#import" class="btn btn-primary me-2 mb-3">
-                <i class="bi bi-file-earmark-plus"></i> Import
-            </a> --}}
-
-
-            {{-- <div class="modal fade" id="import" tabindex="-1" aria-labelledby="importLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="importlabel">New message
-                            </h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="post" action="{{ route('tempat_pkl.import') }}" enctype="multipart/form-data">
-                                @csrf
-                                <div class="mb-3">
-                                    <label for="file" class="col-form-label">Import File</label>
-                                    <input type="file" class="form-control" name="file" id="file">
-                                    @error('file')
-                                        <small>{{ $message }}</small>
-                                    @enderror
-                                </div>
-                                <div class="mb-3">
-                                    <button type="submit" class="btn btn-primary">Upload</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-
 
             <div class="table-responsive">
                 <table class="table table-hover dataTable" width="100%" cellspacing="0">

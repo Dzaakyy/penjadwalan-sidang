@@ -54,9 +54,8 @@
         @if (auth()->user()->id == $data->r_mahasiswa->user_id)
             <div class="col-12 grid-margin d-flex justify-content-center">
                 <div class="row" style="width: 100%;">
-                    <!-- Card Mahasiswa -->
                     <div class="col-md-7 mb-3">
-                        <div class="card" style="width: 100%; max-width: 800px;">
+                        <div class="card shadow-sm" style="width: 100%; max-width: 800px;">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -148,9 +147,8 @@
                     </div>
                 </div>
 
-                <!-- Card Status -->
                 <div class="col-md-5 mb-3">
-                    <div class="card" style="width: 100%; max-width: 800px;">
+                    <div class="card shadow-sm" style="width: 100%; max-width: 800px;">
                         <div class="card-body">
                             <h5 class="card-title">Status <i class="menu-icon mdi mdi-school"></i></h5>
                             @foreach ([

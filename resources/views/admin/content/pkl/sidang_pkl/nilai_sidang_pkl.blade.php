@@ -1,7 +1,7 @@
 @extends('admin.admin_master')
 
 @section('admin')
-    <div class="card">
+    <div class="card shadow-sm">
         <div class="card-body">
             <h4 class="card-title">Data Nilai Sidang PKL</h4>
 

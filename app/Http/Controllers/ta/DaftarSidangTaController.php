@@ -654,6 +654,6 @@ class DaftarSidangTaController extends Controller
         ]);
 
         // return $pdf->stream('Surat_Tugas_ta.pdf');
-        return $pdf->stream('Surat_Tugas_ta.pdf');
+        return $pdf->download('Surat_Tugas_ta.pdf');
     }
 }

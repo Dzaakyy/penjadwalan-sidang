@@ -144,11 +144,16 @@
 
                                         <h3 class="fw-semibold text-center mb-5">Pimpinan Prodi</h3>
 
+                                        <div class="card mt-5 mb-5 shadow-sm">
+                                            <div class="card-body">
+                                                <div id="calendarKaprodi"></div>
+                                            </div>
+                                        </div>
                                         <div class="row">
 
                                             <div class="col-lg-8 d-flex flex-column align-items-stretch">
 
-                                                <div class="card h-50 w-100">
+                                                <div class="card h-50 w-100 shadow-sm">
                                                     <div class="card-body">
                                                         <div
                                                             class="d-sm-flex d-block align-items-center justify-content-between mb-9">
@@ -160,7 +165,7 @@
                                                 </div>
 
 
-                                                <div class="card h-100 mt-3">
+                                                <div class="card h-100 mt-3 shadow-sm">
                                                     <div class="card-body">
                                                         <div class="row">
 
@@ -187,7 +192,7 @@
 
                                             <div class="col-lg-4">
                                                 <div class="col-lg-12">
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -218,7 +223,7 @@
 
 
                                                 <div class="col-lg-12 mt-3">
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -248,7 +253,7 @@
                                                 </div>
 
                                                 <div class="col-lg-12 mt-3">
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -276,9 +281,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-5">
-                                                <div id="calendarKaprodi"></div>
-                                            </div>
+
                                         </div>
 
                                     </div>
@@ -286,30 +289,6 @@
 
                             </div>
                         </div>
-                        {{-- <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                var calendarEl = document.getElementById('calendarKaprodi');
-                                var calendar = new FullCalendar.Calendar(calendarEl, {
-                                    themeSystem: 'bootstrap5',
-                                    initialView: 'dayGridMonth',
-                                    locale: 'id',
-                                    events: @json($eventsKaprodi),
-                                    eventBackgroundColor: '#213555',
-                                    eventContent: function(arg) {
-                                        // Custom tampilan event
-                                        return {
-                                            html: `
-                    <div style="white-space: normal; word-wrap: break-word; padding: 2px;">
-                        <b>${arg.event.title}</b><br>
-                        ${arg.event.extendedProps.room} - ${arg.event.extendedProps.session}
-                    </div>
-                `
-                                        };
-                                    }
-                                });
-                                calendar.render();
-                            });
-                        </script> --}}
                     @endhasrole
 
 
@@ -322,12 +301,17 @@
                                     <div class="container-fluid">
 
                                         <h3 class="fw-semibold text-center mb-5">Admin</h3>
+                                        <div class="card mt-5 mb-5 shadow-sm">
+                                            <div class="card-body">
+                                                <div id="calendarAdmin"></div>
+                                            </div>
+                                        </div>
 
                                         <div class="row">
 
                                             <div class="col-lg-8 d-flex flex-column align-items-stretch">
 
-                                                <div class="card h-50 w-100">
+                                                <div class="card h-50 w-100 shadow-sm">
                                                     <div class="card-body">
                                                         <div
                                                             class="d-sm-flex d-block align-items-center justify-content-between mb-9">
@@ -339,8 +323,9 @@
                                                 </div>
 
 
-                                                <div class="card h-100 mt-3">
+                                                <div class="card h-100 mt-3 shadow-sm">
                                                     <div class="card-body">
+
                                                         <div class="row">
 
                                                             <div class="col-lg-4 chart-container mt-4">
@@ -366,7 +351,7 @@
 
                                             <div class="col-lg-4">
                                                 <div class="col-lg-12">
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -397,7 +382,7 @@
 
 
                                                 <div class="col-lg-12 mt-3">
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -427,7 +412,7 @@
                                                 </div>
 
                                                 <div class="col-lg-12 mt-3">
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -455,9 +440,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="mt-5">
-                                            <div id="calendarAdmin"></div>
-                                        </div>
+
 
                                     </div>
                                 </div>
@@ -465,13 +448,6 @@
                             </div>
                         </div>
                     @endhasrole
-
-
-
-
-
-
-
 
 
                     @hasrole('pembimbingPkl|pembimbingSempro|pembimbingTa')
@@ -483,10 +459,14 @@
                                     <div class="container-fluid">
 
                                         <h3 class="fw-semibold text-center mb-5">Pembimbing</h3>
-
+                                        <div class="card mt-5 mb-5 shadow-sm">
+                                            <div class="card-body">
+                                                <div id="calendarPembimbing"></div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-lg-8 d-flex flex-column align-items-stretch">
-                                                <div class="card w-100">
+                                                <div class="card w-100 shadow-sm">
                                                     <div class="card-body">
                                                         <div
                                                             class="d-sm-flex d-block align-items-center justify-content-between mb-9">
@@ -499,7 +479,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="card h-100 mt-3">
+                                                <div class="card h-100 mt-3 shadow-sm">
                                                     <div class="card-body">
                                                         <div class="row">
 
@@ -525,7 +505,7 @@
                                             <div class="col-lg-4">
                                                 <div class="col-lg-12">
 
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -561,7 +541,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-12 mt-3">
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -595,7 +575,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-12 mt-3">
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -628,9 +608,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-5">
-                                                <div id="calendarPembimbing"></div>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -648,9 +626,14 @@
                                 <div class="container-fluid">
                                     <div class="container-fluid">
                                         <h3 class="fw-semibold text-center mb-5">Penguji</h3>
+                                        <div class="card mt-5 shadow-sm">
+                                            <div class="card-body">
+                                                <div id="calendarPenguji"></div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-lg-8 d-flex flex-column align-items-stretch">
-                                                <div class="card h-50 w-100">
+                                                <div class="card h-50 w-100 shadow-sm">
                                                     <div class="card-body">
                                                         <div
                                                             class="d-sm-flex d-block align-items-center justify-content-between mb-9">
@@ -660,7 +643,7 @@
                                                         <div id="pengujiChart"></div>
                                                     </div>
                                                 </div>
-                                                <div class="card h-100 mt-3">
+                                                <div class="card h-100 mt-3 shadow-sm">
                                                     <div class="card-body">
                                                         <div class="row">
                                                             <div class="col-lg-4 chart-container mt-4">
@@ -681,7 +664,7 @@
                                             </div>
                                             <div class="col-lg-4">
                                                 <div class="col-lg-12">
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -712,7 +695,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-12 mt-3">
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -742,7 +725,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-12 mt-3">
-                                                    <div class="card">
+                                                    <div class="card shadow-sm">
                                                         <div class="card-body">
                                                             <div class="row align-items-start">
                                                                 <div class="col-12 text-center mb-4">
@@ -770,38 +753,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-5">
-                                                <div id="calendarPenguji"></div>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {{-- <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                var calendarEl = document.getElementById('calendarPenguji');
-                                var calendar = new FullCalendar.Calendar(calendarEl, {
-                                    themeSystem: 'bootstrap5',
-                                    initialView: 'dayGridMonth',
-                                    locale: 'id',
-                                    events: @json($eventsPenguji),
-                                    eventBackgroundColor: '#213555',
-                                    eventContent: function(arg) {
-                                        return {
-                                            html: `
-                                            <div style="white-space: normal; word-wrap: break-word; padding: 2px;">
-                                                <b>${arg.event.title}</b><br>
-                                                ${arg.event.extendedProps.room} - ${arg.event.extendedProps.session}
-                                            </div>
-                                        `
-                                        };
-                                    }
-                                });
-                                calendar.render();
-                            });
-                        </script> --}}
                     @endhasrole
 
                     @hasrole('mahasiswa')
@@ -812,7 +770,12 @@
                                     <div class="container-fluid">
                                         <h3 class="fw-semibold text-center mb-5">Mahasiswa</h3>
                                         <div class="row">
-                                            <div id="calendarMahasiswa"></div>
+                                            <div class="card mb-5 shadow-sm">
+                                                <div class="card-body">
+
+                                                    <div id="calendarMahasiswa"></div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div id="earning"></div>
                                     </div>
@@ -820,37 +783,6 @@
 
                             </div>
                         </div>
-                        {{-- <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                var calendarEl = document.getElementById('calender');
-                                var calendar = new FullCalendar.Calendar(calendarEl, {
-                                    themeSystem: 'bootstrap5',
-                                    initialView: 'dayGridMonth',
-                                    locale: 'id',
-                                    events: @json($eventsMahasiswa),
-                                    eventBackgroundColor: '#213555',
-
-                                    eventContent: function(info) {
-                                        var session = info.event.extendedProps.session || 'No session info';
-                                        var room = info.event.extendedProps.room || 'No room info';
-
-                                        var content = document.createElement('div');
-                                        content.innerHTML = `
-                        <strong>${info.event.title}</strong><br>
-                       ${room} (${session})
-                    `;
-
-                                        content.style.whiteSpace = 'normal';
-                                        content.style.wordBreak = 'break-word';
-
-                                        return {
-                                            domNodes: [content]
-                                        };
-                                    },
-                                });
-                                calendar.render();
-                            });
-                        </script> --}}
                     @endhasrole
 
 
@@ -882,15 +814,15 @@
                 return {
                     ...event,
                     title: showRole ? `(${event.role}) ${event.title}` : event.title,
-                    backgroundColor: '#213555', // Warna background event
-                    borderColor: '#213555' // Warna border event
+                    backgroundColor: '#213555',
+                    borderColor: '#213555'
                 };
             }).concat(eventsPenguji.map(event => {
                 return {
                     ...event,
                     title: showRole ? `(${event.role}) ${event.title}` : event.title,
-                    backgroundColor: '#213555', // Warna background event
-                    borderColor: '#213555' // Warna border event
+                    backgroundColor: '#213555',
+                    borderColor: '#213555'
                 };
             }));
 
@@ -932,7 +864,7 @@
                     return {
                         html: `
                             <span class="badge custom-more-link">
-                                ${args.num} Data
+                                ${args.num} Sidang
                             </span>
                         `
                     };

@@ -74,12 +74,12 @@ class MahasiswaTa extends Model
     {
         parent::boot();
         MahasiswaTa::all()->each(function ($sidangTA) {
-            $nilaiPembimbing1 = $sidangTA->r_nilai_pembimbing_1->nilai_sidang ?? null;
-            $nilaiPembimbing2 = $sidangTA->r_nilai_pembimbing_2->nilai_sidang ?? null;
-            $nilaiKetua = $sidangTA->r_nilai_ketua->nilai_sidang ?? null;
-            $nilaiSekretaris = $sidangTA->r_nilai_sekretaris->nilai_sidang ?? null;
-            $nilaiPenguji_1 = $sidangTA->r_nilai_penguji_1->nilai_sidang ?? null;
-            $nilaiPenguji_2 = $sidangTA->r_nilai_penguji_2->nilai_sidang ?? null;
+            $nilaiPembimbing1 = optional($sidangTA->r_nilai_pembimbing_1)->nilai_sidang;
+            $nilaiPembimbing2 = optional($sidangTA->r_nilai_pembimbing_2)->nilai_sidang;
+            $nilaiKetua = optional($sidangTA->r_nilai_ketua)->nilai_sidang;
+            $nilaiSekretaris = optional($sidangTA->r_nilai_sekretaris)->nilai_sidang;
+            $nilaiPenguji_1 = optional($sidangTA->r_nilai_penguji_1)->nilai_sidang;
+            $nilaiPenguji_2 = optional($sidangTA->r_nilai_penguji_2)->nilai_sidang;
 
             if ($nilaiPembimbing1 !== null && $nilaiPembimbing2 !== null && $nilaiKetua !== null && $nilaiSekretaris !== null && $nilaiPenguji_1 !== null && $nilaiPenguji_2 !== null) {
                 $rataRataPembimbing = ($nilaiPembimbing1 + $nilaiPembimbing2) / 2;

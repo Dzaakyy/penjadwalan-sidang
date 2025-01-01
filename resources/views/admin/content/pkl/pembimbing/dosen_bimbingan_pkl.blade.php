@@ -1,7 +1,7 @@
 @extends('admin.admin_master')
 
 @section('admin')
-    <div class="card">
+    <div class="card shadow-sm">
         <div class="card-body">
             <h6 class="card-title">
                 <a href="{{ route('dosen_bimbingan_pkl') }}" class="text-decoration-none"

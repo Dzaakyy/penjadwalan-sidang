@@ -102,7 +102,7 @@
 
 
                     <div class="col-md-7 mb-3">
-                        <div class="card" style="width: 100%; max-width: 800px;">
+                        <div class="card shadow-sm" style="width: 100%; max-width: 800px;">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -253,7 +253,7 @@
                     </div>
 
                     <div class="col-md-5 mb-3">
-                        <div class="card" style="width: 100%; max-width: 800px;">
+                        <div class="card shadow-sm" style="width: 100%; max-width: 800px;">
                             <div class="card-body">
                                 <h5 class="card-title">Status <i class="menu-icon mdi mdi-school"></i></h5>
                                 <div class="form-group row mb-3">
