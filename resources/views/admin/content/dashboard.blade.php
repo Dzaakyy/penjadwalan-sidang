@@ -455,6 +455,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="mt-5">
+                                            <div id="calendarAdmin"></div>
+                                        </div>
 
                                     </div>
                                 </div>
@@ -851,21 +854,7 @@
                     @endhasrole
 
 
-                    <div class="modal fade" id="eventDetailModal" data-bs-backdrop="static" data-bs-keyboard="false"
-                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="eventDetailModalLabel">Detail Jadwal</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body" id="eventDetailContent">
-                                </div>
 
-                            </div>
-                        </div>
-                    </div>
 
                 </div>
             </div>
@@ -885,10 +874,26 @@
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/index.global.min.js"></script> --}}
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.15/index.global.min.js'></script>
     <script>
-   document.addEventListener('DOMContentLoaded', function() {
-    function initCalendar(calendarId, events) {
+  document.addEventListener('DOMContentLoaded', function() {
+    function initCalendar(calendarId, eventsPembimbing, eventsPenguji, showRole = false) {
         var calendarEl = document.getElementById(calendarId);
         if (calendarEl) {
+            var combinedEvents = eventsPembimbing.map(event => {
+                return {
+                    ...event,
+                    title: showRole ? `(${event.role}) ${event.title}` : event.title,
+                    backgroundColor: '#213555', // Warna background event
+                    borderColor: '#213555' // Warna border event
+                };
+            }).concat(eventsPenguji.map(event => {
+                return {
+                    ...event,
+                    title: showRole ? `(${event.role}) ${event.title}` : event.title,
+                    backgroundColor: '#213555', // Warna background event
+                    borderColor: '#213555' // Warna border event
+                };
+            }));
+
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 themeSystem: 'bootstrap',
                 initialView: 'dayGridMonth',
@@ -899,10 +904,11 @@
                 },
                 dayMaxEvents: true,
                 locale: 'id',
-                events: events,
+                events: combinedEvents,
+                eventOrder: 'start',
+                eventOverlap: false, // Mencegah event bertumpuk secara horizontal
                 eventContent: function(arg) {
                     if (arg.view.type === 'listMonth') {
-                        // Tampilan List: Tidak tambahkan background
                         return {
                             html: `
                                 <div style="white-space: normal; word-wrap: break-word; padding: 2px;">
@@ -931,9 +937,14 @@
                         `
                     };
                 },
-                slotDuration: '00:15:00',
-                slotMinTime: '08:00:00',
-                slotMaxTime: '18:00:00'
+                slotDuration: '00:30:00',
+                slotMinTime: '07:00:00',
+                slotMaxTime: '23:00:00',
+                views: {
+                    timeGridWeek: {
+                        eventMaxStack: 0,
+                    }
+                }
             });
             calendar.render();
         }
@@ -941,28 +952,33 @@
 
     var activeTab = "{{ $activeTab }}";
     if (activeTab === 'pimpinan') {
-        initCalendar('calendarKaprodi', @json($eventsKaprodi ?? []));
+        initCalendar('calendarKaprodi', @json($eventsKaprodi ?? []), []);
     } else if (activeTab === 'penguji') {
-        initCalendar('calendarPenguji', @json($eventsPenguji ?? []));
+        initCalendar('calendarPenguji', @json($eventsPembimbing ?? []), @json($eventsPenguji ?? []), true);
     } else if (activeTab === 'pembimbing') {
-        initCalendar('calendarPembimbing', @json($eventsPembimbing ?? []));
+        initCalendar('calendarPembimbing', @json($eventsPembimbing ?? []), @json($eventsPenguji ?? []), true);
     } else if (activeTab === 'mahasiswa') {
-        initCalendar('calendarMahasiswa', @json($eventsMahasiswa ?? []));
+        initCalendar('calendarMahasiswa', @json($eventsMahasiswa ?? []), []);
+    } else if (activeTab === 'admin') {
+        initCalendar('calendarAdmin', @json($eventsAdmin ?? []), []);
     }
 
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
         var target = $(e.target).attr("href");
         if (target === '#pimpinan') {
-            initCalendar('calendarKaprodi', @json($eventsKaprodi ?? []));
+            initCalendar('calendarKaprodi', @json($eventsKaprodi ?? []), []);
         } else if (target === '#penguji') {
-            initCalendar('calendarPenguji', @json($eventsPenguji ?? []));
+            initCalendar('calendarPenguji', @json($eventsPembimbing ?? []), @json($eventsPenguji ?? []), true);
         } else if (target === '#pembimbing') {
-            initCalendar('calendarPembimbing', @json($eventsPembimbing ?? []));
+            initCalendar('calendarPembimbing', @json($eventsPembimbing ?? []), @json($eventsPenguji ?? []), true);
         } else if (target === '#mahasiswa') {
-            initCalendar('calendarMahasiswa', @json($eventsMahasiswa ?? []));
+            initCalendar('calendarMahasiswa', @json($eventsMahasiswa ?? []), []);
+        } else if (target === '#admin') {
+            initCalendar('calendarAdmin', @json($eventsAdmin ?? []), []);
         }
     });
 });
+
         document.addEventListener('DOMContentLoaded', function() {
 
             // Kaprodi
