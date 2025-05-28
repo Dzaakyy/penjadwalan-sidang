@@ -5,14 +5,14 @@
                 <span class="icon-menu"></span>
             </button>
         </div>
-        <div>
+        {{-- <div>
             <a class="navbar-brand brand-logo" href="/">
                 <img src="{{ asset('admin/assets/images/logo.svg') }}" alt="logo" />
             </a>
             <a class="navbar-brand brand-logo-mini" href="# ">
                 <img src="{{ asset('admin/assets/images/logo-mini.svg') }}" alt="logo" />
             </a>
-        </div>
+        </div> --}}
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-top">
         <ul class="navbar-nav">
